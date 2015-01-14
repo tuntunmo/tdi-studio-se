@@ -262,6 +262,8 @@ public class Node extends Element implements IGraphicalNode {
 
     boolean isMapReduceStart = false;
 
+    boolean isJunitStart = false;
+
     // as the talend job contains multiple mapreduce jobs, use this to indicate which mapreduce job contains this
     // graphic node
     private Integer mrGroupId;
@@ -4826,5 +4828,13 @@ public class Node extends Element implements IGraphicalNode {
             }
         }
 
+    }
+
+    public void setJunitStart(boolean isJunitStart) {
+        this.isJunitStart = isJunitStart;
+    }
+
+    public boolean isJunitStart() {
+        return this.isJunitStart;
     }
 }

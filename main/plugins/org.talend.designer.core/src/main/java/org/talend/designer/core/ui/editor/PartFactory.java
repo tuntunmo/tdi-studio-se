@@ -14,6 +14,8 @@ package org.talend.designer.core.ui.editor;
 
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
+import org.talend.core.GlobalServiceRegister;
+import org.talend.designer.core.ITestContainerGEFService;
 import org.talend.designer.core.ui.editor.connections.ConnLabelEditPart;
 import org.talend.designer.core.ui.editor.connections.Connection;
 import org.talend.designer.core.ui.editor.connections.ConnectionLabel;
@@ -82,6 +84,17 @@ public class PartFactory implements EditPartFactory {
         } else if (model instanceof NodeLabel) {
             part = new NodeLabelEditPart();
         } else if (model instanceof NodeContainer) {
+            if (GlobalServiceRegister.getDefault().isServiceRegistered(ITestContainerGEFService.class)) {
+                ITestContainerGEFService testContainerService = (ITestContainerGEFService) GlobalServiceRegister.getDefault()
+                        .getService(ITestContainerGEFService.class);
+                if (testContainerService != null) {
+                    part = testContainerService.createEditorPart(model);
+                    if (part != null) {
+                        part.setModel(model);
+                        return part;
+                    }
+                }
+            }
             if (((NodeContainer) model).getNode().isJoblet()) {
                 part = new JobletContainerPart();
             } else if (((NodeContainer) model).getNode().isMapReduce()) {

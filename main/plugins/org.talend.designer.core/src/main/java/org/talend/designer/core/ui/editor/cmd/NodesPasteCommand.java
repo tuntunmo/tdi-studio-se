@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.PlatformUI;
 import org.talend.commons.ui.runtime.exception.ExceptionHandler;
 import org.talend.core.CorePlugin;
+import org.talend.core.GlobalServiceRegister;
 import org.talend.core.model.components.ComponentCategory;
 import org.talend.core.model.components.IComponent;
 import org.talend.core.model.metadata.IMetadataColumn;
@@ -49,6 +50,7 @@ import org.talend.core.model.process.IProcess;
 import org.talend.core.model.process.IProcess2;
 import org.talend.core.ui.component.ComponentsFactoryProvider;
 import org.talend.core.ui.process.IGraphicalNode;
+import org.talend.designer.core.ITestContainerGEFService;
 import org.talend.designer.core.i18n.Messages;
 import org.talend.designer.core.model.components.DummyComponent;
 import org.talend.designer.core.model.components.EParameterName;
@@ -101,6 +103,26 @@ public class NodesPasteCommand extends Command {
      * if true, all of properties will keep originally. feature 6131
      */
     private boolean isJobletRefactor = false;
+
+    private boolean isJunitCreate = false;
+
+    /**
+     * Getter for isJunitCreate.
+     * 
+     * @return the isJunitCreate
+     */
+    public boolean isJunitCreate() {
+        return this.isJunitCreate;
+    }
+
+    /**
+     * Sets the isJunitCreate.
+     * 
+     * @param isJunitCreate the isJunitCreate to set
+     */
+    public void setJunitCreate(boolean isJunitCreate) {
+        this.isJunitCreate = isJunitCreate;
+    }
 
     /**
      * Getter for cursorLocation.
@@ -337,7 +359,8 @@ public class NodesPasteCommand extends Command {
         createdNames = new ArrayList<String>();
         Map<String, String> oldNameTonewNameMap = new HashMap<String, String>();
         Map<String, String> oldMetaToNewMeta = new HashMap<String, String>();
-
+        List<Node> testNodes = new ArrayList<Node>();
+        ((Node) nodeParts.get(0).getModel()).setJunitStart(true);
         // see bug 0004882: Subjob title is not copied when copying/pasting subjobs from one job to another
         Map<INode, SubjobContainer> mapping = new HashMap<INode, SubjobContainer>();
         // create the nodes
@@ -481,7 +504,7 @@ public class NodesPasteCommand extends Command {
                                     Map<String, Object> newMap = new HashMap<String, Object>();
                                     newMap.putAll(map);
                                     // rename schemas
-									if (!oldMetaToNewMeta.isEmpty()) {
+                                    if (!oldMetaToNewMeta.isEmpty()) {
                                         boolean isSAPBapiInputSchema = "MAPPING_INPUT".equals(param.getName()) //$NON-NLS-1$
                                                 && "tSAPBapi".equals(copiedNode.getComponent().getName()); //$NON-NLS-1$
                                         if (EParameterName.SCHEMAS.name().equals(param.getName()) || isSAPBapiInputSchema) {
@@ -491,8 +514,8 @@ public class NodesPasteCommand extends Command {
                                                 newMap.put(EParameterName.SCHEMA.getName(), newSchemaName);
                                             }
                                         }
-                                    
-									}
+
+                                    }
 
                                     newValues.add(newMap);
                                 }
@@ -541,6 +564,8 @@ public class NodesPasteCommand extends Command {
             } else {
                 nc = new NodeContainer((Node) pastedNode);
             }
+
+            testNodes.add((Node) pastedNode);
             nodeContainerList.add(nc);
         }
         ((Process) process).setCopyPasteSubjobMappings(mapping);
@@ -756,6 +781,18 @@ public class NodesPasteCommand extends Command {
                 }
             }
         }
+
+        if (isJunitCreate()) {
+            if (GlobalServiceRegister.getDefault().isServiceRegistered(ITestContainerGEFService.class)) {
+                ITestContainerGEFService testContainerService = (ITestContainerGEFService) GlobalServiceRegister.getDefault()
+                        .getService(ITestContainerGEFService.class);
+                if (testContainerService != null) {
+                    NodeContainer nc = testContainerService.createJunitContainer(testNodes);
+                    ((Process) process).getElements().add(nc);
+                }
+            }
+        }
+
     }
 
     /**

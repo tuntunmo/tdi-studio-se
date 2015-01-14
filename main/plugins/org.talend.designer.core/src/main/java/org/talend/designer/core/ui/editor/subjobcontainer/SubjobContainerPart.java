@@ -247,6 +247,18 @@ public class SubjobContainerPart extends AbstractGraphicalEditPart implements Pr
                 return 0;
             }
         });
+        // List<Element> children = new ArrayList<Element>();
+        // children.addAll(nodeContainers);
+        // if (GlobalServiceRegister.getDefault().isServiceRegistered(ITestContainerGEFService.class)) {
+        // ITestContainerGEFService testContainerService = (ITestContainerGEFService) GlobalServiceRegister.getDefault()
+        // .getService(ITestContainerGEFService.class);
+        // if (testContainerService != null) {
+        // Element model = testContainerService.getJunitContainer(((SubjobContainer) getModel()).getProcess());
+        // if (model != null) {
+        // children.add(model);
+        // }
+        // }
+        // }
         return nodeContainers;
     }
 
