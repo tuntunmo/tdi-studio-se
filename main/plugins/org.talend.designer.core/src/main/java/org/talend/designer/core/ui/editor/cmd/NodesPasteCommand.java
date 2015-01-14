@@ -360,11 +360,11 @@ public class NodesPasteCommand extends Command {
         Map<String, String> oldNameTonewNameMap = new HashMap<String, String>();
         Map<String, String> oldMetaToNewMeta = new HashMap<String, String>();
         List<Node> testNodes = new ArrayList<Node>();
-        ((Node) nodeParts.get(0).getModel()).setJunitStart(true);
         // see bug 0004882: Subjob title is not copied when copying/pasting subjobs from one job to another
         Map<INode, SubjobContainer> mapping = new HashMap<INode, SubjobContainer>();
         // create the nodes
-        for (NodePart copiedNodePart : nodeParts) {
+        for (int i = 0; i < nodeParts.size(); i++) {
+            NodePart copiedNodePart = nodeParts.get(i);
             IGraphicalNode copiedNode = (IGraphicalNode) copiedNodePart.getModel();
             if (!containNodeInProcess(copiedNode)) {
                 continue;
@@ -559,7 +559,16 @@ public class NodesPasteCommand extends Command {
             }
 
             NodeContainer nc = null;
-            if (((Node) pastedNode).isJoblet() || ((Node) pastedNode).isMapReduce()) {
+            if (i == 0 && isJunitCreate()) {
+                if (GlobalServiceRegister.getDefault().isServiceRegistered(ITestContainerGEFService.class)) {
+                    ITestContainerGEFService testContainerService = (ITestContainerGEFService) GlobalServiceRegister.getDefault()
+                            .getService(ITestContainerGEFService.class);
+                    if (testContainerService != null) {
+                        nc = testContainerService.createJunitContainer((Node) pastedNode);
+                        nodeContainerList.add(nc);
+                    }
+                }
+            } else if (((Node) pastedNode).isJoblet() || ((Node) pastedNode).isMapReduce()) {
                 nc = new JobletContainer((Node) pastedNode);
             } else {
                 nc = new NodeContainer((Node) pastedNode);
@@ -781,14 +790,12 @@ public class NodesPasteCommand extends Command {
                 }
             }
         }
-
         if (isJunitCreate()) {
             if (GlobalServiceRegister.getDefault().isServiceRegistered(ITestContainerGEFService.class)) {
                 ITestContainerGEFService testContainerService = (ITestContainerGEFService) GlobalServiceRegister.getDefault()
                         .getService(ITestContainerGEFService.class);
                 if (testContainerService != null) {
-                    NodeContainer nc = testContainerService.createJunitContainer(testNodes);
-                    ((Process) process).getElements().add(nc);
+                    testContainerService.setTestNodes(testNodes, nodeContainerList);
                 }
             }
         }

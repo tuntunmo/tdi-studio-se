@@ -31,6 +31,8 @@ public interface ITestContainerGEFService extends IService {
 
     public Element getJunitContainer(IProcess2 process);
 
-    public NodeContainer createJunitContainer(List<Node> nodes);
+    public NodeContainer createJunitContainer(Node node);
+
+    public void setTestNodes(List<Node> testNodes, List<NodeContainer> nodeCons);
 
 }
