@@ -68,33 +68,33 @@ import org.xml.sax.SAXException;
  */
 public class ExpressionBuilderDialog extends TrayDialog implements IExpressionBuilderDialogController {
 
-    private static final int             EXPORT_ID          = IDialogConstants.CLIENT_ID + 22;
+    private static final int EXPORT_ID = IDialogConstants.CLIENT_ID + 22;
 
-    private static final int             IMPORT_ID          = IDialogConstants.CLIENT_ID + 21;
+    private static final int IMPORT_ID = IDialogConstants.CLIENT_ID + 21;
 
-    protected static TestComposite       testComposite;
+    protected static TestComposite testComposite;
 
     protected static ExpressionComposite expressionComposite;
 
-    protected static CategoryComposite   categoryComposite;
+    protected static CategoryComposite categoryComposite;
 
-    protected CategoryManager            manager            = new CategoryManager();
+    protected CategoryManager manager = new CategoryManager();
 
-    protected final IExpressionDataBean  dataBean;
+    protected final IExpressionDataBean dataBean;
 
-    protected String                     defaultExpression  = "";                             //$NON-NLS-1$
+    protected String defaultExpression = ""; //$NON-NLS-1$
 
-    protected List<Variable>             defaultVariables;
+    protected List<Variable> defaultVariables;
 
-    private Composite                    container;
+    private Composite container;
 
-    private final INode                  component;
+    private final INode component;
 
-    private final String                 nodeStyle;
+    private final String nodeStyle;
 
-    private String                       expressionForTable = null;
+    private String expressionForTable = null;
 
-    protected static boolean             isESCClose         = true;
+    protected static boolean isESCClose = true;
 
     /**
      * Create the dialog

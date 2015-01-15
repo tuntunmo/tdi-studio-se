@@ -1048,7 +1048,9 @@ public class MapperManager extends AbstractMapperManager {
         if (getAbstractMapComponent().getOriginalNode().getJobletNode() != null) {
             return getAbstractMapComponent().isReadOnly() || getAbstractMapComponent().getOriginalNode().isReadOnly();
         }
-        return getAbstractMapComponent().isReadOnly() || getAbstractMapComponent().getProcess().isReadOnly();
+
+        return getAbstractMapComponent().isReadOnly() || getAbstractMapComponent().getProcess().isReadOnly()
+                || getAbstractMapComponent().getOriginalNode().isReadOnly();
     }
 
     /**
