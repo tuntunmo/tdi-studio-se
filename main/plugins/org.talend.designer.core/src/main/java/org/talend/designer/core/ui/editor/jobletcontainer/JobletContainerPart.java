@@ -99,10 +99,10 @@ public class JobletContainerPart extends NodeContainerPart {
         if (rectangle == null) {
             return;
         }
-        Rectangle cleanRectangle = ((NodeContainer) this.getModel()).getNodeMarkRectangle();
+        // Rectangle cleanRectangle = ((NodeContainer) this.getModel()).getNodeMarkRectangle();
         if (this.getParent() != null) {
             if (this.getParent().getModel() instanceof SubjobContainer) {
-                Rectangle subjobRec = ((SubjobContainer) this.getParent().getModel()).getSubjobContainerRectangle();
+                // Rectangle subjobRec = ((SubjobContainer) this.getParent().getModel()).getSubjobContainerRectangle();
                 ((GraphicalEditPart) getParent()).setLayoutConstraint(this, getFigure(), rectangle);
             }
         }

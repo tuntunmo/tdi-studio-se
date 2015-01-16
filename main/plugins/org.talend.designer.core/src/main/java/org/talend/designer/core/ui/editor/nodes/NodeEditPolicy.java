@@ -36,6 +36,7 @@ public class NodeEditPolicy extends ComponentEditPolicy {
      * 
      * @see org.eclipse.gef.editpolicies.ComponentEditPolicy#getCommand(org.eclipse.gef.Request)
      */
+    @Override
     public Command getCommand(Request request) {
         return super.getCommand(request);
     }
@@ -45,6 +46,7 @@ public class NodeEditPolicy extends ComponentEditPolicy {
      * 
      * @see org.eclipse.gef.editpolicies.ComponentEditPolicy#createDeleteCommand(org.eclipse.gef.requests.GroupRequest)
      */
+    @Override
     protected Command createDeleteCommand(GroupRequest request) {
         if (((Node) getHost().getModel()).isReadOnly()) {
             return null;
@@ -53,6 +55,9 @@ public class NodeEditPolicy extends ComponentEditPolicy {
         for (int i = 0; i < request.getEditParts().size(); i++) {
             if (request.getEditParts().get(i) instanceof NodePart) {
                 INode node = ((INode) ((NodePart) request.getEditParts().get(i)).getModel());
+                if (node.isReadOnly()) {
+                    continue;
+                }
                 if (!nodeList.contains(node)) {
                     nodeList.add(node);
                 }

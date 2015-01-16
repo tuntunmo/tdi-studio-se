@@ -13,13 +13,17 @@
 package org.talend.designer.core;
 
 import java.util.List;
+import java.util.Map;
 
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.talend.core.IService;
 import org.talend.core.model.process.Element;
 import org.talend.core.model.process.IProcess2;
+import org.talend.core.ui.process.IGraphicalNode;
 import org.talend.designer.core.ui.editor.nodecontainer.NodeContainer;
 import org.talend.designer.core.ui.editor.nodes.Node;
+import org.talend.designer.core.ui.editor.subjobcontainer.SubjobContainer;
 
 /**
  * created by hwang on Jan 12, 2015 Detailled comment
@@ -33,6 +37,11 @@ public interface ITestContainerGEFService extends IService {
 
     public NodeContainer createJunitContainer(Node node);
 
-    public void setTestNodes(List<Node> testNodes, List<NodeContainer> nodeCons);
+    public void setTestNodes(Map<IGraphicalNode, IGraphicalNode> nodeMap, Map<SubjobContainer, List<Node>> subjobMap,
+            List<NodeContainer> nodeCons);
+
+    public Rectangle getJunitContainerRectangle(NodeContainer nodeContainer);
+
+    public boolean isTestContainer(IProcess2 process);
 
 }

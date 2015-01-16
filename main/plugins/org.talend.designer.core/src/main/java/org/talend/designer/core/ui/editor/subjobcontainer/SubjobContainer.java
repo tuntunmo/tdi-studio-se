@@ -23,6 +23,7 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.RGB;
 import org.talend.commons.ui.utils.image.ColorUtils;
+import org.talend.core.GlobalServiceRegister;
 import org.talend.core.model.process.EComponentCategory;
 import org.talend.core.model.process.EParameterFieldType;
 import org.talend.core.model.process.Element;
@@ -31,6 +32,7 @@ import org.talend.core.model.process.IConnectionCategory;
 import org.talend.core.model.process.IProcess2;
 import org.talend.core.model.process.ISubjobContainer;
 import org.talend.designer.core.DesignerPlugin;
+import org.talend.designer.core.ITestContainerGEFService;
 import org.talend.designer.core.model.components.EParameterName;
 import org.talend.designer.core.model.components.ElementParameter;
 import org.talend.designer.core.ui.editor.TalendEditor;
@@ -263,12 +265,22 @@ public class SubjobContainer extends Element implements ISubjobContainer {
     public Rectangle getSubjobContainerRectangle() {
         Rectangle totalRectangle = null;
         boolean collapsed = isCollapsed();
+        boolean isTestContainer = false;
+        ITestContainerGEFService testContainerService = null;
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(ITestContainerGEFService.class)) {
+            testContainerService = (ITestContainerGEFService) GlobalServiceRegister.getDefault().getService(
+                    ITestContainerGEFService.class);
+            if (testContainerService != null) {
+                isTestContainer = testContainerService.isTestContainer(this.process);
+            }
+        }
         // boolean hasJoblet = false;
         for (NodeContainer container : nodeContainers) {
             Rectangle curRect = null;
             if (container instanceof JobletContainer) {
                 curRect = ((JobletContainer) container).getJobletContainerRectangle();
-                // hasJoblet = true;
+            } else if (isTestContainer && testContainerService != null) {
+                curRect = testContainerService.getJunitContainerRectangle(container);
             } else {
                 curRect = container.getNodeContainerRectangle();
             }
@@ -306,6 +318,22 @@ public class SubjobContainer extends Element implements ISubjobContainer {
                     totalRectangle = totalRectangle.getUnion(curRect);
                 }
             }
+
+            if (isTestContainer) {
+                if (curRect.x == totalRectangle.x) {
+                    totalRectangle.setLocation(totalRectangle.getLocation().x - TalendEditor.GRID_SIZE,
+                            totalRectangle.getLocation().y);
+                    totalRectangle.setSize(totalRectangle.getSize().width + TalendEditor.GRID_SIZE,
+                            totalRectangle.getSize().height);
+                }
+                if (curRect.y == totalRectangle.y) {
+                    totalRectangle.setLocation(totalRectangle.getLocation().x, totalRectangle.getLocation().y
+                            - TalendEditor.GRID_SIZE);
+                    totalRectangle.setSize(totalRectangle.getSize().width, totalRectangle.getSize().height
+                            + TalendEditor.GRID_SIZE);
+                }
+            }
+
         }
 
         if (totalRectangle == null) {

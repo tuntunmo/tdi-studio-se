@@ -262,4 +262,37 @@ public class SubjobContainerFigure extends Figure {
             add(rectFig, null, 1);
         }
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.draw2d.Figure#setBounds(org.eclipse.draw2d.geometry.Rectangle)
+     */
+    @Override
+    public void setBounds(Rectangle rect) {
+        super.setBounds(rect);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.draw2d.Figure#setLocation(org.eclipse.draw2d.geometry.Point)
+     */
+    @Override
+    public void setLocation(Point p) {
+        // TODO Auto-generated method stub
+        super.setLocation(p);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.draw2d.Figure#setSize(int, int)
+     */
+    @Override
+    public void setSize(int w, int h) {
+        // TODO Auto-generated method stub
+        super.setSize(w, h);
+    }
+
 }
