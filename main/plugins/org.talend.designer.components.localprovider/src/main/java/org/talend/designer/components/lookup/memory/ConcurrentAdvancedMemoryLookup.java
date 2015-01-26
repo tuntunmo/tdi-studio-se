@@ -12,6 +12,7 @@
 // ============================================================================
 
 package org.talend.designer.components.lookup.memory;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -23,124 +24,129 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Class added and implemented to resolve thread safety issues surrounding the AdvancedMemoryLookup class
- * where across multiple partitions we would get various exceptions when multiple threads would try to use
- * the same lookup to save memory.
+ * Class added and implemented to resolve thread safety issues surrounding the AdvancedMemoryLookup class where across
+ * multiple partitions we would get various exceptions when multiple threads would try to use the same lookup to save
+ * memory.
+ * 
  * @param <V> V
  * @author rbaldwin
  */
-public class ConcurrentAdvancedMemoryLookup<V>  extends AdvancedMemoryLookup<V> implements IMemoryLookup<V, V>, Cloneable {
-	public class ConcurrentMultiLazyValuesMap extends java.util.concurrent.ConcurrentHashMap {
-		private ConcurrentHashMap map;
-		public ConcurrentMultiLazyValuesMap(ConcurrentHashMap map) {
-	        super();
-	        this.map = map;
-	    }
+public class ConcurrentAdvancedMemoryLookup<V> extends AdvancedMemoryLookup<V> implements IMemoryLookup<V, V>, Cloneable {
 
-	    public void clear() {
-	        map.clear();
-	    }
+    public class ConcurrentMultiLazyValuesMap extends java.util.HashMap {
 
-	    public boolean containsKey(Object key) {
-	        return map.containsKey(key);
-	    }
+        private ConcurrentHashMap map;
 
-	    public boolean containsValue(Object value) {
-	        return map.containsValue(value);
-	    }
+        public ConcurrentMultiLazyValuesMap(ConcurrentHashMap map) {
+            super();
+            this.map = map;
+        }
 
-	    public Set<ConcurrentHashMap.Entry> entrySet() {
-	        return map.entrySet();
-	    }
+        public void clear() {
+            map.clear();
+        }
 
-	    public Object get(Object key) {
-	        return map.get(key);
-	    }
+        public boolean containsKey(Object key) {
+            return map.containsKey(key);
+        }
 
-	    public boolean isEmpty() {
-	        return map.isEmpty();
-	    }
+        public boolean containsValue(Object value) {
+            return map.containsValue(value);
+        }
 
-	    public Set keySet() {
-	        return map.keySet();
-	    }
+        public Set<ConcurrentHashMap.Entry> entrySet() {
+            return map.entrySet();
+        }
 
-	    public Object put(Object key, Object value) {
-	        Object v = map.get(key);
-	        if (v != null) {
-	            if (v instanceof List) {
-	                ((List) v).add(value);
-	            } else {
-	                Collection list = instanciateNewCollection();
-	                list.add(v);
-	                list.add(value);
-	                map.put(key, list);
-	            }
-	        } else {
-	            return map.put(key, value);
-	        }
-	        return v;
-	    }
+        public Object get(Object key) {
+            return map.get(key);
+        }
 
-	    /**
-	     * DOC amaumont Comment method "instanciateNewList".
-	     * 
-	     * @return
-	     */
-	    public Collection instanciateNewCollection(){
-	    	return new CopyOnWriteArrayList();
-	    }
+        public boolean isEmpty() {
+            return map.isEmpty();
+        }
 
-	    public void putAll(Map t) {
-	        map.putAll(t);
-	    }
+        public Set keySet() {
+            return map.keySet();
+        }
 
-	    public Object remove(Object key) {
-	        return map.remove(key);
-	    }
+        public Object put(Object key, Object value) {
+            Object v = map.get(key);
+            if (v != null) {
+                if (v instanceof List) {
+                    ((List) v).add(value);
+                } else {
+                    Collection list = instanciateNewCollection();
+                    list.add(v);
+                    list.add(value);
+                    map.put(key, list);
+                }
+            } else {
+                return map.put(key, value);
+            }
+            return v;
+        }
 
-	    public int size() {
-	        return map.size();
-	    }
+        /**
+         * DOC amaumont Comment method "instanciateNewList".
+         * 
+         * @return
+         */
+        public Collection instanciateNewCollection() {
+            return new CopyOnWriteArrayList();
+        }
 
-	    public Collection values() {
-	        return map.values();
-	    }
+        public void putAll(Map t) {
+            map.putAll(t);
+        }
 
-	    public Object removeValue(Object key, Object value) {
-	        Object v = map.get(key);
-	        if (v != null) {
-	            if (v instanceof List) {
-	                ((List) v).remove(value);
-	                return value;
-	            } else if (value.equals(v)) {
-	                remove(key);
-	                return value;
-	            }
-	            return null;
-	        }
-	        return null;
-	    }
+        public Object remove(Object key) {
+            return map.remove(key);
+        }
 
-	    public Collection getCollection(Object key) {
-	        Object v = map.get(key);
-	        if (v != null) {
-	            if (v instanceof List) {
-	                return (Collection) v;
-	            } else {
-	                Collection list = instanciateNewCollection();
-	                list.add(v);
-	                map.put(key, list);
-	                return list;
-	            }
-	        } else {
-	            Collection list = instanciateNewCollection();
-	            map.put(key, list);
-	            return list;
-	        }
-	    }
-	}
-	private ConcurrentMultiLazyValuesMap mapOfCol;
+        public int size() {
+            return map.size();
+        }
+
+        public Collection values() {
+            return map.values();
+        }
+
+        public Object removeValue(Object key, Object value) {
+            Object v = map.get(key);
+            if (v != null) {
+                if (v instanceof List) {
+                    ((List) v).remove(value);
+                    return value;
+                } else if (value.equals(v)) {
+                    remove(key);
+                    return value;
+                }
+                return null;
+            }
+            return null;
+        }
+
+        public Collection getCollection(Object key) {
+            Object v = map.get(key);
+            if (v != null) {
+                if (v instanceof List) {
+                    return (Collection) v;
+                } else {
+                    Collection list = instanciateNewCollection();
+                    list.add(v);
+                    map.put(key, list);
+                    return list;
+                }
+            } else {
+                Collection list = instanciateNewCollection();
+                map.put(key, list);
+                return list;
+            }
+        }
+    }
+
+    private ConcurrentMultiLazyValuesMap mapOfCol;
 
     private Map<V, V> uniqueHash;
 
@@ -167,13 +173,15 @@ public class ConcurrentAdvancedMemoryLookup<V>  extends AdvancedMemoryLookup<V> 
     private static final int ONE = 1;
 
     int currentIndex = 0;
-    //ThreadLocal<java.util.concurrent.atomic.AtomicInteger> currentIndex;
+
+    // ThreadLocal<java.util.concurrent.atomic.AtomicInteger> currentIndex;
 
     private int sizeResultList;
 
     private boolean hasResult;
+
     private V lastCheckedKey;
-    
+
     public ConcurrentAdvancedMemoryLookup(MATCHING_MODE matchingMode, boolean keepAllValues, boolean countValuesForEachKey) {
         super();
         this.keepAllValues = keepAllValues;
@@ -181,73 +189,78 @@ public class ConcurrentAdvancedMemoryLookup<V>  extends AdvancedMemoryLookup<V> 
         this.countValuesForEachKey = countValuesForEachKey; // || this.matchingMode == MATCHING_MODE.UNIQUE_MATCH;
         if (matchingMode != MATCHING_MODE.ALL_ROWS) {
             if (matchingMode == MATCHING_MODE.UNIQUE_MATCH && !keepAllValues) {
-                uniqueHash = new ConcurrentHashMap<V, V>(1000,.75f, 1);
+                uniqueHash = new ConcurrentHashMap<V, V>(1000, .75f, 1);
             }
             if (this.countValuesForEachKey) {
                 counterHash = new ConcurrentHashMap<V, Integer>(1000, .75f, 1);
             }
-            mapOfCol = new ConcurrentMultiLazyValuesMap(new ConcurrentHashMap(1000,.75f,1));
+            mapOfCol = new ConcurrentMultiLazyValuesMap(new ConcurrentHashMap(1000, .75f, 1));
         }
     }
+
     public ConcurrentAdvancedMemoryLookup(ConcurrentAdvancedMemoryLookup<V> other) {
-    	super();
+        super();
         this.keepAllValues = other.keepAllValues;
         this.matchingMode = other.matchingMode == null ? MATCHING_MODE.UNIQUE_MATCH : other.matchingMode;
         this.countValuesForEachKey = other.countValuesForEachKey;
         if (matchingMode != MATCHING_MODE.ALL_ROWS) {
             if (matchingMode == MATCHING_MODE.UNIQUE_MATCH && !keepAllValues) {
-                uniqueHash = new ConcurrentHashMap<V,V>(other.uniqueHash.size(),.75f,1);
-                uniqueHash.putAll(other.uniqueHash);//new ConcurrentHashMap<V, V>(1000,.9f, 1);
+                uniqueHash = new ConcurrentHashMap<V, V>(other.uniqueHash.size(), .75f, 1);
+                uniqueHash.putAll(other.uniqueHash);// new ConcurrentHashMap<V, V>(1000,.9f, 1);
             }
             if (this.countValuesForEachKey) {
                 counterHash = new ConcurrentHashMap<V, Integer>(1000, .9f, 1);
                 counterHash.putAll(other.counterHash);
             }
-            mapOfCol = new ConcurrentMultiLazyValuesMap(new ConcurrentHashMap(1000,.9f,1));
+            mapOfCol = new ConcurrentMultiLazyValuesMap(new ConcurrentHashMap(1000, .9f, 1));
             mapOfCol.putAll(other.mapOfCol);
         }
     }
+
     public static synchronized <V> ConcurrentAdvancedMemoryLookup<V> copyLookup(ConcurrentAdvancedMemoryLookup<V> other) {
-    	ConcurrentAdvancedMemoryLookup<V> tmp = new ConcurrentAdvancedMemoryLookup<V>(other.matchingMode,other.keepAllValues, other.countValuesForEachKey);
-    	tmp.uniqueHash = other.uniqueHash;
-    	
-    	tmp.counterHash = other.counterHash;
-    	if (tmp.counterHash != null) {
-    		int tCHS = tmp.counterHash.size();
-    		int oCHS = other.counterHash.size();
-    	}
-    	tmp.mapOfCol = other.mapOfCol;
-    	if (tmp.mapOfCol != null) {
-    		int tMOCS = tmp.mapOfCol.size();
-    		int oMOCS = other.mapOfCol.size();
-    	}
-    	
-    	tmp.list = other.list;
-    	if (tmp.list != null) {
-    		int tls = tmp.list.size();
-    		int ols = other.list.size();
-    	}
-    	tmp.arrayValues = other.arrayValues;
-    	tmp.arrayIsDirty = other.arrayIsDirty;
-    	tmp.listResult = other.listResult;
-    	tmp.objectResult= other.objectResult;
-    	if (tmp.uniqueHash != null) {
-        	int tUHS = tmp.uniqueHash.size();
-        	int oUHS = other.uniqueHash.size();
+        ConcurrentAdvancedMemoryLookup<V> tmp = new ConcurrentAdvancedMemoryLookup<V>(other.matchingMode, other.keepAllValues,
+                other.countValuesForEachKey);
+        tmp.uniqueHash = other.uniqueHash;
+
+        tmp.counterHash = other.counterHash;
+        if (tmp.counterHash != null) {
+            int tCHS = tmp.counterHash.size();
+            int oCHS = other.counterHash.size();
         }
-    	
-    	return tmp;
+        tmp.mapOfCol = other.mapOfCol;
+        if (tmp.mapOfCol != null) {
+            int tMOCS = tmp.mapOfCol.size();
+            int oMOCS = other.mapOfCol.size();
+        }
+
+        tmp.list = other.list;
+        if (tmp.list != null) {
+            int tls = tmp.list.size();
+            int ols = other.list.size();
+        }
+        tmp.arrayValues = other.arrayValues;
+        tmp.arrayIsDirty = other.arrayIsDirty;
+        tmp.listResult = other.listResult;
+        tmp.objectResult = other.objectResult;
+        if (tmp.uniqueHash != null) {
+            int tUHS = tmp.uniqueHash.size();
+            int oUHS = other.uniqueHash.size();
+        }
+
+        return tmp;
     }
+
     public String getSnapshot() {
-    	String rc = "";
-    	rc += "arrayValues = ["+arrayValues+"]";
-    	rc += "\tarrIsDirts = ["+arrayIsDirty+"]";
-    	rc += "\tcounterHash = ["+counterHash+"]";
-    	rc += "\tlist = ["+list+"]";
-    	rc += "\tobjectResult = ["+objectResult+"]";
-    	rc += "\tlastCheckedKey = ["+lastCheckedKey+"]";
-    	return rc;
+        String rc = "";
+        rc += "arrayValues = [" + arrayValues + "]";
+        rc += "\tarrIsDirts = [" + arrayIsDirty + "]";
+        rc += "\tcounterHash = [" + counterHash + "]";
+        rc += "\tlist = [" + list + "]";
+        rc += "\tobjectResult = [" + objectResult + "]";
+        rc += "\tlastCheckedKey = [" + lastCheckedKey + "]";
+        return rc;
     }
+
     public static <V> ConcurrentAdvancedMemoryLookup<V> getLookup(MATCHING_MODE matchingMode) {
         return new ConcurrentAdvancedMemoryLookup<V>(matchingMode, false, false);
     }
@@ -317,14 +330,16 @@ public class ConcurrentAdvancedMemoryLookup<V>  extends AdvancedMemoryLookup<V> 
     }
 
     private static ThreadLocal<AtomicInteger> initializeCurIndex() {
-    	return new ThreadLocal<AtomicInteger>() {
-    		protected AtomicInteger initialValue() {
-    			return new AtomicInteger(0);
-    		}
-    	};
+        return new ThreadLocal<AtomicInteger>() {
+
+            protected AtomicInteger initialValue() {
+                return new AtomicInteger(0);
+            }
+        };
     }
+
     public void lookup(V key) {
-    	lastCheckedKey = key;
+        lastCheckedKey = key;
         if (matchingMode == MATCHING_MODE.UNIQUE_MATCH) {
             listResult = null;
             objectResult = uniqueHash.get(key);
@@ -333,7 +348,7 @@ public class ConcurrentAdvancedMemoryLookup<V>  extends AdvancedMemoryLookup<V> 
                 Object v = mapOfCol.get(key);
                 if (v instanceof List) {
                     List<V> localList = (List<V>) v;
-                    if (matchingMode == MATCHING_MODE.ALL_MATCHES) {                    	
+                    if (matchingMode == MATCHING_MODE.ALL_MATCHES) {
                         listResult = localList;
                         currentIndex = 0;
                         sizeResultList = localList.size();
@@ -358,7 +373,7 @@ public class ConcurrentAdvancedMemoryLookup<V>  extends AdvancedMemoryLookup<V> 
                 objectResult = null;
             }
         }
-        
+
     }
 
     public boolean hasNext() {
@@ -371,8 +386,8 @@ public class ConcurrentAdvancedMemoryLookup<V>  extends AdvancedMemoryLookup<V> 
     }
 
     public V next() {
-    	if (objectResult != null) {
-        	
+        if (objectResult != null) {
+
             hasResult = true;
             V object = objectResult;
             objectResult = null;
@@ -517,6 +532,7 @@ public class ConcurrentAdvancedMemoryLookup<V>  extends AdvancedMemoryLookup<V> 
 
     /**
      * Getter for matchingMode.
+     * 
      * @return the matchingMode
      */
     public MATCHING_MODE getMatchingMode() {
@@ -527,27 +543,26 @@ public class ConcurrentAdvancedMemoryLookup<V>  extends AdvancedMemoryLookup<V> 
     public Object clone() throws CloneNotSupportedException {
         return super.clone();
     }
-    
+
     /**
-     * Getter for id_Document lookup(for tXMLMap)
-     * Purpose : Get all value data storing in the lookup Object 
-     * Use case : When no basic lookup(not Document lookup) exists,but Document lookup exists
-     * for ALL,First Matching(When no basic lookup,not override the hashCode(),equals() method,so no List<V> value,only V value)
-     */ 
+     * Getter for id_Document lookup(for tXMLMap) Purpose : Get all value data storing in the lookup Object Use case :
+     * When no basic lookup(not Document lookup) exists,but Document lookup exists for ALL,First Matching(When no basic
+     * lookup,not override the hashCode(),equals() method,so no List<V> value,only V value)
+     */
     public void lookup() {
-    	List<V> localList = new ArrayList<V>();
-    	if(matchingMode == MATCHING_MODE.UNIQUE_MATCH) {
-    		for(V value : uniqueHash.values()) {
-    			localList.add(value);
-    		}
-    	} else {
-    		for(Object value : mapOfCol.values()) {
-    			localList.add((V)value);
-    		}
-    	}
-    	listResult = localList;
-		sizeResultList = localList.size();
-		objectResult = null;
-		currentIndex = 0;
+        List<V> localList = new ArrayList<V>();
+        if (matchingMode == MATCHING_MODE.UNIQUE_MATCH) {
+            for (V value : uniqueHash.values()) {
+                localList.add(value);
+            }
+        } else {
+            for (Object value : mapOfCol.values()) {
+                localList.add((V) value);
+            }
+        }
+        listResult = localList;
+        sizeResultList = localList.size();
+        objectResult = null;
+        currentIndex = 0;
     }
 }
