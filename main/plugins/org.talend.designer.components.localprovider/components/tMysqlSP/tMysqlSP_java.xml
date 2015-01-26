@@ -187,6 +187,36 @@
         </ITEM>
       </ITEMS>
     </PARAMETER>
+    
+    <PARAMETER
+	  NAME="NOTE"
+      FIELD="LABEL"
+      NUM_ROW="110"
+	  GROUP="DATASOURCE"
+	  SHOW_IF="USE_EXISTING_CONNECTION=='false'"
+    >
+    	<DEFAULT>This option only applies when deploying and running in the Talend Runtime</DEFAULT>
+    </PARAMETER>
+	<PARAMETER
+      NAME="SPECIFY_DATASOURCE_ALIAS"
+	  FIELD="CHECK"
+      NUM_ROW="115"
+      REQUIRED="true"
+	  GROUP="DATASOURCE"
+	  SHOW_IF="USE_EXISTING_CONNECTION=='false'"
+    >      
+    </PARAMETER>
+	<PARAMETER
+      NAME="DATASOURCE_ALIAS"
+	  FIELD="TEXT"
+      NUM_ROW="120"
+      REQUIRED="true"
+	  GROUP="DATASOURCE"
+	  SHOW_IF="(SPECIFY_DATASOURCE_ALIAS=='true' AND USE_EXISTING_CONNECTION=='false')"
+    >      
+		<DEFAULT>""</DEFAULT>
+    </PARAMETER>
+    
   </PARAMETERS>
 
   <ADVANCED_PARAMETERS>

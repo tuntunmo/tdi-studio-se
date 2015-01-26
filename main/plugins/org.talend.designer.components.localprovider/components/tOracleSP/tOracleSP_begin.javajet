@@ -27,13 +27,43 @@ imports="
 	String nlsLanguage = ElementParameterParser.getValue(node, "__NLS_LANGUAGE__");
 	String nlsTerritory = ElementParameterParser.getValue(node, "__NLS_TERRITORY__");
 	String dbVersion =  ElementParameterParser.getValue(node, "__DB_VERSION__");
+	%>
+	java.sql.Connection connection_<%=cid %> = null;
+<%
 if (useExistingConnection) {
 	String connection = ElementParameterParser.getValue(node, "__CONNECTION__");
 	String connectionName = "conn_" + connection;
 	%>
-	java.sql.Connection connection_<%=cid%> = (java.sql.Connection) globalMap.get("<%=connectionName%>");
+	connection_<%=cid%> = (java.sql.Connection) globalMap.get("<%=connectionName%>");
 	<%
+	INode connectionNode = null;
+	for (INode processNode : node.getProcess().getGeneratingNodes()) {
+		if(connection.equals(processNode.getUniqueName())) {
+			connectionNode = processNode;
+			break; 
+		} 
+	} 
+	boolean specify_alias = "true".equals(ElementParameterParser.getValue(connectionNode, "__SPECIFY_DATASOURCE_ALIAS__"));
+	if(specify_alias){
+		String alias = ElementParameterParser.getValue(connectionNode, "__DATASOURCE_ALIAS__"); 
+		%> 
+		if (null == connection_<%=cid %>) {
+			java.util.Map<String, routines.system.TalendDataSource> dataSources_<%=cid%> = (java.util.Map<String, routines.system.TalendDataSource>) globalMap.get(KEY_DB_DATASOURCES); 
+			connection_<%=cid %> = dataSources_<%=cid%>.get(<%=(null != alias && !("".equals(alias)))?alias:"\"\""%>).getConnection();
+		}
+	<%
+	}
 } else {
+	boolean specify_alias = "true".equals(ElementParameterParser.getValue(node, "__SPECIFY_DATASOURCE_ALIAS__"));
+	if(specify_alias){
+		String alias = ElementParameterParser.getValue(node, "__DATASOURCE_ALIAS__");
+	%>
+		java.util.Map<String, routines.system.TalendDataSource> dataSources_<%=cid%> = (java.util.Map<String, routines.system.TalendDataSource>) globalMap.get(KEY_DB_DATASOURCES);
+		if (null != dataSources_<%=cid%>) {
+			connection_<%=cid %> = dataSources_<%=cid%>.get(<%=(null != alias && !("".equals(alias)))?alias:"\"\""%>).getConnection();
+		} else {
+	<%
+	}
 	%>
 	<%if("ORACLE_11".equals(dbVersion) || "ORACLE_11-6".equals(dbVersion) || "ORACLE_12".equals(dbVersion) ){%>
     	java.lang.Class.forName("oracle.jdbc.OracleDriver");	
@@ -71,7 +101,7 @@ if (useExistingConnection) {
 <%
 	if(dbproperties == null || ("\"\"").equals(dbproperties) || ("").equals(dbproperties)) {
 %>
-	java.sql.Connection connection_<%=cid%> = java.sql.DriverManager.getConnection(connectionString_<%=cid%>, <%=dbuser%>, decryptedPassword_<%=cid%>);
+	connection_<%=cid%> = java.sql.DriverManager.getConnection(connectionString_<%=cid%>, <%=dbuser%>, decryptedPassword_<%=cid%>);
 <%
 	} else {
 %>
@@ -81,12 +111,14 @@ if (useExistingConnection) {
 	atnParamsPrope_<%=cid%>.put("user",<%=dbuser%>);
 	atnParamsPrope_<%=cid%>.put("password",decryptedPassword_<%=cid%>);
 	atnParamsPrope_<%=cid%>.load(new java.io.ByteArrayInputStream(atnParams_<%=cid%>.getBytes()));
-	java.sql.Connection connection_<%=cid%> = java.sql.DriverManager.getConnection(connectionString_<%=cid%>, atnParamsPrope_<%=cid%>);
+	connection_<%=cid%> = java.sql.DriverManager.getConnection(connectionString_<%=cid%>, atnParamsPrope_<%=cid%>);
 <%
 	}
-%>
-	
+	if(specify_alias){
+	%>
+		}
 	<%
+	}
 }
 
 %>
