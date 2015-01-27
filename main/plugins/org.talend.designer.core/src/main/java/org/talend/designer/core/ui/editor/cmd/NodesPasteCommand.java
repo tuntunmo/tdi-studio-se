@@ -362,10 +362,19 @@ public class NodesPasteCommand extends Command {
 
         // see bug 0004882: Subjob title is not copied when copying/pasting subjobs from one job to another
         Map<INode, SubjobContainer> mapping = new HashMap<INode, SubjobContainer>();
-
-        Map<SubjobContainer, List<Node>> subjobMap = new HashMap<SubjobContainer, List<Node>>();
+        ITestContainerGEFService testContainerService = null;
+        Map<SubjobContainer, List<Node>> junitGroup = null;
         if (isJunitCreate()) {
-            initSubjobMap(subjobMap);
+            if (GlobalServiceRegister.getDefault().isServiceRegistered(ITestContainerGEFService.class)) {
+                testContainerService = (ITestContainerGEFService) GlobalServiceRegister.getDefault().getService(
+                        ITestContainerGEFService.class);
+                if (testContainerService != null) {
+                    junitGroup = testContainerService.caculateJunitGroup(nodeParts);
+                }
+            }
+            if (nodeMap == null) {
+                nodeMap = new HashMap<IGraphicalNode, IGraphicalNode>();
+            }
         }
 
         // create the nodes
@@ -564,18 +573,13 @@ public class NodesPasteCommand extends Command {
             }
 
             NodeContainer nc = null;
-            boolean firstNode = false;
-            List<Node> pastedNodeList = subjobMap.get(((Node) copiedNode).getNodeContainer().getSubjobContainer());
-            if (pastedNodeList != null && pastedNodeList.size() > 0) {
-                firstNode = pastedNodeList.get(0) == copiedNode;
+            List<Node> pastedNodeList = null;
+            if (junitGroup != null) {
+                pastedNodeList = junitGroup.get(((Node) copiedNode).getNodeContainer().getSubjobContainer());
             }
-            if (firstNode && isJunitCreate()) {
-                if (GlobalServiceRegister.getDefault().isServiceRegistered(ITestContainerGEFService.class)) {
-                    ITestContainerGEFService testContainerService = (ITestContainerGEFService) GlobalServiceRegister.getDefault()
-                            .getService(ITestContainerGEFService.class);
-                    if (testContainerService != null) {
-                        nc = testContainerService.createJunitContainer((Node) pastedNode);
-                    }
+            if (((Node) copiedNode).isJunitStart() && isJunitCreate()) {
+                if (testContainerService != null) {
+                    nc = testContainerService.createJunitContainer((Node) pastedNode);
                 }
             } else if (((Node) pastedNode).isJoblet() || ((Node) pastedNode).isMapReduce()) {
                 nc = new JobletContainer((Node) pastedNode);
@@ -802,12 +806,8 @@ public class NodesPasteCommand extends Command {
             }
         }
         if (isJunitCreate()) {
-            if (GlobalServiceRegister.getDefault().isServiceRegistered(ITestContainerGEFService.class)) {
-                ITestContainerGEFService testContainerService = (ITestContainerGEFService) GlobalServiceRegister.getDefault()
-                        .getService(ITestContainerGEFService.class);
-                if (testContainerService != null) {
-                    testContainerService.setTestNodes(nodeMap, subjobMap, nodeContainerList);
-                }
+            if (testContainerService != null) {
+                testContainerService.setTestNodes(nodeMap, junitGroup, nodeContainerList);
             }
         }
 
@@ -971,29 +971,6 @@ public class NodesPasteCommand extends Command {
 
     public void setNodeMap(Map<IGraphicalNode, IGraphicalNode> nodeMap) {
         this.nodeMap = nodeMap;
-    }
-
-    private void initSubjobMap(Map<SubjobContainer, List<Node>> subjobMap) {
-        for (NodePart copiedNodePart : nodeParts) {
-            IGraphicalNode copiedNode = (IGraphicalNode) copiedNodePart.getModel();
-            if (!(copiedNode instanceof Node)) {
-                continue;
-            }
-            SubjobContainer sub = ((Node) copiedNode).getNodeContainer().getSubjobContainer();
-            if (sub == null) {
-                continue;
-            }
-            if (!subjobMap.containsValue(sub)) {
-                List<Node> testNodes = new ArrayList<Node>();
-                testNodes.add((Node) copiedNode);
-                subjobMap.put(sub, testNodes);
-            } else {
-                subjobMap.get(sub).add((Node) copiedNode);
-            }
-        }
-        if (nodeMap == null) {
-            nodeMap = new HashMap<IGraphicalNode, IGraphicalNode>();
-        }
     }
 
 }

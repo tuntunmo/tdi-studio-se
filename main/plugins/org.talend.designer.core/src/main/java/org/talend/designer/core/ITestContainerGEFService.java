@@ -23,6 +23,7 @@ import org.talend.core.model.process.IProcess2;
 import org.talend.core.ui.process.IGraphicalNode;
 import org.talend.designer.core.ui.editor.nodecontainer.NodeContainer;
 import org.talend.designer.core.ui.editor.nodes.Node;
+import org.talend.designer.core.ui.editor.nodes.NodePart;
 import org.talend.designer.core.ui.editor.subjobcontainer.SubjobContainer;
 
 /**
@@ -37,11 +38,13 @@ public interface ITestContainerGEFService extends IService {
 
     public NodeContainer createJunitContainer(Node node);
 
-    public void setTestNodes(Map<IGraphicalNode, IGraphicalNode> nodeMap, Map<SubjobContainer, List<Node>> subjobMap,
+    public void setTestNodes(Map<IGraphicalNode, IGraphicalNode> nodeMap, Map<SubjobContainer, List<Node>> junitGroup,
             List<NodeContainer> nodeCons);
 
     public Rectangle getJunitContainerRectangle(NodeContainer nodeContainer);
 
     public boolean isTestContainer(IProcess2 process);
+
+    public Map<SubjobContainer, List<Node>> caculateJunitGroup(List<NodePart> nodeParts);
 
 }
