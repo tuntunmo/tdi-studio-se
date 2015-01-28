@@ -683,4 +683,9 @@ public class JobContextLoadComponent implements IComponent {
     public boolean isLog4JEnabled() {
         return false;
     }
+
+    @Override
+    public boolean isAllowedPropagated() {
+        return true;
+    }
 }

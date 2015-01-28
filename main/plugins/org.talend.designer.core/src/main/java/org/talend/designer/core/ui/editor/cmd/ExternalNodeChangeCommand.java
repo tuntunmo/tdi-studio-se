@@ -304,10 +304,13 @@ public class ExternalNodeChangeCommand extends Command {
                         initTraceList.add(connection);
                     }
                     INode connTar = connection.getTarget();
+                    boolean isAllowedPropagated = connTar.getComponent().isAllowedPropagated();
                     boolean openDialog = false;
                     Map<String, Boolean> jobletMap = new HashMap<String, Boolean>();
                     if (isForTemlate()) {
                         openDialog = true;
+                    } else if (!isAllowedPropagated) {
+                        openDialog = false;
                     } else {
                         openDialog = getPropagate(connection, jobletMap);
                     }

@@ -604,4 +604,9 @@ public abstract class AbstractStatsLogsComponent implements IComponent {
         return false;
     }
 
+    @Override
+    public boolean isAllowedPropagated() {
+        return true;
+    }
+
 }
