@@ -329,8 +329,8 @@
 		<IMPORT NAME="commons-fileupload"   MODULE="commons-fileupload-1.0.jar" UrlPath="platform:/plugin/org.talend.libraries.apache.common/lib/commons-fileupload-1.0.jar" REQUIRED="true" />
 		<IMPORT NAME="commons-pool"         MODULE="commons-pool-1.2.jar" UrlPath="platform:/plugin/org.talend.libraries.apache.common/lib/commons-pool-1.2.jar" REQUIRED="true" />
 		<IMPORT NAME="commons-digester"     MODULE="commons-digester-1.7.jar" UrlPath="platform:/plugin/org.talend.libraries.apache.common/lib/commons-digester-1.7.jar" REQUIRED="true" />
-		<IMPORT NAME="commons-httpclient"   MODULE="commons-httpclient-3.0.1.jar" UrlPath="platform:/base/plugins/org.apache.commons.httpclient_3.0.1.v201005080501.jar" REQUIRED="true" />
-		<IMPORT NAME="commons-codec"        MODULE="commons-codec-1.3.jar" UrlPath="platform:/base/plugins/org.apache.commons.codec_1.3.0.v201101211617.jar" REQUIRED="true" />
+		<IMPORT NAME="commons-httpclient"   MODULE="commons-httpclient-3.0.1.jar" UrlPath="platform:/plugin/org.talend.libraries.apache.http/lib/commons-httpclient-3.0.1.jar" REQUIRED="true" />
+		<IMPORT NAME="commons-codec"        MODULE="commons-codec-1.6.jar" UrlPath="platform:/base/plugins/org.apache.commons.codec_1.6.0.v201305230611.jar" REQUIRED="true" />
 		<IMPORT NAME="Driver-MySql"         MODULE="mysql-connector-java-5.1.30-bin.jar" REQUIRED="true" />
 		<IMPORT NAME="Driver-DB2" 			MODULE="db2jcc.jar" REQUIRED="true" />
 		<IMPORT NAME="Driver-DB2-LICENSE-CISUZ" MODULE="db2jcc_license_cisuz.jar" REQUIRED="true" />

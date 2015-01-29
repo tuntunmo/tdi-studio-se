@@ -92,7 +92,7 @@
 			<IMPORT NAME="JAXB-api" MODULE="jaxb-api-2.2.jar" UrlPath="platform:/plugin/org.talend.libraries.apache.axis2/lib/jaxb-api-2.2.jar" REQUIRED="true" />
 			<IMPORT NAME="JAXB-impl" MODULE="jaxb-impl-2.1.8.jar" UrlPath="platform:/plugin/org.talend.libraries.apache.axis2/lib/jaxb-impl-2.1.8.jar" REQUIRED="true" />
 			<IMPORT NAME="jsr173" MODULE="jsr173_1.0_api.jar" UrlPath="platform:/plugin/org.talend.libraries.ebcdic/lib/jsr173_1.0_api.jar" REQUIRED="true" />
-			<IMPORT NAME="commons-lang" MODULE="commons-lang-2.4.jar" UrlPath="platform:/base/plugins/org.apache.commons.lang_2.4.0.v201005080502.jar" REQUIRED="true" />
+			<IMPORT NAME="commons-lang" MODULE="commons-lang-2.6.jar" UrlPath="platform:/base/plugins/org.apache.commons.lang_2.6.0.v201404270220.jar" REQUIRED="true" />
 			<IMPORT NAME="commons-logging" MODULE="commons-logging-1.1.1.jar" UrlPath="platform:/base/plugins/org.apache.commons.logging_1.1.1.v201101211721.jar" REQUIRED="true" />
 			<IMPORT NAME="cobolX" MODULE="cobolX.jar" UrlPath="platform:/plugin/org.talend.libraries.ebcdic/lib/cobolX.jar" REQUIRED="true" />
 		</IMPORTS>

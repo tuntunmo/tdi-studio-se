@@ -219,7 +219,7 @@ for(int i = 0; i &lt; result.length; i++){
 				REQUIRED="true" />
 			<IMPORT NAME="COMMONSHTTPCLIENT" MODULE="commons-httpclient-3.1.jar" UrlPath="platform:/plugin/org.talend.libraries.apache.http/lib/commons-httpclient-3.1.jar"
 				REQUIRED="true" />
-			<IMPORT NAME="COMMONSCODEC" MODULE="commons-codec-1.3.jar" UrlPath="platform:/base/plugins/org.apache.commons.codec_1.3.0.v201101211617.jar"
+			<IMPORT NAME="COMMONSCODEC" MODULE="commons-codec-1.6.jar" UrlPath="platform:/base/plugins/org.apache.commons.codec_1.6.0.v201305230611.jar"
 				REQUIRED="true" />
 
 

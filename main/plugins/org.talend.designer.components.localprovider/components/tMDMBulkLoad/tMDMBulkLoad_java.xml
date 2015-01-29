@@ -105,7 +105,7 @@
   <CODEGENERATION>
     <IMPORTS>
       <IMPORT NAME="MDM-Bulkloadclient" MODULE="bulkloadclient.jar" REQUIRED="true" />
-      <IMPORT NAME="SOAP-codec" MODULE="commons-codec.jar" UrlPath="platform:/base/plugins/org.apache.commons.codec_1.3.0.v201101211617.jar" REQUIRED="true" />
+      <IMPORT NAME="SOAP-codec" MODULE="commons-codec-1.6.jar" UrlPath="platform:/base/plugins/org.apache.commons.codec_1.6.0.v201305230611.jar" REQUIRED="true" />
       <IMPORT NAME="SOAP-httpclient" MODULE="commons-httpclient.jar" UrlPath="platform:/plugin/org.talend.libraries.apache.http/lib/commons-httpclient.jar" REQUIRED="true" />
       <IMPORT NAME="SOAP-logging" MODULE="commons-logging.jar" UrlPath="platform:/base/plugins/org.apache.commons.logging_1.1.1.v201101211721.jar" REQUIRED="true" />
     </IMPORTS>

@@ -180,7 +180,7 @@
 				REQUIRED="true" />
 			<IMPORT NAME="commons-collections" MODULE="commons-collections-3.1.jar" UrlPath="platform:/plugin/org.talend.libraries.apache.common/lib/commons-collections-3.1.jar"
 				REQUIRED="true" />
-			<IMPORT NAME="commons-lang" MODULE="commons-lang-2.4.jar" UrlPath="platform:/base/plugins/org.apache.commons.lang_2.4.0.v201005080502.jar"
+			<IMPORT NAME="commons-lang" MODULE="commons-lang-2.6.jar" UrlPath="platform:/base/plugins/org.apache.commons.lang_2.6.0.v201404270220.jar"
 				REQUIRED="true" />
 			<IMPORT NAME="dom4j" MODULE="dom4j-1.6.1.jar" UrlPath="platform:/plugin/org.talend.libraries.dom4j-jaxen/lib/dom4j-1.6.1.jar" BundleID="org.apache.servicemix.bundles.dom4j"
 				REQUIRED="true" />

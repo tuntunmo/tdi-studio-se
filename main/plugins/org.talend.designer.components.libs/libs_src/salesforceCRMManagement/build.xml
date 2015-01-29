@@ -21,7 +21,7 @@
 		<pathelement location="${axis2.dir}/axis2-kernel-1.6.2.jar" />
 		<pathelement location="${axis2.dir}/axis2-transport-http-1.6.2.jar" />
 		<pathelement location="${axis2.dir}/axis2-transport-local-1.6.2.jar" />
-		<pathelement location="${targetplugin.dir}/org.apache.commons.codec_1.3.0.v201101211617.jar" />
+		<pathelement location="${targetplugin.dir}/org.apache.commons.codec_1.6.0.v201305230611.jar" />
         <pathelement location="${http.dir}/commons-httpclient-3.1.jar" />
 		<pathelement location="${targetplugin.dir}/org.apache.commons.logging_1.1.1.v201101211721.jar" />
 		<pathelement location="${http.dir}/httpcore-4.0.jar" />
