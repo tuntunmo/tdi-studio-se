@@ -389,6 +389,17 @@ public class SalesforceBulkAPI {
         closeFileRead();
         return resultInfoList;
     }
+    
+    public org.talend.salesforceBulk.ResultSet getQueryResultSet(String resultId) throws AsyncApiException, IOException, ConnectionException {
+        baseFileReader = new com.talend.csv.CSVReader(new java.io.BufferedReader(new java.io.InputStreamReader(
+                connection.getQueryResultStream(job.getId(), batchInfoList.get(0).getId(), resultId), FILE_ENCODING)), ',');
+
+        if (baseFileReader.readNext()) {
+            baseFileHeader = Arrays.asList(baseFileReader.getValues());
+        }
+        baseFileHeaderSize = baseFileHeader.size();
+        return new org.talend.salesforceBulk.ResultSet(baseFileReader ,baseFileHeader);
+    }
 
     // for TDI-26832
     public void closeFileRead() throws IOException {

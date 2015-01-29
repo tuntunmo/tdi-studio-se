@@ -338,9 +338,9 @@ if ((metadatas != null) && (metadatas.size() > 0)) {
 					sforceBulk_<%=cid%>.doBulkQuery(<%=sObject%>, sql_<%=cid%>.toString(), 30);
 					String[] queryResultIDs_<%=cid%> = sforceBulk_<%=cid%>.getQueryResultIDs();
 					for(String queryResultId_<%=cid%> : queryResultIDs_<%=cid%>){
-						java.util.List<java.util.Map<String,String>> resultListMessage_<%=cid%> = sforceBulk_<%=cid%>.getQueryResult(queryResultId_<%=cid%>);
-						for(java.util.Map<String,String> resultMessage_<%=cid%> : resultListMessage_<%=cid%>){
-							
+						org.talend.salesforceBulk.ResultSet resultSet_<%=cid%> = sforceBulk_<%=cid%>.getQueryResultSet(queryResultId_<%=cid%>);
+						java.util.Map<String,String> resultMessage_<%=cid%> = null;
+						while((resultMessage_<%=cid%> = resultSet_<%=cid%>.next())!=null){
 							nb_line_<%=cid%>++;		
 							String value_<%=cid%> = null;		
 				<%

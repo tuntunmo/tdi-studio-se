@@ -2,8 +2,9 @@
 <project name="org.talend.designer.components.libs" default="process" basedir=".">
 	
 	<property name="component.plugin.home" value="../../../org.talend.designer.components.localprovider/components" />
-	<property name="csv.dir" value="../../../org.talend.libraries.csv/lib" />
-	<property name="lib.dir" value="../../../org.talend.libraries.salesforce/lib" />
+	<property name="csv.dir" value="../../../../../../tcommon-studio-se/main/plugins/org.talend.libraries.csv/lib" />
+	<property name="salesforce.dir" value="../../../org.talend.libraries.salesforce/lib" />
+	<property name="lib.dir" value="${salesforce.dir}" />
 
 	<!-- #################################################### -->
 
@@ -15,6 +16,7 @@
 
 	<!-- modification 2: compile classpath -->
 	<path id="compile.classpath">
+		<pathelement location="${salesforce.dir}/salesforceOAuth.jar" />
 		<pathelement location="${component.plugin.home}/tSalesforceBulkExec/partnerBulk.jar" />
 		<pathelement location="${component.plugin.home}/tSalesforceBulkExec/wsc.jar" />
 		<pathelement location="${csv.dir}/talendcsv.jar" />
