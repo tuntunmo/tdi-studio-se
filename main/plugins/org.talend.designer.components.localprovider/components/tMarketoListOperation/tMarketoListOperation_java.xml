@@ -92,7 +92,7 @@
     </PARAMETER>
 
 	<PARAMETER NAME="ENDPOINT" FIELD="TEXT" NUM_ROW="10" REQUIRED="true">
-		<DEFAULT>"https://123-ABC-456.mktoapi.com/soap/mktows/2_2"</DEFAULT>
+		<DEFAULT>"https://123-ABC-456.mktoapi.com/soap/mktows/2_7"</DEFAULT>
 	</PARAMETER>
 	<PARAMETER NAME="SECRET_KEY" FIELD="PASSWORD" NUM_ROW="20" REQUIRED="true">
 		<DEFAULT>""</DEFAULT>
@@ -133,7 +133,7 @@
 		<IMPORT NAME="SOAP-JAF" MODULE="activation.jar" UrlPath="platform:/plugin/org.talend.libraries.apache.axis2/lib/activation.jar" REQUIRED="true" />
 		<IMPORT NAME="XML-DOM4J" MODULE="dom4j-1.6.1.jar" UrlPath="platform:/plugin/org.talend.libraries.dom4j-jaxen/lib/dom4j-1.6.1.jar" REQUIRED="true" BundleID="" />
 		<IMPORT NAME="XML-XPATH-JAXEN" MODULE="jaxen-1.1.1.jar" UrlPath="platform:/plugin/org.talend.libraries.dom4j-jaxen/lib/jaxen-1.1.1.jar" REQUIRED="true" BundleID="" />
-		<IMPORT NAME="TALEND-MARKETO" MODULE="talend-marketo.jar" REQUIRED="true" />
+		<IMPORT NAME="TALEND-MARKETO" MODULE="talend-marketo-2.7.jar" REQUIRED="true" />
 	</IMPORTS>
   </CODEGENERATION>
 
