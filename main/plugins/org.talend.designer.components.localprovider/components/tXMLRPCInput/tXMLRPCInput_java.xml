@@ -159,7 +159,7 @@
       <IMPORT NAME="XMLRPC-client" MODULE="xmlrpc-client-3.0.jar" UrlPath="platform:/plugin/org.talend.libraries.apache.xml/lib/xmlrpc-client-3.0.jar" REQUIRED="true" />
       <IMPORT NAME="XMLRPC-common" MODULE="xmlrpc-common-3.0.jar" UrlPath="platform:/plugin/org.talend.libraries.apache.xml/lib/xmlrpc-common-3.0.jar" REQUIRED="true" />
       <IMPORT NAME="COMMONS-Logging" MODULE="commons-logging-1.1.jar" UrlPath="platform:/plugin/org.talend.libraries.apache.common/lib/commons-logging-1.1.jar" REQUIRED="true" />
-  	  <IMPORT NAME="COMMONS-codec" MODULE="commons-codec-1.6.jar" UrlPath="platform:/base/plugins/org.apache.commons.codec_1.6.0.v201305230611.jar" REQUIRED="true" />
+  	  <IMPORT NAME="COMMONS-codec" MODULE="commons-codec-1.6.jar" UrlPath="platform:/plugin/org.talend.libraries.apache.common/lib/commons-codec-1.6.jar" REQUIRED="true" />
   	  <IMPORT NAME="XMLPRC-AUTIL" MODULE="autil.jar" REQUIRED="true" />
     </IMPORTS>
   </CODEGENERATION>

@@ -129,8 +129,8 @@
 
    <CODEGENERATION>
      <IMPORTS>
-       <IMPORT NAME="Commons-Codec" MODULE="commons-codec-1.6.jar" UrlPath="platform:/base/plugins/org.apache.commons.codec_1.6.0.v201305230611.jar" REQUIRED="true" />
-       <IMPORT NAME="Commons-Lang" MODULE="commons-lang-2.1.jar" UrlPath="platform:/base/plugins/org.apache.commons.lang_2.1.0.v201005080500.jar" REQUIRED="true" />
+       <IMPORT NAME="Commons-Codec" MODULE="commons-codec-1.6.jar" UrlPath="platform:/plugin/org.talend.libraries.apache.common/lib/commons-codec-1.6.jar" REQUIRED="true" />
+       <IMPORT NAME="Commons-Lang" MODULE="commons-lang-2.6.jar" UrlPath="platform:/base/plugins/org.apache.commons.lang_2.6.0.v201404270220.jar" REQUIRED="true" />
      </IMPORTS>
    </CODEGENERATION>
 

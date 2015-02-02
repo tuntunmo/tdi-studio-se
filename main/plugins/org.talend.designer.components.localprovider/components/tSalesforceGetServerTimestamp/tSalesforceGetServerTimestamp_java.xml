@@ -255,7 +255,7 @@
 			REQUIRED="true" />
 		<IMPORT NAME="axis2-transport-http" MODULE="axis2-transport-http-1.6.2.jar" UrlPath="platform:/plugin/org.talend.libraries.apache.axis2/lib/axis2-transport-http-1.6.2.jar" REQUIRED="true" />
 		<IMPORT NAME="axis2-transport-local" MODULE="axis2-transport-local-1.6.2.jar" UrlPath="platform:/plugin/org.talend.libraries.apache.axis2/lib/axis2-transport-local-1.6.2.jar" REQUIRED="true" />
-		<IMPORT NAME="commons-codec" MODULE="commons-codec-1.6.jar" UrlPath="platform:/base/plugins/org.apache.commons.codec_1.6.0.v201305230611.jar"
+		<IMPORT NAME="commons-codec" MODULE="commons-codec-1.6.jar" UrlPath="platform:/plugin/org.talend.libraries.apache.common/lib/commons-codec-1.6.jar"
 			REQUIRED="true" />
 		<IMPORT NAME="commons-httpclient"
 			MODULE="commons-httpclient-3.1.jar" UrlPath="platform:/plugin/org.talend.libraries.apache.http/lib/commons-httpclient-3.1.jar" REQUIRED="true" />
