@@ -49,7 +49,7 @@ public class TalendScalableFreeformRootEditPart extends ScalableFreeformRootEdit
 
     private double[] zoomLevels = { .05, .1, .25, .5, .75, 1, 1.25, 1.5, 1.75, 2, 4 };
 
-    private TalendGridLayer gridLayer;
+    private GridLayer gridLayer;
 
     private FeedbackLayer feedbackLayer;
 

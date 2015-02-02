@@ -232,6 +232,7 @@ public class ProcessPart extends AbstractGraphicalEditPart implements PropertyCh
      * 
      * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
+    @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         String prop = evt.getPropertyName();
         if (Process.NEED_UPDATE_JOB.equals(prop)) {

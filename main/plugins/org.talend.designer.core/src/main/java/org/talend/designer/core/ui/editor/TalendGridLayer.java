@@ -18,6 +18,8 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.editparts.GridLayer;
 import org.eclipse.swt.graphics.Color;
+import org.talend.commons.ui.runtime.image.EImage;
+import org.talend.commons.ui.runtime.image.ImageProvider;
 
 /**
  * Grid that will be used for the designer. (modification of the default grid to have black points)
@@ -41,7 +43,13 @@ public class TalendGridLayer extends GridLayer {
 
     protected void paintGrid(Graphics g, IFigure f, org.eclipse.draw2d.geometry.Point origin, int distanceX, int distanceY) {
         Rectangle clip = g.getClip(Rectangle.SINGLETON);
-
+        // if (origin.x != 0) {
+        // System.out.println(origin.toString());
+        // }
+        // if (true) {
+        // super.paintGrid(g);
+        // return;
+        // }
         if (distanceX > 0 && distanceY > 0) {
             if (origin.x >= clip.x) {
                 while (origin.x - distanceX >= clip.x) {
@@ -65,7 +73,12 @@ public class TalendGridLayer extends GridLayer {
 
             for (int i = origin.x; i < clip.x + clip.width; i += distanceX) {
                 for (int j = origin.y; j < clip.y + clip.height; j += distanceY) {
-                    g.drawPoint(i, j);
+                    // g.drawPoint(i, j);
+                    int re = Math.abs(i - j);
+                    if (re / distanceY % 2 == 0) {
+                        g.drawImage(ImageProvider.getImage(EImage.CHESS_GRAY), i, j);
+                    }
+
                 }
             }
         }

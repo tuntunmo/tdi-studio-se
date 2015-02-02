@@ -174,7 +174,8 @@ public class SubjobContainerFigure extends Figure {
         outlineFigure.setForegroundColor(new Color(Display.getDefault(), subjobTitleColor));
         outlineFigure.setSize(rectangle.width, preferedSize.height);
 
-        collapseFigure.setLocation(new Point(rectangle.width - preferedSize.height + location.x, location.y));
+        // collapseFigure.setLocation(new Point(rectangle.width - preferedSize.height + location.x, location.y));
+        collapseFigure.setLocation(new Point(location.x, location.y));
         collapseFigure.setSize(preferedSize.height, preferedSize.height);
         // collapseFigure.setBackgroundColor(new Color(null, 50, 50, 250));
 

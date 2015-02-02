@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.draw2d.Graphics;
-import org.eclipse.draw2d.PolygonDecoration;
 import org.eclipse.draw2d.PolylineConnection;
 import org.eclipse.swt.graphics.Color;
 import org.talend.commons.ui.runtime.image.EImage;
@@ -76,7 +75,14 @@ public class ConnectionFigure extends PolylineConnection {
     public ConnectionFigure(IConnection connection, IConnectionProperty connectionProperty, INode node) {
         linkedNode = node;
         this.connection = connection;
-        setTargetDecoration(new PolygonDecoration());
+        // this.setLineStyle(Graphics.LINE_SOLID);
+        setDecoration();
+        this.setLineWidth(2);
+        // this.setBorder(new
+        // org.eclipse.draw2d.LineBorder(ColorUtils.getCacheColor(ColorUtils.parseStringToRGB("255;255;255"))));
+        // this.setSmoothness(SMOOTH_MORE);
+        // this.setRoundedBendpointsRadius(12);
+        // setTargetDecoration(new PolygonDecoration());
         setConnectionProperty(connectionProperty);
 
         if (PluginChecker.isAutoParalelPluginLoaded()) {
@@ -86,6 +92,11 @@ public class ConnectionFigure extends PolylineConnection {
                 initFigureMap();
             }
         }
+    }
+
+    private void setDecoration() {
+        setTargetDecoration(new DecorationFigure(this, true));
+        setSourceDecoration(new DecorationFigure(this, false));
     }
 
     private void initFigureMap() {
@@ -279,6 +290,11 @@ public class ConnectionFigure extends PolylineConnection {
      */
     public IConnection getConnection() {
         return this.connection;
+    }
+
+    @Override
+    protected void outlineShape(Graphics g) {
+        super.outlineShape(g);
     }
 
 }

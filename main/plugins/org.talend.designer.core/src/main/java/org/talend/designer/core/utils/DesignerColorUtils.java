@@ -26,7 +26,7 @@ public final class DesignerColorUtils {
 
     public static final RGB SUBJOB_TITLE_COLOR = new RGB(160, 190, 240);
 
-    public static final RGB SUBJOB_COLOR = new RGB(220, 220, 250);
+    public static final RGB SUBJOB_COLOR = new RGB(218, 247, 252);
 
     public static final RGB JOBLET_COLOR = new RGB(130, 240, 100);
 

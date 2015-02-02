@@ -180,6 +180,10 @@ public class ConnectionPart extends AbstractConnectionEditPart implements Proper
         ConnectionFigure connection = new ConnectionFigure(conn, conn.getSourceNodeConnector().getConnectionProperty(
                 conn.getLineStyle()), conn.getSource());
 
+        BezierCurveConnectionRouter curvrRouter = new BezierCurveConnectionRouter();
+        connection.setLineWidth(2);
+        connection.setConnectionRouter(curvrRouter);
+
         if (((Connection) getModel()).isActivate()) {
             connection.setAlpha(-1);
         } else {
