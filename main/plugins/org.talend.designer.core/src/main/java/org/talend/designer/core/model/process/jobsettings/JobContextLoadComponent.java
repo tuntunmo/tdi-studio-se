@@ -48,9 +48,9 @@ import org.talend.designer.core.model.process.jobsettings.JobSettingsConstants.C
  */
 public class JobContextLoadComponent implements IComponent {
 
-    private static final String FILE_INPUT_DELIMITED = "Delimited"; //$NON-NLS-1$
+    private static final String FILE_INPUT_REGEX = "Regex"; //$NON-NLS-1$
 
-    private static final String FILE_INPUT_COMPONENT = "tFileInputDelimited"; //$NON-NLS-1$
+    private static final String FILE_INPUT_COMPONENT = "tFileInputRegex"; //$NON-NLS-1$
 
     private static final String CONTEXT_LOAD = "Context"; //$NON-NLS-1$
 
@@ -74,9 +74,9 @@ public class JobContextLoadComponent implements IComponent {
         IMultipleComponentManager multipleComponentManager = null;
         // create base items
         if (isFile) {
-            multipleComponentManager = new MultipleComponentManager(FILE_INPUT_DELIMITED, CONTEXT_LOAD);
+            multipleComponentManager = new MultipleComponentManager(FILE_INPUT_REGEX, CONTEXT_LOAD);
 
-            IMultipleComponentItem currentItem = multipleComponentManager.addItem(FILE_INPUT_DELIMITED, FILE_INPUT_COMPONENT);
+            IMultipleComponentItem currentItem = multipleComponentManager.addItem(FILE_INPUT_REGEX, FILE_INPUT_COMPONENT);
             currentItem.getOutputConnections().add(
                     new MultipleComponentConnection(EConnectionType.FLOW_MAIN.getName(), CONTEXT_LOAD));
 
@@ -248,10 +248,10 @@ public class JobContextLoadComponent implements IComponent {
             if (isFile) {
                 // delimited
                 String source = self + EParameterName.IMPLICIT_TCONTEXTLOAD_FILE.getName();
-                multipleComponentManager.addParam(source, FILE_INPUT_DELIMITED + ".FILENAME"); //$NON-NLS-1$ 
+                multipleComponentManager.addParam(source, FILE_INPUT_REGEX + ".FILENAME"); //$NON-NLS-1$ 
 
-                source = self + EParameterName.FIELDSEPARATOR.getName();
-                multipleComponentManager.addParam(source, FILE_INPUT_DELIMITED + ".FIELDSEPARATOR"); //$NON-NLS-1$ 
+                source = self + JobSettingsConstants.IMPLICIT_TCONTEXTLOAD_REGEX;
+                multipleComponentManager.addParam(source, FILE_INPUT_REGEX + ".REGEX"); //$NON-NLS-1$ 
 
             } else {
                 String source = self + JobSettingsConstants.getExtraParameterName(EParameterName.URL.getName());
@@ -358,7 +358,7 @@ public class JobContextLoadComponent implements IComponent {
         elemParamList.add(newParam);
 
         newParam = new ElementParameter(node);
-        newParam.setName(EParameterName.FIELDSEPARATOR.getName());
+        newParam.setName(JobSettingsConstants.IMPLICIT_TCONTEXTLOAD_REGEX);
         newParam.setFieldType(EParameterFieldType.TEXT);
         newParam.setValue(""); //$NON-NLS-1$
         elemParamList.add(newParam);
