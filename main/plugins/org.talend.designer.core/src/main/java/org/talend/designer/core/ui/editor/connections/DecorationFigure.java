@@ -37,10 +37,13 @@ public class DecorationFigure extends PolygonDecoration implements RotatableDeco
 
     private boolean isSource = false;
 
+    private ConnectionFigure parent;
+
     public DecorationFigure(ConnectionFigure parent, boolean isSource) {
         this.isSource = isSource;
+        this.parent = parent;
         initImage();
-        setAlignment(PositionConstants.CENTER);
+        setAlignment(PositionConstants.WEST);
     }
 
     /**
@@ -67,8 +70,6 @@ public class DecorationFigure extends PolygonDecoration implements RotatableDeco
         if (getImage() == null) {
             return;
         }
-        this.setBounds(new Rectangle(this.getLocation(), size));
-        this.getBounds();
         int x, y;
         Rectangle area = getClientArea();
         switch (alignment & PositionConstants.NORTH_SOUTH) {

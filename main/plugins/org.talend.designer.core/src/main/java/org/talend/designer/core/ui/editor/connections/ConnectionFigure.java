@@ -17,9 +17,16 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.PolygonDecoration;
 import org.eclipse.draw2d.PolylineConnection;
+import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.swt.graphics.Color;
+import org.talend.commons.ui.runtime.geometry.Curve2DBezier;
+import org.talend.commons.ui.runtime.geometry.Point2D;
+import org.talend.commons.ui.runtime.geometry.Point2DList;
 import org.talend.commons.ui.runtime.image.EImage;
 import org.talend.commons.ui.runtime.image.ImageProvider;
 import org.talend.commons.ui.utils.image.ColorUtils;
@@ -95,8 +102,25 @@ public class ConnectionFigure extends PolylineConnection {
     }
 
     private void setDecoration() {
-        setTargetDecoration(new DecorationFigure(this, true));
-        setSourceDecoration(new DecorationFigure(this, false));
+        PointList template = new PointList();
+        PolygonDecoration targetDecoration = new DecorationFigure(this, true);
+        targetDecoration.setBackgroundColor(ColorConstants.white);
+        targetDecoration.setScale(10, 6);
+        template.addPoint(-1, 1);
+        template.addPoint(0, 0);
+        template.addPoint(-1, -1);
+        targetDecoration.setTemplate(template);
+        setTargetDecoration(targetDecoration);
+
+        PolygonDecoration sourceDecoration = new DecorationFigure(this, false);
+        sourceDecoration.setBackgroundColor(ColorConstants.white);
+        sourceDecoration.setScale(10, 6);
+        template = new PointList();
+        template.addPoint(0, 1);
+        template.addPoint(0, -1);
+        template.addPoint(-1, 0);
+        sourceDecoration.setTemplate(template);
+        setSourceDecoration(sourceDecoration);
     }
 
     private void initFigureMap() {
@@ -294,7 +318,96 @@ public class ConnectionFigure extends PolylineConnection {
 
     @Override
     protected void outlineShape(Graphics g) {
+        PointList pointList = caculatePointist();
+        // ((BezierCurveConnectionRouter) this.getConnectionRouter()).setPointList(pointList);
         super.outlineShape(g);
+    }
+
+    private PointList caculatePointist() {
+        Point startPoint = this.getStart();
+        Point endPoint = this.getEnd();
+        Point2DList pl = null;
+        // PointList straightList = new PointList();
+        // straightList.addPoint(startPoint);
+        // straightList.addPoint(endPoint);
+        // int spaceBetweenPoints = 1;
+
+        double distance = new java.awt.Point(startPoint.x, startPoint.y).distance(endPoint.x, endPoint.y);
+        Curve2DBezier curve = null;
+        if (curve == null) {
+            curve = new Curve2DBezier();
+            pl = new Point2DList();
+            curve.setPointList(pl);
+            for (int i = 0; i < 5; i++) {
+                pl.add(new Point2D());
+            }
+        } else {
+            pl = (Point2DList) curve.getPointList();
+        }
+
+        int subdiv = (int) (2000 / distance);
+        curve.setSubdiv(subdiv > 0 ? subdiv : 2);
+
+        pl.get(0).setLocation(startPoint.x, startPoint.y);
+
+        Point p = getMiddlePoint(startPoint, endPoint, 1);
+        if (p == null) {
+            return null;
+        } else {
+            pl.get(1).setLocation(p.x, p.y);
+        }
+
+        p = getMiddlePoint(startPoint, endPoint, 2);
+        if (p == null) {
+            return null;
+        } else {
+            pl.get(2).setLocation(p.x, p.y);
+        }
+
+        p = getMiddlePoint(startPoint, endPoint, 3);
+        if (p == null) {
+            return null;
+        } else {
+            pl.get(3).setLocation(p.x, p.y);
+        }
+
+        pl.get(4).setLocation(endPoint.x, endPoint.y);
+
+        curve.draw(null, pl, pl, 0, 0);
+        if (curve.getPoints() != null) {
+            int[] points = curve.getPoints();
+            PointList pointList = new PointList(points.length / 2);
+            for (int i = 0; (i + 1) < points.length; i += 2) {
+                pointList.addPoint(points[i], points[i + 1]);
+            }
+            this.setPoints(pointList);
+            return pointList;
+        }
+        return null;
+    }
+
+    private Point getMiddlePoint(Point start, Point end, int index) {
+        double x = 0;
+        double y = 0;
+        if (start.x == end.x) {
+            return null;
+        }
+        if (start.y == end.y) {
+            return null;
+        }
+        y = end.y;
+        x = start.x;
+        if (index == 1) {
+            if (y > 32) {
+                y = y - 32;
+            }
+        } else if (index == 3) {
+            x = x + 32;
+        }
+        if (index == 2) {
+            return new Point(x, y);
+        }
+        return new Point(x, y);
     }
 
 }

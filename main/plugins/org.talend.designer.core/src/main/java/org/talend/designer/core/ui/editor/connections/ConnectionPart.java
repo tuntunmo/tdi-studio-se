@@ -182,7 +182,7 @@ public class ConnectionPart extends AbstractConnectionEditPart implements Proper
 
         BezierCurveConnectionRouter curvrRouter = new BezierCurveConnectionRouter();
         connection.setLineWidth(2);
-        connection.setConnectionRouter(curvrRouter);
+        // connection.setConnectionRouter(curvrRouter);
 
         if (((Connection) getModel()).isActivate()) {
             connection.setAlpha(-1);

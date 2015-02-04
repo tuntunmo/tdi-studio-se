@@ -42,14 +42,16 @@ public class TalendGridLayer extends GridLayer {
     }
 
     protected void paintGrid(Graphics g, IFigure f, org.eclipse.draw2d.geometry.Point origin, int distanceX, int distanceY) {
-        Rectangle clip = g.getClip(Rectangle.SINGLETON);
-        // if (origin.x != 0) {
-        // System.out.println(origin.toString());
-        // }
-        // if (true) {
-        // super.paintGrid(g);
-        // return;
-        // }
+        // FreeformFigure ff = (FreeformFigure) this.getParent();
+        // Rectangle clientArea = getClientArea();
+        // Rectangle bounds = ff.getFreeformExtent().getCopy();
+        // bounds.union(0, 0, clientArea.width, clientArea.height);
+        // ff.setFreeformBounds(bounds);
+
+        Rectangle original = g.getClip(Rectangle.SINGLETON);
+
+        Rectangle clip = new Rectangle(original.x - original.x % distanceX, original.y - original.y % distanceY, original.width
+                + Math.abs(original.x % distanceX), original.height + Math.abs(original.y % distanceY));
         if (distanceX > 0 && distanceY > 0) {
             if (origin.x >= clip.x) {
                 while (origin.x - distanceX >= clip.x) {
