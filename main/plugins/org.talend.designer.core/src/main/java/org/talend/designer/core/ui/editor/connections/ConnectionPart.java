@@ -26,6 +26,7 @@ import org.eclipse.gef.editparts.AbstractConnectionEditPart;
 import org.eclipse.gef.editpolicies.ConnectionEditPolicy;
 import org.eclipse.gef.editpolicies.ConnectionEndpointEditPolicy;
 import org.eclipse.gef.requests.GroupRequest;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.routers.BorderItemRectilinearRouter;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -180,9 +181,8 @@ public class ConnectionPart extends AbstractConnectionEditPart implements Proper
         ConnectionFigure connection = new ConnectionFigure(conn, conn.getSourceNodeConnector().getConnectionProperty(
                 conn.getLineStyle()), conn.getSource());
 
-        BezierCurveConnectionRouter curvrRouter = new BezierCurveConnectionRouter();
         connection.setLineWidth(2);
-        // connection.setConnectionRouter(curvrRouter);
+        connection.setConnectionRouter(new BorderItemRectilinearRouter());
 
         if (((Connection) getModel()).isActivate()) {
             connection.setAlpha(-1);

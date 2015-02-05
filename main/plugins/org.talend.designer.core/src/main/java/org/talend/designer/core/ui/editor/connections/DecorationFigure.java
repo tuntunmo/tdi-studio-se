@@ -20,9 +20,7 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.swt.graphics.Image;
-import org.talend.commons.ui.runtime.image.EImage;
-import org.talend.commons.ui.runtime.image.ImageProvider;
+import org.talend.core.model.process.IConnection;
 
 /**
  * DOC hwang class global comment. Detailled comment
@@ -31,19 +29,20 @@ public class DecorationFigure extends PolygonDecoration implements RotatableDeco
 
     private final static int OFFSET = 3;
 
-    private Dimension size = new Dimension();
+    private Dimension size = new Dimension(8, 14);
 
     private int alignment;
 
     private boolean isSource = false;
 
-    private ConnectionFigure parent;
+    private IConnection connection;
+
+    private String title = "o";
 
     public DecorationFigure(ConnectionFigure parent, boolean isSource) {
         this.isSource = isSource;
-        this.parent = parent;
-        initImage();
-        setAlignment(PositionConstants.WEST);
+        setAlignment(PositionConstants.CENTER);
+        init(parent);
     }
 
     /**
@@ -67,9 +66,6 @@ public class DecorationFigure extends PolygonDecoration implements RotatableDeco
     public void paintFigure(Graphics graphics) {
         super.paintFigure(graphics);
 
-        if (getImage() == null) {
-            return;
-        }
         int x, y;
         Rectangle area = getClientArea();
         switch (alignment & PositionConstants.NORTH_SOUTH) {
@@ -94,7 +90,12 @@ public class DecorationFigure extends PolygonDecoration implements RotatableDeco
             x = (area.width - size.width) / 2 + area.x;
             break;
         }
-        graphics.drawImage(getImage(), x, y);
+        // graphics.setFont(font);
+        if (!isSource) {
+            graphics.drawString("o", x, y);
+            return;
+        }
+        graphics.drawString(title, x, y);
     }
 
     /**
@@ -115,22 +116,23 @@ public class DecorationFigure extends PolygonDecoration implements RotatableDeco
         alignment = flag;
     }
 
-    public void initImage() {
-        Image image = getImage();
-        if (image != null) {
-            size = new Rectangle(image.getBounds()).getSize();
-        } else {
-            size = new Dimension();
+    public void init(ConnectionFigure parent) {
+        this.connection = parent.getConnection();
+        if (this.connection == null) {
+            return;
         }
-        revalidate();
-        repaint();
-    }
+        switch (this.connection.getLineStyle()) {
+        case FLOW_MAIN:
+            title = "m"; //$NON-NLS-1$
+            break;
+        case FLOW_REF:
+            title = "l"; //$NON-NLS-1$
+            break;
+        default:
+            title = "i";//$NON-NLS-1$
+            break;
+        }
 
-    private Image getImage() {
-        if (isSource) {
-            return ImageProvider.getImage(EImage.DECORATION_IN);
-        }
-        return ImageProvider.getImage(EImage.DECORATION_OUT);
     }
 
     /*

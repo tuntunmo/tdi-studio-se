@@ -45,7 +45,8 @@ Require-Bundle: org.talend.model,
  org.talend.libraries.dom4j-jaxen,
  org.talend.libraries.uniserv;resolution:=optional,
  org.eclipse.ui.workbench.texteditor,
- org.talend.registration
+ org.talend.registration,
+ org.eclipse.gmf.runtime.draw2d.ui
 Eclipse-LazyStart: true
 Plugin-Class: org.talend.designer.core.DesignerPlugin
 Export-Package: org.talend.designer.core;
