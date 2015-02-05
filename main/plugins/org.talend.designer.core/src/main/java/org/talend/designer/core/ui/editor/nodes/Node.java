@@ -3560,7 +3560,7 @@ public class Node extends Element implements IGraphicalNode {
                                         "Node.differentFromSchemaDefined", inputConnecion.getName()); //$NON-NLS-1$
                                 Problems.add(ProblemStatus.WARNING, this, errorMessage);
                             }
-                        } else if (connector.getMaxLinkInput() != 0 && connector.getMaxLinkOutput() == 0) {
+                        } else if (connector != null && connector.getMaxLinkInput() != 0 && connector.getMaxLinkOutput() == 0) {
                             if (!outputMeta.sameMetadataAs(inputMeta, IMetadataColumn.OPTIONS_NONE)) {
                                 schemaSynchronized = false;
                                 String errorMessage = Messages.getString(
