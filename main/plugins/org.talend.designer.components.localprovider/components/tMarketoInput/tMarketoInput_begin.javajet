@@ -40,7 +40,14 @@ if ((metadatas != null) && (metadatas.size() > 0)) { //1
             String operation = ElementParameterParser.getValue(node, "__OPERATION__");
             String leadKeyType = ElementParameterParser.getValue(node, "__LEAD_KEYTYPE__");
             String leadKeyValue = ElementParameterParser.getValue(node, "__LEAD_KEYVALUE__");
-            String mutipleLeadsLastUpdatedAt = ElementParameterParser.getValue(node, "__MUTIPLE_LEADS_LASTUPDATEDAT__");
+            String leadKeyValues = ElementParameterParser.getValue(node, "__LEAD_KEYVALUES__");
+            String leadSelector = ElementParameterParser.getValue(node, "__LEAD_SELECTOR__");
+            String oldestUpdatedAt = ElementParameterParser.getValue(node, "__MUTIPLE_LEADS_OLDESTUPDATEDAT__");
+            String lastestUpdatedAt = ElementParameterParser.getValue(node, "__MUTIPLE_LEADS_LASTUPDATEDAT__");
+            
+            String listParam = ElementParameterParser.getValue(node, "__LIST_PARAM__");
+            String listParamValue = ElementParameterParser.getValue(node, "__LIST_PARAM_VALUE__");
+            
             String batchSize = ElementParameterParser.getValue(node, "__BATCH_SIZE__");
             String timeout = ElementParameterParser.getValue(node, "__TIMEOUT__");
             boolean setIncludeTypes = ("true").equals(ElementParameterParser.getValue(node,"__SET_INCLUDE_TYPES__"));
@@ -157,7 +164,7 @@ if ((metadatas != null) && (metadatas.size() > 0)) { //1
 			}else if("getMutipleLeads".equals(operation)){
 %>
 			java.text.SimpleDateFormat updatedAt_<%=cid%> = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        	updatedAt_<%=cid%>.parse(<%=mutipleLeadsLastUpdatedAt%>);
+        	updatedAt_<%=cid%>.parse(<%=lastestUpdatedAt%>);
             java.util.Calendar updatedAtCal_<%=cid%> = updatedAt_<%=cid%>.getCalendar();
             String streamPosition_<%=cid%> = null;
             String[] includeAttributes_<%=cid%> = new String[]{
@@ -165,10 +172,32 @@ if ((metadatas != null) && (metadatas.size() > 0)) { //1
     			<%=fldMapping.get(key)%>,		
 			<%}%>
 			};
+			com.marketo.www.mktows.LeadSelector selector_<%=cid%> = new com.marketo.www.mktows.<%=leadSelector%>();
+			<%
+			if("LeadKeySelector".equals(leadSelector)){
+			%>
+				selector_<%=cid%> = org.talend.marketo.SelectorUtil.getLeadKeySelector("<%=leadKeyType%>",<%=leadKeyValues%>);
+			<%
+			}else if("StaticListSelector".equals(leadSelector)){
+				if("STATIC_LIST_NAME".equals(listParam)){
+            	%>
+					selector_<%=cid%> = org.talend.marketo.SelectorUtil.getStaticListSelectorByName(<%=listParamValue%>);
+				<%
+            	}else{
+            	%>
+					selector_<%=cid%> = org.talend.marketo.SelectorUtil.getStaticListSelectorByID(<%=listParamValue%>);
+				<%
+            	}
+			}else{
+				%>
+				selector_<%=cid%> =  org.talend.marketo.SelectorUtil.getLastUpdateAtSelector(<%=oldestUpdatedAt%>,<%=lastestUpdatedAt%>);
+				<%
+			}
+			%>
             while(true){
             	com.marketo.www.mktows.ResultGetMultipleLeads leads_<%=cid%> = null;
             	try{ 
-            		leads_<%=cid%> = client_<%=cid%>.getMultipleLeads(includeAttributes_<%=cid%>, <%=batchSize%>, updatedAtCal_<%=cid%>, streamPosition_<%=cid%>);
+            		leads_<%=cid%> = client_<%=cid%>.getMultipleLeads(includeAttributes_<%=cid%>, <%=batchSize%>, streamPosition_<%=cid%>,selector_<%=cid%>);
             		globalMap.put("<%=cid %>_NB_CALL",++nb_call_<%=cid%>);
             	}catch(java.lang.Exception ex_<%=cid%>){
             		if(ex_<%=cid%> instanceof org.apache.axis.AxisFault){

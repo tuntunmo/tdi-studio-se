@@ -140,13 +140,15 @@ public class Client {
         return false;
     }
 
-    public ResultGetMultipleLeads getMultipleLeads(String[] includeAttributes, int batchSize, Calendar lastUpdatedAt,
-            String streamPosition) throws Exception {
+    public ResultGetMultipleLeads getMultipleLeads(String[] includeAttributes, int batchSize, String streamPosition,
+    		LeadSelector leadSelector) throws Exception {
         ParamsGetMultipleLeads paramsGetMultipleLeads = new ParamsGetMultipleLeads();
         paramsGetMultipleLeads.setIncludeAttributes(includeAttributes);
         paramsGetMultipleLeads.setBatchSize(batchSize > 1000 ? 1000 : batchSize);
-        paramsGetMultipleLeads.setLastUpdatedAt(lastUpdatedAt);
         paramsGetMultipleLeads.setStreamPosition(streamPosition);
+        if(leadSelector!=null){
+        	paramsGetMultipleLeads.setLeadSelector(leadSelector);
+        }
         SuccessGetMultipleLeads successLeads = stub.getMultipleLeads(paramsGetMultipleLeads);
         ResultGetMultipleLeads result = successLeads.getResult();
         return result;
