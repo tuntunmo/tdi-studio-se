@@ -92,6 +92,8 @@ public class ChangeMetadataCommand extends Command {
 
     protected boolean isNotSim = false;
 
+    private Map<String, String> columnRenameMap;
+
     // Default constructor.
     public ChangeMetadataCommand() {
     }
@@ -713,7 +715,8 @@ public class ChangeMetadataCommand extends Command {
                 if (parameter.getFieldType() == EParameterFieldType.TABLE && parameter.getRepositoryValue() != null
                         && parameter.getRepositoryValue().equals("XML_MAPPING")) { //$NON-NLS-1$
                     List<Map<String, Object>> value2 = (List<Map<String, Object>>) parameter.getValue();
-                    RepositoryToComponentProperty.getTableXMLMappingValue(getConnection(), value2, newOutputMetadata);
+                    RepositoryToComponentProperty.getTableXMLMappingValue(getConnection(), value2, newOutputMetadata,
+                            getColumnRenameMap());
                     IElementParameter elementParameter = node.getElementParameter(EParameterName.PROPERTY_TYPE.getName());
                     if (elementParameter != null) {
                         if (EmfComponent.BUILTIN.equals(elementParameter.getValue())) {
@@ -725,6 +728,14 @@ public class ChangeMetadataCommand extends Command {
                 }
             }
         }
+    }
+
+    public Map<String, String> getColumnRenameMap() {
+        return this.columnRenameMap;
+    }
+
+    public void setColumnRenameMap(Map<String, String> columnRenameMap) {
+        this.columnRenameMap = columnRenameMap;
     }
 
     @Override

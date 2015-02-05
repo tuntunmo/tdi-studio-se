@@ -1941,7 +1941,7 @@ public class ProcessUpdateManager extends AbstractUpdateManager {
                                 } else if (param.getFieldType().equals(EParameterFieldType.TABLE)
                                         && UpdatesConstants.XML_MAPPING.equals(repositoryValue)) {
                                     List<Map<String, Object>> newMaps = RepositoryToComponentProperty.getXMLMappingValue(
-                                            repositoryConnection, node.getMetadataList());
+                                            repositoryConnection, node.getMetadataList(), getColumnRenamedMap());
                                     if ((value instanceof List) && newMaps != null) {
                                         List<Map<String, Object>> oldMaps = (List<Map<String, Object>>) value;
                                         // sameValues = oldMaps.size() == newMaps.size();

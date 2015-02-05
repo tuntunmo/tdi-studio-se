@@ -60,9 +60,11 @@ import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.XmlFileConnectionItem;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.model.update.AbstractUpdateManager;
 import org.talend.core.model.update.EUpdateItemType;
 import org.talend.core.model.update.EUpdateResult;
 import org.talend.core.model.update.IUpdateItemType;
+import org.talend.core.model.update.IUpdateManager;
 import org.talend.core.model.update.UpdateResult;
 import org.talend.core.model.update.UpdatesConstants;
 import org.talend.core.model.utils.TalendTextUtils;
@@ -87,7 +89,7 @@ import org.talend.repository.model.ProjectNodeHelper;
 
 /**
  * ggu class global comment. Detailled comment
- *
+ * 
  */
 public class UpdateNodeParameterCommand extends Command {
 
@@ -656,6 +658,14 @@ public class UpdateNodeParameterCommand extends Command {
                                                     }
                                                 }
                                                 cmd.setConnection(repositoryConn);
+                                                if (node.getProcess() instanceof IProcess2) {
+                                                    IUpdateManager updateManager = ((IProcess2) node.getProcess())
+                                                            .getUpdateManager();
+                                                    if (updateManager instanceof AbstractUpdateManager) {
+                                                        cmd.setColumnRenameMap(((AbstractUpdateManager) updateManager)
+                                                                .getColumnRenamedMap());
+                                                    }
+                                                }
 
                                                 cmd.setRepositoryMode(true);
                                                 cmd.execute(true);
