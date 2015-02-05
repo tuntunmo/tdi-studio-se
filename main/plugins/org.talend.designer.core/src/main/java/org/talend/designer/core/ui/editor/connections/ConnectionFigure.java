@@ -99,7 +99,7 @@ public class ConnectionFigure extends PolylineConnectionEx implements IMapMode {
         PolygonDecoration targetDecoration = new DecorationFigure(this, true);
         targetDecoration.setBackgroundColor(ColorConstants.white);
         targetDecoration.setForegroundColor(ColorConstants.black);
-        targetDecoration.setScale(9, 9);
+        targetDecoration.setScale(7, 7);
         template.addPoint(-2, 1);
         template.addPoint(-1, 1);
         template.addPoint(0, 0);
@@ -111,7 +111,7 @@ public class ConnectionFigure extends PolylineConnectionEx implements IMapMode {
         PolygonDecoration sourceDecoration = new DecorationFigure(this, false);
         sourceDecoration.setBackgroundColor(ColorConstants.white);
         targetDecoration.setForegroundColor(ColorConstants.black);
-        sourceDecoration.setScale(9, 9);
+        sourceDecoration.setScale(7, 7);
         template = new PointList();
 
         template.addPoint(0, 1);

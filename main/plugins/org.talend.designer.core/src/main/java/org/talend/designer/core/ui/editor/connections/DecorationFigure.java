@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.designer.core.ui.editor.connections;
 
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.PolygonDecoration;
 import org.eclipse.draw2d.PositionConstants;
@@ -20,6 +21,9 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.widgets.Display;
 import org.talend.core.model.process.IConnection;
 
 /**
@@ -27,9 +31,9 @@ import org.talend.core.model.process.IConnection;
  */
 public class DecorationFigure extends PolygonDecoration implements RotatableDecoration {
 
-    private final static int OFFSET = 3;
+    private final static int OFFSET = 1;
 
-    private Dimension size = new Dimension(8, 14);
+    private Dimension size = new Dimension(8, 11);
 
     private int alignment;
 
@@ -65,37 +69,63 @@ public class DecorationFigure extends PolygonDecoration implements RotatableDeco
     @Override
     public void paintFigure(Graphics graphics) {
         super.paintFigure(graphics);
+        adjustAlignment();
 
-        int x, y;
         Rectangle area = getClientArea();
+        int y = (area.height - size.height) / 2 + area.y;
+        int x = (area.width - size.width) / 2 + area.x + OFFSET;
         switch (alignment & PositionConstants.NORTH_SOUTH) {
         case PositionConstants.NORTH:
-            y = area.y;
+            y = y + OFFSET;
             break;
         case PositionConstants.SOUTH:
-            y = area.y + area.height - size.height;
+            y = y - OFFSET;
             break;
         default:
-            y = (area.height - size.height) / 2 + area.y;
             break;
         }
         switch (alignment & PositionConstants.EAST_WEST) {
         case PositionConstants.EAST:
-            x = area.x + area.width - size.width;
+            x = x - OFFSET;
             break;
         case PositionConstants.WEST:
-            x = area.x;
+            x = x + 2 * OFFSET;
             break;
         default:
-            x = (area.width - size.width) / 2 + area.x;
             break;
         }
-        // graphics.setFont(font);
+        graphics.setFont(new Font(Display.getDefault(), "tahoma", 6, SWT.BOLD));
+        graphics.setForegroundColor(ColorConstants.black);
         if (!isSource) {
             graphics.drawString("o", x, y);
             return;
         }
+
         graphics.drawString(title, x, y);
+    }
+
+    private void adjustAlignment() {
+        if (this.getPoints().size() < 5) {
+            return;
+        }
+        Point first = this.getPoints().getFirstPoint();
+        Point middle = this.getPoints().getMidpoint();
+        Point last = this.getPoints().getLastPoint();
+        if (first.x == last.x) {
+            if (middle.x > first.x) {
+                setAlignment(PositionConstants.EAST);
+            } else {
+                setAlignment(PositionConstants.WEST);
+            }
+        }
+        if (first.y == last.y) {
+            if (middle.y > first.y) {
+                setAlignment(PositionConstants.SOUTH);
+            } else {
+                setAlignment(PositionConstants.NORTH);
+            }
+        }
+
     }
 
     /**
