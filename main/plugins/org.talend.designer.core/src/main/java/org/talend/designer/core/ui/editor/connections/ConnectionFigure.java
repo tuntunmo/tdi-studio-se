@@ -17,9 +17,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.PolygonDecoration;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Translatable;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
@@ -97,28 +97,26 @@ public class ConnectionFigure extends PolylineConnectionEx implements IMapMode {
     private void setDecoration() {
         PointList template = new PointList();
         PolygonDecoration targetDecoration = new DecorationFigure(this, true);
-        targetDecoration.setBackgroundColor(ColorConstants.white);
-        targetDecoration.setForegroundColor(ColorConstants.black);
-        targetDecoration.setScale(7, 7);
-        template.addPoint(-2, 1);
-        template.addPoint(-1, 1);
-        template.addPoint(0, 0);
-        template.addPoint(-1, -1);
-        template.addPoint(-2, -1);
+        targetDecoration.setScale(1, 1);
+        template.addPoint(new Point(-11, -5.5));
+        template.addPoint(new Point(-2, -5.5));
+        template.addPoint(0, -1);
+        template.addPoint(0, 1);
+        template.addPoint(new Point(-2, 5.5));
+        template.addPoint(new Point(-11, 5.5));
         targetDecoration.setTemplate(template);
         setTargetDecoration(targetDecoration);
 
         PolygonDecoration sourceDecoration = new DecorationFigure(this, false);
-        sourceDecoration.setBackgroundColor(ColorConstants.white);
-        targetDecoration.setForegroundColor(ColorConstants.black);
-        sourceDecoration.setScale(7, 7);
+        sourceDecoration.setScale(1, 1);
         template = new PointList();
 
-        template.addPoint(0, 1);
-        template.addPoint(-1, 1);
-        template.addPoint(-2, 0);
-        template.addPoint(-1, -1);
-        template.addPoint(0, -1);
+        template.addPoint(new Point(0, 5.5));
+        template.addPoint(new Point(-9, 5.5));
+        template.addPoint(-11, 1);
+        template.addPoint(-11, -1);
+        template.addPoint(new Point(-9, -5.5));
+        template.addPoint(new Point(0, -5.5));
 
         sourceDecoration.setTemplate(template);
         setSourceDecoration(sourceDecoration);
@@ -297,6 +295,15 @@ public class ConnectionFigure extends PolylineConnectionEx implements IMapMode {
 
     public void disposeColors() {
         // ResourceDisposeUtil.disposeColor(getForegroundColor());
+    }
+
+    public void disposeResource() {
+        if (getSourceDecoration() != null) {
+            ((DecorationFigure) getSourceDecoration()).disposeResource();
+        }
+        if (getTargetDecoration() != null) {
+            ((DecorationFigure) getTargetDecoration()).disposeResource();
+        }
     }
 
     /**

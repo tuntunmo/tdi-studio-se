@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.designer.core.ui.editor.connections;
 
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.PolygonDecoration;
 import org.eclipse.draw2d.PositionConstants;
@@ -22,8 +21,11 @@ import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
+import org.talend.commons.ui.utils.image.ColorUtils;
 import org.talend.core.model.process.IConnection;
 
 /**
@@ -31,7 +33,7 @@ import org.talend.core.model.process.IConnection;
  */
 public class DecorationFigure extends PolygonDecoration implements RotatableDecoration {
 
-    private final static int OFFSET = 1;
+    private int OFFSET = 1;
 
     private Dimension size = new Dimension(8, 11);
 
@@ -42,6 +44,12 @@ public class DecorationFigure extends PolygonDecoration implements RotatableDeco
     private IConnection connection;
 
     private String title = "o";
+
+    private Color black = null;
+
+    private RGB white = new RGB(255, 255, 255);
+
+    private Font font = new Font(Display.getDefault(), "courrier", 6, SWT.NORMAL);
 
     public DecorationFigure(ConnectionFigure parent, boolean isSource) {
         this.isSource = isSource;
@@ -70,38 +78,100 @@ public class DecorationFigure extends PolygonDecoration implements RotatableDeco
     public void paintFigure(Graphics graphics) {
         super.paintFigure(graphics);
         adjustAlignment();
-
         Rectangle area = getClientArea();
         int y = (area.height - size.height) / 2 + area.y;
-        int x = (area.width - size.width) / 2 + area.x + OFFSET;
-        switch (alignment & PositionConstants.NORTH_SOUTH) {
-        case PositionConstants.NORTH:
-            y = y + OFFSET;
-            break;
-        case PositionConstants.SOUTH:
-            y = y - OFFSET;
-            break;
-        default:
-            break;
-        }
-        switch (alignment & PositionConstants.EAST_WEST) {
-        case PositionConstants.EAST:
-            x = x - OFFSET;
-            break;
-        case PositionConstants.WEST:
-            x = x + 2 * OFFSET;
-            break;
-        default:
-            break;
-        }
-        graphics.setFont(new Font(Display.getDefault(), "tahoma", 6, SWT.BOLD));
-        graphics.setForegroundColor(ColorConstants.black);
+        int x = (area.width - size.width) / 2 + area.x;
+        Point point = new Point(x, y);
+        adjustPosition(point);
+        graphics.setFont(font);
+        graphics.setForegroundColor(black);
         if (!isSource) {
-            graphics.drawString("o", x, y);
+            graphics.drawString("o", point);
             return;
         }
+        graphics.drawString(title, point);
+    }
 
-        graphics.drawString(title, x, y);
+    private void adjustPosition(Point point) {
+        if (!isSource) {
+            switch (alignment) {
+            case PositionConstants.NORTH:
+                point.x = point.x + 2;
+                point.y = point.y + 1;
+                break;
+            case PositionConstants.SOUTH:
+                point.x = point.x + 2;
+                point.y = point.y + 1;
+                break;
+            case PositionConstants.EAST:
+                point.x = point.x + 1;
+                break;
+            case PositionConstants.WEST:
+                point.x = point.x + 2;
+                break;
+            default:
+                break;
+            }
+        } else if (title.equals("i")) {
+            switch (alignment) {
+            case PositionConstants.NORTH:
+                point.x = point.x + 3;
+                point.y = point.y + 2;
+                break;
+            case PositionConstants.SOUTH:
+                point.x = point.x + 3;
+                point.y = point.y + 2;
+                break;
+            case PositionConstants.EAST:
+                point.x = point.x + 2;
+                point.y = point.y + 1;
+                break;
+            case PositionConstants.WEST:
+                point.x = point.x + 3;
+                point.y = point.y + 1;
+                break;
+            default:
+                break;
+            }
+        } else if (title.equals("l")) {
+            switch (alignment) {
+            case PositionConstants.NORTH:
+                point.x = point.x + 3;
+                point.y = point.y + 2;
+                break;
+            case PositionConstants.SOUTH:
+                point.x = point.x + 3;
+                point.y = point.y + 2;
+                break;
+            case PositionConstants.EAST:
+                point.x = point.x + 2;
+                point.y = point.y + 1;
+                break;
+            case PositionConstants.WEST:
+                point.x = point.x + 3;
+                point.y = point.y + 1;
+                break;
+            default:
+                break;
+            }
+        } else if (title.equals("m")) {
+            switch (alignment) {
+            case PositionConstants.NORTH:
+                point.x = point.x + 1;
+                point.y = point.y + 1;
+                break;
+            case PositionConstants.SOUTH:
+                point.x = point.x + 1;
+                break;
+            case PositionConstants.EAST:
+                break;
+            case PositionConstants.WEST:
+                point.x = point.x + 1;
+                break;
+            default:
+                break;
+            }
+        }
     }
 
     private void adjustAlignment() {
@@ -147,6 +217,10 @@ public class DecorationFigure extends PolygonDecoration implements RotatableDeco
     }
 
     public void init(ConnectionFigure parent) {
+        Color whiteColor = ColorUtils.getCacheColor(white);
+        black = ColorUtils.getCacheColor(new RGB(0, 0, 0));
+        this.setBackgroundColor(whiteColor);
+        this.setForegroundColor(black);
         this.connection = parent.getConnection();
         if (this.connection == null) {
             return;
@@ -173,6 +247,18 @@ public class DecorationFigure extends PolygonDecoration implements RotatableDeco
     @Override
     public void setReferencePoint(Point p) {
         super.setReferencePoint(p);
+    }
+
+    public void disposeResource() {
+        // if (this.getBackgroundColor() != null && !this.getBackgroundColor().isDisposed()) {
+        // this.getBackgroundColor().dispose();
+        // }
+        // if (black != null && !black.isDisposed()) {
+        // black.dispose();
+        // }
+        if (font != null && !font.isDisposed()) {
+            font.dispose();
+        }
     }
 
 }
