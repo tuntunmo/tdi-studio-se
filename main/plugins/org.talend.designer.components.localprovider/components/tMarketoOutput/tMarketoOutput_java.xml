@@ -11,7 +11,7 @@
 
     DATA_AUTO_PROPAGATE="false"
    	HAS_CONDITIONAL_OUTPUTS="true"
-   	SCHEMA_AUTO_PROPAGATE="true"
+   	SCHEMA_AUTO_PROPAGATE="false"
 
     STARTABLE="false"
 	PARTITIONING="AUTO"
@@ -32,7 +32,7 @@
     <CONNECTOR CTYPE="FLOW" MAX_OUTPUT="1" MAX_INPUT="1"/>
     <!-- <CONNECTOR NAME="MAIN" CTYPE="FLOW" MAX_OUTPUT="1" BASE_SCHEMA="FLOW"/>-->
     <CONNECTOR NAME="REJECT" CTYPE="FLOW" MAX_INPUT="0" MAX_OUTPUT="1" LINE_STYLE="2" COLOR="FF0000" BASE_SCHEMA="FLOW"
-     NOT_SHOW_IF="(OPERATION=='syncMultipleLeads') or (DIE_ON_ERROR == 'true')"/>
+     NOT_SHOW_IF="(OPERATION=='syncMultipleLeads') or (DIE_ON_ERROR == 'true') or (IS_VIRTUAL_COMPONENT == 'true')"/>
     <CONNECTOR CTYPE="ITERATE" MAX_INPUT="0" MAX_OUTPUT="0"/>
     <CONNECTOR CTYPE="SUBJOB_OK" MAX_INPUT="1" />
     <CONNECTOR CTYPE="SUBJOB_ERROR" MAX_INPUT="1" />
@@ -47,11 +47,20 @@
       NAME="SCHEMA_FLOW"
       FIELD="SCHEMA_TYPE"
       NUM_ROW="1">
-      <TABLE>
+      <TABLE IF="(IS_VIRTUAL_COMPONENT == 'false')">
         <COLUMN NAME="Id" TYPE="id_Integer" READONLY="true" />
+        <COLUMN NAME="Email" TYPE="id_String" />
+        <COLUMN NAME="ForeignSysPersonId" TYPE="id_String" />
+        <COLUMN NAME="ForeignSysType" TYPE="id_String" />
+        <COLUMN NAME="Status" TYPE="id_String" READONLY="true" CUSTOM="true"/>
+      </TABLE>
+      <TABLE IF="(IS_VIRTUAL_COMPONENT == 'true')">
+      	<COLUMN NAME="Id" TYPE="id_Integer" READONLY="false" />
 		<COLUMN NAME="Email" TYPE="id_String" />
 		<COLUMN NAME="ForeignSysPersonId" TYPE="id_String" />
 		<COLUMN NAME="ForeignSysType" TYPE="id_String" />
+		<COLUMN NAME="Status" TYPE="id_String" READONLY="false" CUSTOM="true"/>
+		<COLUMN NAME="ERROR_MSG" TYPE="id_String" READONLY="false" CUSTOM="true"/>
       </TABLE>
     </PARAMETER>
 
@@ -74,10 +83,11 @@
       SHOW="true">
       <TABLE READONLY="true">
         <COLUMN NAME="ERROR_MSG" TYPE="id_String" READONLY="false" CUSTOM="true"/>
-        <COLUMN NAME="Id" TYPE="id_Integer" READONLY="true" />
+        <COLUMN NAME="Id" TYPE="id_Integer" READONLY="false" />
 		<COLUMN NAME="Email" TYPE="id_String" />
 		<COLUMN NAME="ForeignSysPersonId" TYPE="id_String" />
 		<COLUMN NAME="ForeignSysType" TYPE="id_String" />
+		<COLUMN NAME="Status" TYPE="id_String" READONLY="false" CUSTOM="true"/>
       </TABLE>
     </PARAMETER>
 
@@ -112,6 +122,10 @@
 	<PARAMETER NAME="TIMEOUT" FIELD="TEXT" NUM_ROW="70" REQUIRED="true">
 		<DEFAULT>600000</DEFAULT>
 	</PARAMETER>
+	
+	<PARAMETER NAME="IS_VIRTUAL_COMPONENT" FIELD="CHECK" REQUIRED="true" NUM_ROW="95" >
+    	<DEFAULT>false</DEFAULT>
+	</PARAMETER>
 
 	<PARAMETER NAME="DIE_ON_ERROR" FIELD="CHECK" NUM_ROW="100" REQUIRED="true">
 		<DEFAULT>true</DEFAULT>
@@ -119,6 +133,32 @@
   </PARAMETERS>
 
   <CODEGENERATION>
+    <TEMPLATES INPUT="Out" OUTPUT="In">
+	  <TEMPLATE NAME="Out" COMPONENT="tMarketoOutputWrite">
+        <LINK_TO NAME="In" CTYPE="ROWS_END" />
+      </TEMPLATE>
+
+      <TEMPLATE NAME="In" COMPONENT="tMarketoOutputExtract" />
+
+      <TEMPLATE_PARAM SOURCE="self.MAPPING_INPUT" TARGET="Out.MAPPING_INPUT" />
+	  <TEMPLATE_PARAM SOURCE="self.ENDPOINT" TARGET="Out.ENDPOINT" />
+	  <TEMPLATE_PARAM SOURCE="self.SECRET_KEY" TARGET="Out.SECRET_KEY" />
+	  <TEMPLATE_PARAM SOURCE="self.CLIENT_ACCESSID" TARGET="Out.CLIENT_ACCESSID" />
+	  <TEMPLATE_PARAM SOURCE="self.OPERATION" TARGET="Out.OPERATION" />
+	  <TEMPLATE_PARAM SOURCE="self.MAPPING_INPUT" TARGET="Out.MAPPING_INPUT" />
+      <TEMPLATE_PARAM SOURCE="self.ROOT" TARGET="Out.ROOT" />
+      <TEMPLATE_PARAM SOURCE="self.GROUP" TARGET="Out.GROUP" />
+      <TEMPLATE_PARAM SOURCE="self.DE_DUPENABLED" TARGET="Out.DE_DUPENABLED" />
+      <TEMPLATE_PARAM SOURCE="self.BATCH_SIZE" TARGET="Out.BATCH_SIZE" />
+      <TEMPLATE_PARAM SOURCE="self.TIMEOUT" TARGET="Out.TIMEOUT" />
+      <TEMPLATE_PARAM SOURCE="self.DIE_ON_ERROR" TARGET="Out.DIE_ON_ERROR" />
+      <TEMPLATE_PARAM SOURCE="self.SCHEMA_FLOW" TARGET="Out.SCHEMA" />
+      
+
+      <TEMPLATE_PARAM SOURCE="self.SCHEMA_FLOW" TARGET="In.SCHEMA" />
+      <TEMPLATE_PARAM SOURCE="self.DIE_ON_ERROR" TARGET="In.DIE_ON_ERROR" />
+
+     </TEMPLATES>
  	 <IMPORTS>
 		<IMPORT NAME="SOAP-axis" MODULE="axis.jar" UrlPath="platform:/plugin/org.talend.libraries.apache.axis2/lib/axis.jar" REQUIRED="true" />
 		<IMPORT NAME="SOAP-discovery" MODULE="commons-discovery-0.2.jar" UrlPath="platform:/plugin/org.talend.libraries.apache.common/lib/commons-discovery-0.2.jar" REQUIRED="true" />
