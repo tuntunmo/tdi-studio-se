@@ -12,8 +12,14 @@
 // ============================================================================
 package org.talend.repository.ui.actions.importproject;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -23,11 +29,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.zip.ZipFile;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -84,42 +90,62 @@ public class ImportProjectsUtilities {
         // Rename in ".project" and "talendProject" or "talend.project"
         // TODO SML Optimize
         final IWorkspace workspace = org.eclipse.core.resources.ResourcesPlugin.getWorkspace();
-        final IProject project = workspace.getRoot().getProject(technicalName);
-
+        IContainer containers = (IProject) workspace.getRoot().findMember(new Path(technicalName));
+        IResource file2 = containers.findMember(IProjectDescription.DESCRIPTION_FILE_NAME);
         try {
-            IProjectDescription description = project.getDescription();
-            if (description != null && !technicalName.equals(description.getName())) {
-                description.setName(technicalName);
-                ((org.eclipse.core.internal.resources.Project) project).writeDescription(description, IResource.KEEP_HISTORY,
-                        true, false);
+            replaceInFile("<name>.*</name>", file2.getLocation().toOSString(), "<name>" + technicalName + "</name>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            // TDI-19269
+            final IProject project = workspace.getRoot().getProject(technicalName);
+            XmiResourceManager xmiManager = new XmiResourceManager();
+            try {
+                final Project loadProject = xmiManager.loadProject(project);
+                loadProject.setTechnicalLabel(technicalName);
+                loadProject.setLabel(newName);
+                loadProject.setLocal(true);
+                loadProject.setId(0);
+                loadProject.setUrl(null);
+                loadProject.setCreationDate(null);
+                loadProject.setDescription("");
+                loadProject.setType(null);
+                // ADD xqliu 2012-03-12 TDQ-4771 clear the list of Folders
+                if (loadProject.getFolders() != null) {
+                    loadProject.getFolders().clear();
+                }
+                // ~ TDQ-4771
+                xmiManager.saveResource(loadProject.eResource());
+                return loadProject;
+            } catch (PersistenceException e) {
+                //
             }
-        } catch (CoreException e1) {
-            //
+        } catch (IOException e) {
+            throw new InvocationTargetException(e);
         }
-        // TDI-19269
-        XmiResourceManager xmiManager = new XmiResourceManager();
-        try {
-            final Project loadProject = xmiManager.loadProject(project);
-            loadProject.setTechnicalLabel(technicalName);
-            loadProject.setLabel(newName);
-            loadProject.setLocal(true);
-            loadProject.setId(0);
-            loadProject.setUrl(null);
-            loadProject.setCreationDate(null);
-            loadProject.setDescription("");
-            loadProject.setType(null);
-            // ADD xqliu 2012-03-12 TDQ-4771 clear the list of Folders
-            if (loadProject.getFolders() != null) {
-                loadProject.getFolders().clear();
-            }
-            // ~ TDQ-4771
-            xmiManager.saveResource(loadProject.eResource());
-            return loadProject;
-        } catch (PersistenceException e) {
-            //
-        }
-
         return null;
+    }
+
+    public static void replaceInFile(String regex, String fileName, String replacement) throws IOException {
+        InputStream in = new FileInputStream(fileName);
+        StringBuffer buffer = new StringBuffer();
+        try {
+            InputStreamReader inR = new InputStreamReader(in);
+            BufferedReader buf = new BufferedReader(inR);
+            String line;
+            while ((line = buf.readLine()) != null) {
+                if (line.endsWith("</name>")) {
+                    line = replacement;
+                }
+                //buffer.append(StringUtils.replace(line, regex, replacement)).append("\n"); //$NON-NLS-1$
+                buffer.append(line).append("\n"); //$NON-NLS-1$
+            }
+        } catch (IOException e) {
+            // logger.error(e);
+        } finally {
+            in.close();
+        }
+
+        OutputStream os = new FileOutputStream(fileName);
+        os.write(buffer.toString().getBytes());
+        os.close();
     }
 
     public static void importArchiveProjectAs(Shell shell, String newName, String technicalName, String sourcePath,
