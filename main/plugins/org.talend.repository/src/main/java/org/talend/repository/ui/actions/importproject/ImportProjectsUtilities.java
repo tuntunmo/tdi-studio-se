@@ -27,6 +27,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.ZipFile;
 
 import org.eclipse.core.resources.IContainer;
@@ -127,18 +129,19 @@ public class ImportProjectsUtilities {
         InputStream in = new FileInputStream(fileName);
         StringBuffer buffer = new StringBuffer();
         try {
+            Pattern p = Pattern.compile(regex);
             InputStreamReader inR = new InputStreamReader(in);
             BufferedReader buf = new BufferedReader(inR);
             String line;
             while ((line = buf.readLine()) != null) {
-                if (line.endsWith("</name>")) {
-                    line = replacement;
+                Matcher matcher = p.matcher(line);
+                if (matcher.find()) {
+                    line = matcher.replaceAll(replacement);
                 }
-                //buffer.append(StringUtils.replace(line, regex, replacement)).append("\n"); //$NON-NLS-1$
                 buffer.append(line).append("\n"); //$NON-NLS-1$
             }
         } catch (IOException e) {
-            // logger.error(e);
+            //
         } finally {
             in.close();
         }
