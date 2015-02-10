@@ -26,7 +26,6 @@ import org.eclipse.gef.editparts.AbstractConnectionEditPart;
 import org.eclipse.gef.editpolicies.ConnectionEditPolicy;
 import org.eclipse.gef.editpolicies.ConnectionEndpointEditPolicy;
 import org.eclipse.gef.requests.GroupRequest;
-import org.eclipse.gmf.runtime.draw2d.ui.internal.routers.BorderItemRectilinearRouter;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -184,7 +183,7 @@ public class ConnectionPart extends AbstractConnectionEditPart implements Proper
                 conn.getLineStyle()), conn.getSource());
 
         connection.setLineWidth(2);
-        connection.setConnectionRouter(new BorderItemRectilinearRouter());
+        connection.setConnectionRouter(new TalendBorderItemRectilinearRouter());
 
         if (((Connection) getModel()).isActivate()) {
             connection.setAlpha(-1);

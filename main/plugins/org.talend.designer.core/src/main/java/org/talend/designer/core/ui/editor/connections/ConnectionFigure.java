@@ -84,7 +84,6 @@ public class ConnectionFigure extends PolylineConnectionEx implements IMapMode {
         this.setLineWidth(2);
         this.setRoundedBendpointsRadius(32);
         setConnectionProperty(connectionProperty);
-
         if (PluginChecker.isAutoParalelPluginLoaded()) {
             addParallelFigure();
             // TDI-26611
@@ -96,7 +95,7 @@ public class ConnectionFigure extends PolylineConnectionEx implements IMapMode {
 
     private void setDecoration() {
         PointList template = new PointList();
-        PolygonDecoration targetDecoration = new DecorationFigure(this, true);
+        PolygonDecoration targetDecoration = new DecorationFigure(this, false);
         targetDecoration.setScale(1, 1);
         template.addPoint(new Point(-11, -5.5));
         template.addPoint(new Point(-2, -5.5));
@@ -107,7 +106,7 @@ public class ConnectionFigure extends PolylineConnectionEx implements IMapMode {
         targetDecoration.setTemplate(template);
         setTargetDecoration(targetDecoration);
 
-        PolygonDecoration sourceDecoration = new DecorationFigure(this, false);
+        PolygonDecoration sourceDecoration = new DecorationFigure(this, true);
         sourceDecoration.setScale(1, 1);
         template = new PointList();
 

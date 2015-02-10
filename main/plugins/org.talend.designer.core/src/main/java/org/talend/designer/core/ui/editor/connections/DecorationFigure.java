@@ -85,7 +85,7 @@ public class DecorationFigure extends PolygonDecoration implements RotatableDeco
         adjustPosition(point);
         graphics.setFont(font);
         graphics.setForegroundColor(black);
-        if (!isSource) {
+        if (isSource) {
             graphics.drawString("o", point);
             return;
         }
@@ -93,7 +93,7 @@ public class DecorationFigure extends PolygonDecoration implements RotatableDeco
     }
 
     private void adjustPosition(Point point) {
-        if (!isSource) {
+        if (isSource) {
             switch (alignment) {
             case PositionConstants.NORTH:
                 point.x = point.x + 2;
@@ -247,6 +247,14 @@ public class DecorationFigure extends PolygonDecoration implements RotatableDeco
     @Override
     public void setReferencePoint(Point p) {
         super.setReferencePoint(p);
+        // if (isSource) {
+        // setRotation(Math.PI);
+        // } else {
+        // EConnectionCategory category = connection.getLineStyle().getCategory();
+        // if (category == EConnectionCategory.MAIN && connection.getLineStyle() != EConnectionType.FLOW_REF) {
+        // setRotation(0.0);
+        // }
+        // }
     }
 
     public void disposeResource() {

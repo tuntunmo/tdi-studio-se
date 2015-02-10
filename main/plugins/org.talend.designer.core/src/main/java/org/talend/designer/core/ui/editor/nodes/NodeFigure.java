@@ -34,7 +34,9 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 import org.talend.commons.ui.runtime.image.ImageUtils.ICON_SIZE;
 import org.talend.commons.ui.utils.workbench.gef.SimpleHtmlFigure;
+import org.talend.core.model.process.EConnectionCategory;
 import org.talend.core.model.process.EConnectionType;
+import org.talend.core.model.process.IConnection;
 import org.talend.core.model.process.INodeConnector;
 import org.talend.core.ui.images.CoreImageProvider;
 import org.talend.designer.core.DesignerPlugin;
@@ -118,7 +120,7 @@ public class NodeFigure extends Figure {
             return curConn;
         }
         Point figCenter = fig.getBounds().getCenter();
-
+        // figCenter = getDirectionPosition(connection.getConnection(), figCenter, true);
         curConn.getConnectionRouter().route(curConn);
         Point endPoint = curConn.getStart();
         if (!figCenter.equals(connection.getStart())) {
@@ -136,6 +138,7 @@ public class NodeFigure extends Figure {
             return;
         }
         Point figCenter = fig.getBounds().getCenter();
+        // figCenter = getDirectionPosition(targetDummy.getConnection(), figCenter, false);
         if (targetConnection.getTargetAnchor() == null) {
             targetDummy.setVisible(false);
         } else {
@@ -391,6 +394,27 @@ public class NodeFigure extends Figure {
 
     public ImageFigure getImageFigure() {
         return fig;
+    }
+
+    private Point getDirectionPosition(IConnection connection, Point figCenter, boolean isSource) {
+        EConnectionCategory category = connection.getLineStyle().getCategory();
+        if (category == EConnectionCategory.MAIN && connection.getLineStyle() != EConnectionType.FLOW_REF) {
+            if (isSource) {
+                figCenter.x = figCenter.x - node.DEFAULT_SIZE / 2;
+            } else {
+                figCenter.x = figCenter.x + node.DEFAULT_SIZE / 2;
+            }
+        } else if (category == EConnectionCategory.MAIN
+                && (connection.getLineStyle() == EConnectionType.FLOW_REF || connection.getLineStyle() == EConnectionType.TABLE_REF)) {
+            int sourceY = connection.getSource().getPosY();
+            int targetY = connection.getTarget().getPosY();
+            if (sourceY < targetY) {
+                figCenter.y = figCenter.y + node.DEFAULT_SIZE / 2;
+            } else {
+                figCenter.y = figCenter.y - node.DEFAULT_SIZE / 2;
+            }
+        }
+        return figCenter;
     }
 
 }
