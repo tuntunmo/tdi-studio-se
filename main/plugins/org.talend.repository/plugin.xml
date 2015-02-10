@@ -2321,6 +2321,15 @@
               description="change the mapping db id for redshift components"
               version="5.6.2">
         </projecttask>
+        <projecttask
+              beforeLogon="false"
+              breaks="5.6.1"
+              class="org.talend.repository.model.migration.ChangeParameter4tSAPIDocOutput"
+              id="org.talend.repository.model.migration.ChangeParameter4tSAPIDocOutput"
+              name="ChangeParameter4tSAPIDocOutput"
+              description="change parameter for tsapidocoutput"
+              version="5.6.2">
+        </projecttask>
    </extension>
 
    <extension
