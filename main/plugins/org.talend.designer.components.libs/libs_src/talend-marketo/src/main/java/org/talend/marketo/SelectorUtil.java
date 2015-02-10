@@ -14,12 +14,14 @@ public class SelectorUtil {
 			String oldestUpdatedAt, String latestUpdatedAt)
 			throws ParseException {
 		LastUpdateAtSelector selector = new LastUpdateAtSelector();
-		if (latestUpdatedAt != null) {
+		if (latestUpdatedAt != null && latestUpdatedAt.length()>0) {
 			selector.setLatestUpdatedAt(parseDate("yyyy-MM-dd HH:mm:ss",
 					latestUpdatedAt));
 		}
-		selector.setOldestUpdatedAt(parseDate("yyyy-MM-dd HH:mm:ss",
-				oldestUpdatedAt));
+		if (oldestUpdatedAt != null && oldestUpdatedAt.length()>0) {
+			selector.setOldestUpdatedAt(parseDate("yyyy-MM-dd HH:mm:ss",
+					oldestUpdatedAt));
+		}
 		return selector;
 	}
 

@@ -147,7 +147,16 @@ public class Client {
         paramsGetMultipleLeads.setBatchSize(batchSize > 1000 ? 1000 : batchSize);
         paramsGetMultipleLeads.setStreamPosition(streamPosition);
         if(leadSelector!=null){
-        	paramsGetMultipleLeads.setLeadSelector(leadSelector);
+        	if(leadSelector instanceof LastUpdateAtSelector){
+        		LastUpdateAtSelector lastLeadSelector = (LastUpdateAtSelector) leadSelector;
+        		if (lastLeadSelector.getOldestUpdatedAt() != null) {
+        			paramsGetMultipleLeads.setLeadSelector(leadSelector);
+                }else{
+                	paramsGetMultipleLeads.setLastUpdatedAt(lastLeadSelector.getLatestUpdatedAt());
+        		}
+        	}else{
+        		paramsGetMultipleLeads.setLeadSelector(leadSelector);
+        	}
         }
         SuccessGetMultipleLeads successLeads = stub.getMultipleLeads(paramsGetMultipleLeads);
         ResultGetMultipleLeads result = successLeads.getResult();

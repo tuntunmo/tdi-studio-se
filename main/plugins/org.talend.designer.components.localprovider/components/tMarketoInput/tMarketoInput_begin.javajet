@@ -163,9 +163,6 @@ if ((metadatas != null) && (metadatas.size() > 0)) { //1
 <%			
 			}else if("getMutipleLeads".equals(operation)){
 %>
-			java.text.SimpleDateFormat updatedAt_<%=cid%> = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        	updatedAt_<%=cid%>.parse(<%=lastestUpdatedAt%>);
-            java.util.Calendar updatedAtCal_<%=cid%> = updatedAt_<%=cid%>.getCalendar();
             String streamPosition_<%=cid%> = null;
             String[] includeAttributes_<%=cid%> = new String[]{
 			<%for(String key:fldMapping.keySet()){%>	
@@ -175,7 +172,8 @@ if ((metadatas != null) && (metadatas.size() > 0)) { //1
 			com.marketo.www.mktows.LeadSelector selector_<%=cid%> = new com.marketo.www.mktows.<%=leadSelector%>();
 			<%
 			if("LeadKeySelector".equals(leadSelector)){
-			%>
+				batchSize = "0";
+				%>
 				selector_<%=cid%> = org.talend.marketo.SelectorUtil.getLeadKeySelector("<%=leadKeyType%>",<%=leadKeyValues%>);
 			<%
 			}else if("StaticListSelector".equals(leadSelector)){
