@@ -121,6 +121,11 @@ public class DesignerPreferencePage extends FieldEditorPreferencePage implements
                 Messages.getString("DesignerPreferencePage.actionInJobDesigner"), getFieldEditorParent()); //$NON-NLS-1$
         addField(antialiasing);
 
+        BooleanFieldEditor lineStyle;
+        lineStyle = new BooleanFieldEditor(TalendDesignerPrefConstants.EDITOR_LINESTYLE,
+                Messages.getString("DesignerPreferencePage.lineStyle"), getFieldEditorParent()); //$NON-NLS-1$
+        addField(lineStyle);
+
         DirectoryFieldEditor compDefaultFileDir = new DirectoryFieldEditor(TalendDesignerPrefConstants.COMP_DEFAULT_FILE_DIR,
                 Messages.getString("DesignerPreferencePage.defaultFilePathDirectory"), getFieldEditorParent()) {
 

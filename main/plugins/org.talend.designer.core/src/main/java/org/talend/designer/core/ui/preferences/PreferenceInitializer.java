@@ -174,6 +174,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
                 });
             }
             store.setDefault(TalendDesignerPrefConstants.EDITOR_ANTIALIASING, true);
+            store.setDefault(TalendDesignerPrefConstants.EDITOR_LINESTYLE, true);
             // store.setDefault(TalendDesignerPrefConstants.EDITOR_INTERPOLATION, false);
 
             // designer color

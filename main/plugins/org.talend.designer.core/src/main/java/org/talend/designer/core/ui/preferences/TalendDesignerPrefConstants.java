@@ -64,6 +64,8 @@ public class TalendDesignerPrefConstants {
 
     public static final String EDITOR_INTERPOLATION = "editorInterpolation "; //$NON-NLS-1$
 
+    public static final String EDITOR_LINESTYLE = "editorLineStyle "; //$NON-NLS-1$
+
     public static final String SCHEMA_OPTIONS = "schemaOptions"; //$NON-NLS-1$
 
     public static final String VIEW_OPTIONS = "viewOptions"; //$NON-NLS-1$

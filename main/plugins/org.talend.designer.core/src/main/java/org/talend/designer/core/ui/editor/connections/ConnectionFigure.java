@@ -34,9 +34,11 @@ import org.talend.core.model.process.IConnectionCategory;
 import org.talend.core.model.process.IConnectionProperty;
 import org.talend.core.model.process.IElementParameter;
 import org.talend.core.model.process.INode;
+import org.talend.designer.core.DesignerPlugin;
 import org.talend.designer.core.model.components.EParameterName;
 import org.talend.designer.core.ui.editor.nodes.Node;
 import org.talend.designer.core.ui.editor.subjobcontainer.SubjobContainer;
+import org.talend.designer.core.ui.preferences.TalendDesignerPrefConstants;
 import org.talend.designer.core.utils.ParallelExecutionUtils;
 import org.talend.designer.core.utils.ResourceDisposeUtil;
 
@@ -94,6 +96,10 @@ public class ConnectionFigure extends PolylineConnectionEx implements IMapMode {
     }
 
     private void setDecoration() {
+        if (!DesignerPlugin.getDefault().getPreferenceStore().getBoolean(TalendDesignerPrefConstants.EDITOR_LINESTYLE)) {
+            this.setTargetDecoration(new PolygonDecoration());
+            return;
+        }
         PointList template = new PointList();
         PolygonDecoration targetDecoration = new DecorationFigure(this, false);
         targetDecoration.setScale(1, 1);
@@ -297,10 +303,10 @@ public class ConnectionFigure extends PolylineConnectionEx implements IMapMode {
     }
 
     public void disposeResource() {
-        if (getSourceDecoration() != null) {
+        if ((getSourceDecoration() != null) && (getSourceDecoration() instanceof DecorationFigure)) {
             ((DecorationFigure) getSourceDecoration()).disposeResource();
         }
-        if (getTargetDecoration() != null) {
+        if ((getTargetDecoration() != null) && (getTargetDecoration() instanceof DecorationFigure)) {
             ((DecorationFigure) getTargetDecoration()).disposeResource();
         }
     }

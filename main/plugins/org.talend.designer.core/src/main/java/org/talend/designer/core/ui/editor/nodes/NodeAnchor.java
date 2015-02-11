@@ -28,7 +28,9 @@ import org.talend.core.model.process.EConnectionCategory;
 import org.talend.core.model.process.EConnectionType;
 import org.talend.core.model.process.IConnection;
 import org.talend.core.ui.process.IGraphicalNode;
+import org.talend.designer.core.DesignerPlugin;
 import org.talend.designer.core.ui.editor.connections.Connection;
+import org.talend.designer.core.ui.preferences.TalendDesignerPrefConstants;
 
 /**
  * DOC bqian class global comment. Detailled comment
@@ -195,8 +197,10 @@ public class NodeAnchor extends ChopboxAnchor {
             }
         }
 
-        targetPoint = targetRect.getCenter();
         targetPoint = getDirectionPosition(this.connection, targetRect.getCenter(), false);
+        if (targetPoint == null) {
+            targetPoint = targetRect.getCenter();
+        }
         if (sourcePoint == null) {
             if ((targetLocation.y < sourceRect.getCenter().y)
                     && (sourceRect.getCenter().y < (targetLocation.y + targetRect.height))) {
@@ -217,17 +221,23 @@ public class NodeAnchor extends ChopboxAnchor {
             return super.getLocation(reference);
         }
         if (sourcePoint != null && targetPoint != null) {
+            if (!DesignerPlugin.getDefault().getPreferenceStore().getBoolean(TalendDesignerPrefConstants.EDITOR_LINESTYLE)) {
+                return calculateLocationFromRef(sourcePoint, targetPoint);
+            }
             if (!isTargetAnchor) {
                 return sourcePoint;
             } else {
                 return targetPoint;
             }
-            // return calculateLocationFromRef(sourcePoint, targetPoint);
+
         }
         return super.getLocation(reference);
     }
 
     private Point getDirectionPosition(IConnection connection, Point figCenter, boolean isSource) {
+        if (!DesignerPlugin.getDefault().getPreferenceStore().getBoolean(TalendDesignerPrefConstants.EDITOR_LINESTYLE)) {
+            return null;
+        }
         EConnectionCategory category = connection.getLineStyle().getCategory();
         Point result = new Point(figCenter);
         if (category == EConnectionCategory.MAIN && connection.getLineStyle() != EConnectionType.FLOW_REF) {

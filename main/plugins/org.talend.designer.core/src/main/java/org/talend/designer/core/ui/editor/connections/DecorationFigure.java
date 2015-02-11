@@ -227,7 +227,12 @@ public class DecorationFigure extends PolygonDecoration implements RotatableDeco
         }
         switch (this.connection.getLineStyle()) {
         case FLOW_MAIN:
-            title = "m"; //$NON-NLS-1$
+            String comName = this.connection.getTarget().getComponent().getName();
+            if (comName.equals("tMap") || comName.equals("tXMLMap")) {
+                title = "m"; //$NON-NLS-1$
+            } else {
+                title = "i";
+            }
             break;
         case FLOW_REF:
             title = "l"; //$NON-NLS-1$
@@ -236,7 +241,6 @@ public class DecorationFigure extends PolygonDecoration implements RotatableDeco
             title = "i";//$NON-NLS-1$
             break;
         }
-
     }
 
     /*
