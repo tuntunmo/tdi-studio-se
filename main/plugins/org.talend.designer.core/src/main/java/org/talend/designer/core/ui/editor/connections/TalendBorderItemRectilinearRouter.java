@@ -91,6 +91,9 @@ public class TalendBorderItemRectilinearRouter extends BorderItemRectilinearRout
                 pointList.addPoint(lastpoint);
                 alreadyHandle = true;
             } else if (Math.abs(sourceBounds.getCenter().y - targetBounds.getCenter().y) == 4 * OFFSET) {
+                if ((firstpoint.x + lastpoint.x) / 2 - OFFSET <= firstpoint.x) {
+                    return false;
+                }
                 if (sourceBounds.y < targetBounds.y) {
                     pointList.addPoint(firstpoint);
                     pointList.addPoint((firstpoint.x + lastpoint.x) / 2 - OFFSET, firstpoint.y);
@@ -150,7 +153,7 @@ public class TalendBorderItemRectilinearRouter extends BorderItemRectilinearRout
                 pointList.addPoint(lastpoint);
                 alreadyHandle = true;
             } else if (sourceBounds.x >= targetBounds.x) {
-
+                firstpoint = new Point(sourceBounds.getCenter().x + OFFSET, sourceBounds.getCenter().y);
                 pointList.addPoint(firstpoint);
                 pointList.addPoint(firstpoint.x + OFFSET, firstpoint.y);
                 if (targetBounds.getTopRight().x == sourceBounds.getBottomLeft().x) {
@@ -175,5 +178,4 @@ public class TalendBorderItemRectilinearRouter extends BorderItemRectilinearRout
         }
         return alreadyHandle;
     }
-
 }
