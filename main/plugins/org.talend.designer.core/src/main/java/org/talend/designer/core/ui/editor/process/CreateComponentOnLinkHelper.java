@@ -15,7 +15,9 @@ package org.talend.designer.core.ui.editor.process;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.draw2d.PolylineConnection;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.talend.core.GlobalServiceRegister;
 import org.talend.core.model.metadata.IMetadataTable;
@@ -364,6 +366,21 @@ public class CreateComponentOnLinkHelper {
             fig.setLineWidth(2);
             connPart.refresh();
         }
+    }
+
+    public static double getDistanceOrthogonal(double x, double y, PolylineConnection connection, double zoom) {
+        double distance = 1000000000;
+        double a = 0, b = 0, c = 0;
+        PointList points = connection.getPoints();
+        for (int i = 0; i < points.size() - 1; i++) {
+            Point point1 = points.getPoint(i);
+            Point point2 = points.getPoint(i + 1);
+            double dis = CreateComponentOnLinkHelper.getDistanceOrthogonal(x, y, point1, point2, zoom);
+            if (dis < distance) {
+                distance = dis;
+            }
+        }
+        return distance;
     }
 
     public static double getDistanceOrthogonal(double x, double y, Point point1, Point point2, double zoom) {

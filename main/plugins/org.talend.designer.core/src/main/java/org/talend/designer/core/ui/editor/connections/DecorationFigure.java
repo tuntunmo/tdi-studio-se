@@ -43,7 +43,7 @@ public class DecorationFigure extends PolygonDecoration implements RotatableDeco
 
     private IConnection connection;
 
-    private String title = "o";
+    private String title = "O";
 
     private Color black = null;
 
@@ -86,7 +86,7 @@ public class DecorationFigure extends PolygonDecoration implements RotatableDeco
         graphics.setFont(font);
         graphics.setForegroundColor(black);
         if (isSource) {
-            graphics.drawString("o", point);
+            graphics.drawString("O", point);
             return;
         }
         graphics.drawString(title, point);
@@ -105,14 +105,16 @@ public class DecorationFigure extends PolygonDecoration implements RotatableDeco
                 break;
             case PositionConstants.EAST:
                 point.x = point.x + 1;
+                point.y = point.y + 1;
                 break;
             case PositionConstants.WEST:
                 point.x = point.x + 2;
+                point.y = point.y + 1;
                 break;
             default:
                 break;
             }
-        } else if (title.equals("i")) {
+        } else if (title.equals("I")) {
             switch (alignment) {
             case PositionConstants.NORTH:
                 point.x = point.x + 3;
@@ -133,14 +135,35 @@ public class DecorationFigure extends PolygonDecoration implements RotatableDeco
             default:
                 break;
             }
-        } else if (title.equals("l")) {
+        } else if (title.equals("T")) {
             switch (alignment) {
             case PositionConstants.NORTH:
-                point.x = point.x + 3;
+                point.x = point.x + 2;
                 point.y = point.y + 2;
                 break;
             case PositionConstants.SOUTH:
-                point.x = point.x + 3;
+                point.x = point.x + 2;
+                point.y = point.y + 2;
+                break;
+            case PositionConstants.EAST:
+                point.x = point.x + 1;
+                point.y = point.y + 1;
+                break;
+            case PositionConstants.WEST:
+                point.x = point.x + 2;
+                point.y = point.y + 1;
+                break;
+            default:
+                break;
+            }
+        } else if (title.equals("L")) {
+            switch (alignment) {
+            case PositionConstants.NORTH:
+                point.x = point.x + 2;
+                point.y = point.y + 2;
+                break;
+            case PositionConstants.SOUTH:
+                point.x = point.x + 2;
                 point.y = point.y + 2;
                 break;
             case PositionConstants.EAST:
@@ -154,7 +177,7 @@ public class DecorationFigure extends PolygonDecoration implements RotatableDeco
             default:
                 break;
             }
-        } else if (title.equals("m")) {
+        } else if (title.equals("M")) {
             switch (alignment) {
             case PositionConstants.NORTH:
                 point.x = point.x + 1;
@@ -162,11 +185,14 @@ public class DecorationFigure extends PolygonDecoration implements RotatableDeco
                 break;
             case PositionConstants.SOUTH:
                 point.x = point.x + 1;
+                point.y = point.y + 1;
                 break;
             case PositionConstants.EAST:
+                point.y = point.y + 1;
                 break;
             case PositionConstants.WEST:
                 point.x = point.x + 1;
+                point.y = point.y + 1;
                 break;
             default:
                 break;
@@ -229,16 +255,23 @@ public class DecorationFigure extends PolygonDecoration implements RotatableDeco
         case FLOW_MAIN:
             String comName = this.connection.getTarget().getComponent().getName();
             if (comName.equals("tMap") || comName.equals("tXMLMap")) {
-                title = "m"; //$NON-NLS-1$
+                title = "M"; //$NON-NLS-1$
             } else {
-                title = "i";
+                title = "I";
             }
             break;
         case FLOW_REF:
-            title = "l"; //$NON-NLS-1$
+            title = "L"; //$NON-NLS-1$
+            break;
+        case RUN_IF:
+        case ON_SUBJOB_OK:
+        case ON_SUBJOB_ERROR:
+        case ON_COMPONENT_OK:
+        case ON_COMPONENT_ERROR:
+            title = "T"; //$NON-NLS-1$
             break;
         default:
-            title = "i";//$NON-NLS-1$
+            title = "I";//$NON-NLS-1$
             break;
         }
     }

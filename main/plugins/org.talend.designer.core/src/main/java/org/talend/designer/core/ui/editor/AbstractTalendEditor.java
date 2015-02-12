@@ -2001,10 +2001,8 @@ public abstract class AbstractTalendEditor extends GraphicalEditorWithFlyoutPale
                     for (ConnectionPart part : connectionParts) {
                         if (part.getFigure() instanceof PolylineConnection) {
                             PolylineConnection connection = (PolylineConnection) part.getFigure();
-                            Point pt1 = connection.getStart();
-                            Point pt2 = connection.getEnd();
                             double distance = CreateComponentOnLinkHelper.getDistanceOrthogonal(draw2dPosition.x,
-                                    draw2dPosition.y, pt1, pt2, zoom);
+                                    draw2dPosition.y, connection, zoom);
                             if (distance < minDistance) {
                                 selectedConnectionPart = part;
                                 minDistance = Math.min(distance, minDistance);

@@ -238,28 +238,35 @@ public class NodeAnchor extends ChopboxAnchor {
         if (!DesignerPlugin.getDefault().getPreferenceStore().getBoolean(TalendDesignerPrefConstants.EDITOR_LINESTYLE)) {
             return null;
         }
+        Dimension nodeSize = null;
+        if (isSource) {
+            nodeSize = ((Node) connection.getSource()).getSize();
+        } else {
+            nodeSize = ((Node) connection.getTarget()).getSize();
+        }
+
         EConnectionCategory category = connection.getLineStyle().getCategory();
         Point result = new Point(figCenter);
         if (category == EConnectionCategory.MAIN && connection.getLineStyle() != EConnectionType.FLOW_REF) {
             if (isSource) {
-                result.x = figCenter.x + Node.DEFAULT_SIZE / 2;
+                result.x = figCenter.x + nodeSize.width / 2;
             } else {
-                result.x = figCenter.x - Node.DEFAULT_SIZE / 2;
+                result.x = figCenter.x - nodeSize.width / 2;
             }
             return result;
         } else if (category == EConnectionCategory.OTHER
                 && (connection.getLineStyle() == EConnectionType.FLOW_REF || connection.getLineStyle() == EConnectionType.TABLE_REF)) {
             if (isSource) {
-                result.x = figCenter.x + Node.DEFAULT_SIZE / 2;
+                result.x = figCenter.x + nodeSize.width / 2;
                 return result;
             }
 
             int sourceY = connection.getSource().getPosY();
             int targetY = connection.getTarget().getPosY();
             if (sourceY < targetY) {
-                result.y = figCenter.y - Node.DEFAULT_SIZE / 2;
+                result.y = figCenter.y - nodeSize.height / 2;
             } else {
-                result.y = figCenter.y + Node.DEFAULT_SIZE / 2;
+                result.y = figCenter.y + nodeSize.height / 2;
             }
             return result;
         }
