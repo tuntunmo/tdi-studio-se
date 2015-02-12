@@ -41,6 +41,7 @@ import org.talend.core.model.process.INodeConnector;
 import org.talend.core.ui.images.CoreImageProvider;
 import org.talend.designer.core.DesignerPlugin;
 import org.talend.designer.core.ui.editor.connections.ConnectionFigure;
+import org.talend.designer.core.ui.editor.connections.DummyConnectionFigure;
 import org.talend.designer.core.ui.preferences.TalendDesignerPrefConstants;
 import org.talend.designer.core.utils.ResourceDisposeUtil;
 
@@ -61,7 +62,7 @@ public class NodeFigure extends Figure {
 
     private final NodeBorder lineBorder = new NodeBorder();
 
-    private Map<ConnectionFigure, ConnectionFigure> sourceDummyMap;
+    private Map<ConnectionFigure, DummyConnectionFigure> sourceDummyMap;
 
     private boolean dummy;
 
@@ -69,7 +70,7 @@ public class NodeFigure extends Figure {
 
     private ConnectionFigure targetConnection;
 
-    private ConnectionFigure targetDummy;
+    private DummyConnectionFigure targetDummy;
 
     private List<ConnectionFigure> newSourceConnections = new ArrayList<ConnectionFigure>();
 
@@ -95,7 +96,7 @@ public class NodeFigure extends Figure {
 
         INodeConnector mainNodeConnector = node.getConnectorFromType(EConnectionType.FLOW_MAIN);
         if (mainNodeConnector != null) {
-            sourceDummyMap = new HashMap<ConnectionFigure, ConnectionFigure>();
+            sourceDummyMap = new HashMap<ConnectionFigure, DummyConnectionFigure>();
         }
         this.setSize(node.getSize());
         this.setOpaque(false);
@@ -114,12 +115,12 @@ public class NodeFigure extends Figure {
     }
 
     private ConnectionFigure updateSource(ConnectionFigure curConn) {
-        ConnectionFigure connection = sourceDummyMap.get(curConn);
+        DummyConnectionFigure connection = sourceDummyMap.get(curConn);
         if (curConn.getTargetAnchor() == null || curConn.getSourceAnchor() == null) {
             connection.setVisible(false);
             return curConn;
         }
-        Point figCenter = fig.getBounds().getCenter();
+        Point figCenter = new Rectangle(this.node.getLocation(), this.node.getSize()).getCenter(); // fig.getBounds().getCenter();
         // figCenter = getDirectionPosition(connection.getConnection(), figCenter, true);
         curConn.getConnectionRouter().route(curConn);
         Point endPoint = curConn.getStart();
@@ -137,7 +138,7 @@ public class NodeFigure extends Figure {
         if (targetConnection == null) {
             return;
         }
-        Point figCenter = fig.getBounds().getCenter();
+        Point figCenter = new Rectangle(this.node.getLocation(), this.node.getSize()).getCenter();
         // figCenter = getDirectionPosition(targetDummy.getConnection(), figCenter, false);
         if (targetConnection.getTargetAnchor() == null) {
             targetDummy.setVisible(false);
@@ -230,12 +231,12 @@ public class NodeFigure extends Figure {
         dummy = value;
         if (sourceDummyMap != null) {
             if (dummy) {
-                for (ConnectionFigure connection : sourceDummyMap.values()) {
+                for (DummyConnectionFigure connection : sourceDummyMap.values()) {
                     connection.setAlpha(255);
                     connection.setVisible(true);
                 }
             } else {
-                for (ConnectionFigure connection : sourceDummyMap.values()) {
+                for (DummyConnectionFigure connection : sourceDummyMap.values()) {
                     connection.setVisible(false);
                 }
             }
@@ -309,14 +310,15 @@ public class NodeFigure extends Figure {
      * 
      * @param startConnection the startConnection to set
      */
-    ConnectionFigure connection = null;
+    DummyConnectionFigure connection = null;
 
     public void addSourceConnection(ConnectionFigure sourceConnection) {
         if (!sourceDummyMap.keySet().contains(sourceConnection)) {
             if (connection != null) {
                 connection.disposeColors();
             }
-            connection = new ConnectionFigure(sourceConnection.getConnection(), sourceConnection.getConnectionProperty(), node);
+            connection = new DummyConnectionFigure(sourceConnection.getConnection(), sourceConnection.getConnectionProperty(),
+                    node);
             connection.setTargetDecoration(null);
             add(connection);
             if (dummy) {
@@ -343,7 +345,7 @@ public class NodeFigure extends Figure {
         if (connection != null) {
             connection.disposeColors();
         }
-        connection = new ConnectionFigure(targetConnection.getConnection(), targetConnection.getConnectionProperty(), node);
+        connection = new DummyConnectionFigure(targetConnection.getConnection(), targetConnection.getConnectionProperty(), node);
         connection.setTargetDecoration(null);
         add(connection);
         if (dummy) {
