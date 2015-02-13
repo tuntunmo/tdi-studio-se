@@ -86,7 +86,19 @@ public class DecorationFigure extends PolygonDecoration implements RotatableDeco
         graphics.setFont(font);
         graphics.setForegroundColor(black);
         if (isSource) {
-            graphics.drawString("O", point);
+            switch (this.connection.getLineStyle()) {
+            case RUN_IF:
+            case ON_SUBJOB_OK:
+            case ON_SUBJOB_ERROR:
+            case ON_COMPONENT_OK:
+            case ON_COMPONENT_ERROR:
+                title = "T"; //$NON-NLS-1$
+                graphics.drawString(title, point);
+                break;
+            default:
+                graphics.drawString("O", point);//$NON-NLS-1$
+                break;
+            }
             return;
         }
         graphics.drawString(title, point);

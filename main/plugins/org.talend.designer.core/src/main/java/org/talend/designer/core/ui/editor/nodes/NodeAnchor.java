@@ -263,11 +263,11 @@ public class NodeAnchor extends ChopboxAnchor {
 
             int sourceY = connection.getSource().getPosY();
             int targetY = connection.getTarget().getPosY();
-            if (sourceY < targetY) {
-                result.y = figCenter.y - nodeSize.height / 2;
-            } else {
-                result.y = figCenter.y + nodeSize.height / 2;
-            }
+            // if (sourceY < targetY) {
+            // result.y = figCenter.y - nodeSize.height / 2;
+            // } else {
+            result.y = figCenter.y + nodeSize.height / 2;
+            // }
             return result;
         }
         return null;
