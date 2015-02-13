@@ -96,29 +96,6 @@ public class TalendBorderItemRectilinearRouter extends BorderItemRectilinearRout
                     return false;
                 }
                 ((ConnectionFigure) conn).setRoundedBendpointsRadius(16);
-                // if (sourceBounds.y < targetBounds.y) {
-                // pointList.addPoint(firstpoint);
-                // pointList.addPoint((firstpoint.x + lastpoint.x) / 2 - OFFSET, firstpoint.y);
-                // pointList.addPoint((firstpoint.x + lastpoint.x) / 2 - OFFSET, firstpoint.y + 2 * OFFSET);
-                //
-                // pointList.addPoint((firstpoint.x + lastpoint.x) / 2, (firstpoint.y + lastpoint.y) / 2);
-                //
-                // pointList.addPoint((firstpoint.x + lastpoint.x) / 2 + OFFSET, lastpoint.y - 2 * OFFSET);
-                // pointList.addPoint((firstpoint.x + lastpoint.x) / 2 + OFFSET, lastpoint.y);
-                // pointList.addPoint(lastpoint);
-                // alreadyHandle = true;
-                // } else {
-                // pointList.addPoint(firstpoint);
-                // pointList.addPoint((firstpoint.x + lastpoint.x) / 2 - OFFSET, firstpoint.y);
-                // pointList.addPoint((firstpoint.x + lastpoint.x) / 2 - OFFSET, firstpoint.y - 2 * OFFSET);
-                //
-                // pointList.addPoint((firstpoint.x + lastpoint.x) / 2, (firstpoint.y + lastpoint.y) / 2);
-                //
-                // pointList.addPoint((firstpoint.x + lastpoint.x) / 2 + OFFSET, lastpoint.y + 2 * OFFSET);
-                // pointList.addPoint((firstpoint.x + lastpoint.x) / 2 + OFFSET, lastpoint.y);
-                // pointList.addPoint(lastpoint);
-                // alreadyHandle = true;
-                // }
             }
         } else if (category == EConnectionCategory.OTHER
                 && (connection.getLineStyle() == EConnectionType.FLOW_REF || connection.getLineStyle() == EConnectionType.TABLE_REF)) {
@@ -154,23 +131,7 @@ public class TalendBorderItemRectilinearRouter extends BorderItemRectilinearRout
                 pointList.addPoint(lastpoint.x, lastpoint.y + OFFSET);
                 pointList.addPoint(lastpoint);
                 alreadyHandle = true;
-            }
-            // else if ((targetBounds.getTopRight().y == sourceBounds.getBottomLeft().y)
-            // && (targetBounds.x - sourceBounds.x >= 10 * OFFSET)) {
-            // pointList.addPoint(firstpoint);
-            // pointList.addPoint((sourceBounds.getCenter().x + targetBounds.getCenter().x) / 2 - 2 * OFFSET,
-            // firstpoint.y);
-            // pointList.addPoint((sourceBounds.getCenter().x + targetBounds.getCenter().x) / 2 - 2 * OFFSET,
-            // firstpoint.y
-            // + OFFSET);
-            // pointList.addPoint((sourceBounds.getCenter().x + targetBounds.getCenter().x) / 2, firstpoint.y + OFFSET);
-            //
-            // pointList.addPoint((sourceBounds.getCenter().x + targetBounds.getCenter().x) / 2, lastpoint.y + OFFSET);
-            // pointList.addPoint(lastpoint.x, lastpoint.y + OFFSET);
-            // pointList.addPoint(lastpoint);
-            // alreadyHandle = true;
-            // }
-            else if (sourceBounds.x >= targetBounds.x) {
+            } else if (sourceBounds.x >= targetBounds.x) {
                 firstpoint = new Point(sourceBounds.getCenter().x + sourceBounds.width / 2, sourceBounds.getCenter().y);
                 pointList.addPoint(firstpoint);
                 pointList.addPoint(firstpoint.x + OFFSET, firstpoint.y);
@@ -179,8 +140,6 @@ public class TalendBorderItemRectilinearRouter extends BorderItemRectilinearRout
                         pointList.addPoint(firstpoint.x + OFFSET, firstpoint.y - 2 * OFFSET);
                         pointList.addPoint(lastpoint.x, firstpoint.y - 2 * OFFSET);
                     } else {
-                        // pointList.addPoint(firstpoint.x + OFFSET, firstpoint.y + 2 * OFFSET);
-                        // pointList.addPoint(lastpoint.x, firstpoint.y + 2 * OFFSET);
                         pointList.addPoint(firstpoint.x + OFFSET, lastpoint.y + OFFSET);
                         pointList.addPoint(lastpoint.x, lastpoint.y + OFFSET);
                     }
@@ -206,15 +165,6 @@ public class TalendBorderItemRectilinearRouter extends BorderItemRectilinearRout
                 pointList.addPoint(lastpoint);
                 alreadyHandle = true;
             }
-            // else if (targetBounds.y < sourceBounds.y) {
-            // pointList.addPoint(firstpoint);
-            // pointList.addPoint(firstpoint.x + OFFSET, firstpoint.y);
-            // pointList.addPoint(lastpoint.x, firstpoint.y);
-            //
-            // pointList.addPoint(lastpoint.x, lastpoint.y + OFFSET);
-            // pointList.addPoint(lastpoint);
-            // alreadyHandle = true;
-            // }
         }
         if (alreadyHandle && pointList.size() > 0) {
             conn.setPoints(pointList);
