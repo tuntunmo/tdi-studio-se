@@ -155,7 +155,9 @@ public class TalendBorderItemRectilinearRouter extends BorderItemRectilinearRout
                 pointList.addPoint(lastpoint);
                 alreadyHandle = true;
             } else if (sourceBounds.y < targetBounds.y) {
-                ((ConnectionFigure) conn).setRoundedBendpointsRadius(16);
+                if ((targetBounds.getTopRight().y == sourceBounds.getBottomLeft().y)) {
+                    ((ConnectionFigure) conn).setRoundedBendpointsRadius(16);
+                }
                 firstpoint = new Point(sourceBounds.getCenter().x + sourceBounds.width / 2, sourceBounds.getCenter().y);
                 pointList.addPoint(firstpoint);
                 pointList.addPoint((sourceBounds.getCenter().x + targetBounds.getCenter().x) / 2, firstpoint.y);
