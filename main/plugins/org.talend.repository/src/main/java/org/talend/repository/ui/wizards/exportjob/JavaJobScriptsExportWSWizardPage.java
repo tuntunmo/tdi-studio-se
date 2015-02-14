@@ -289,6 +289,43 @@ public class JavaJobScriptsExportWSWizardPage extends JavaJobScriptsExportWizard
     }
 
     @Override
+    protected boolean validateDestinationGroup() {
+        boolean superValidationResult = super.validateDestinationGroup();
+        if (!superValidationResult) {
+            return false;
+        }
+        boolean additionalValidationResult = true;
+        String os = System.getProperty("os.name");
+        if (os.toLowerCase().startsWith("win")) {
+            String fName = this.getDestinationValue().trim();
+            String temp[] = fName.split("\\\\");
+            try {
+                File file = new File(fName);
+                if (!file.exists()) {
+                    file.toPath();
+                }
+            } catch (Exception e) {
+                setMessage(Messages.getString("FileStep1.fileIncomplete"));
+                return false;
+            }
+        }
+        if (os.toLowerCase().startsWith("lin") || os.toLowerCase().startsWith("mac")) {
+            String fName = this.getDestinationValue().trim();
+            try {
+                File file = new File(fName);
+                if (!file.exists()) {
+                    file.toPath();
+                }
+            } catch (Exception e) {
+                setMessage(Messages.getString("FileStep1.fileIncomplete"));
+                return false;
+            }
+        }
+        // validation
+        return superValidationResult && additionalValidationResult;
+    }
+
+    @Override
     public void createControl(Composite parent) {
 
         initializeDialogUnits(parent);
@@ -326,6 +363,8 @@ public class JavaJobScriptsExportWSWizardPage extends JavaJobScriptsExportWizard
         destinationNameFieldInnerComposite.setLayout(layout);
 
         createDestinationGroup(destinationNameFieldInnerComposite);
+
+        // this.getDestinationValue()
         // createExportTree(pageComposite);
         if (!isMultiNodes()) {
             IBrandingService brandingService = (IBrandingService) GlobalServiceRegister.getDefault().getService(
@@ -1273,15 +1312,15 @@ public class JavaJobScriptsExportWSWizardPage extends JavaJobScriptsExportWizard
             }
         }
 
-		// TESB-13867 Export limitations for ESB 'Jobs'
-		// add extra checks.
-		if (isValid) {
-			String errorMsg = presenter.extraCheck(getCurrentExportType1(), getCheckNodes());
-			if (errorMsg != null) {
-				setErrorMessage(errorMsg);
-				return false;
-			}
-		}
+        // TESB-13867 Export limitations for ESB 'Jobs'
+        // add extra checks.
+        if (isValid) {
+            String errorMsg = presenter.extraCheck(getCurrentExportType1(), getCheckNodes());
+            if (errorMsg != null) {
+                setErrorMessage(errorMsg);
+                return false;
+            }
+        }
         setPageComplete(isValid);
         return isValid;
     }
@@ -1576,15 +1615,15 @@ public class JavaJobScriptsExportWSWizardPage extends JavaJobScriptsExportWizard
         }
         boolean noError = getErrorMessage() == null;
 
-		// TESB-13867 Export limitations for ESB 'Jobs'
-		// add extra checks.
-		if (noError) {
-			String errorMsg = presenter.extraCheck(getCurrentExportType1(), getCheckNodes());
-			if (errorMsg != null) {
-				setErrorMessage(errorMsg);
-				return false;
-			}
-		}
+        // TESB-13867 Export limitations for ESB 'Jobs'
+        // add extra checks.
+        if (noError) {
+            String errorMsg = presenter.extraCheck(getCurrentExportType1(), getCheckNodes());
+            if (errorMsg != null) {
+                setErrorMessage(errorMsg);
+                return false;
+            }
+        }
 
         setPageComplete(noError);
         return noError;
@@ -1627,7 +1666,6 @@ public class JavaJobScriptsExportWSWizardPage extends JavaJobScriptsExportWizard
 
             } catch (Exception e) {
                 ExceptionHandler.process(e);
-
             }
 
             return ok;
