@@ -298,14 +298,13 @@ public class JavaJobScriptsExportWSWizardPage extends JavaJobScriptsExportWizard
         String os = System.getProperty("os.name");
         if (os.toLowerCase().startsWith("win")) {
             String fName = this.getDestinationValue().trim();
-            String temp[] = fName.split("\\\\");
             try {
                 File file = new File(fName);
                 if (!file.exists()) {
                     file.toPath();
                 }
             } catch (Exception e) {
-                setMessage(Messages.getString("FileStep1.fileIncomplete"));
+                setMessage(Messages.getString("FileStep1.fileIncomplete")); //$NON-NLS-1$
                 return false;
             }
         }
@@ -317,7 +316,7 @@ public class JavaJobScriptsExportWSWizardPage extends JavaJobScriptsExportWizard
                     file.toPath();
                 }
             } catch (Exception e) {
-                setMessage(Messages.getString("FileStep1.fileIncomplete"));
+                setMessage(Messages.getString("FileStep1.fileIncomplete")); //$NON-NLS-1$
                 return false;
             }
         }
