@@ -538,7 +538,7 @@ public class ComponentsFactory implements IComponentsFactory {
                         BusinessException ex = new BusinessException(
                                 "Cannot load component \"" + currentFolder.getName() + "\": " //$NON-NLS-1$ //$NON-NLS-2$
                                         + e.getMessage(), e);
-                        ExceptionHandler.process(ex, Level.WARN);
+                        ExceptionHandler.process(ex, Level.ERROR);
                     }
 
                     if (this.subMonitor != null) {
