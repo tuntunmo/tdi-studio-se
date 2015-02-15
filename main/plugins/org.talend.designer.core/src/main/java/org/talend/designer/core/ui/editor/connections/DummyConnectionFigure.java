@@ -18,6 +18,8 @@ import org.talend.commons.ui.utils.image.ColorUtils;
 import org.talend.core.model.process.IConnection;
 import org.talend.core.model.process.IConnectionProperty;
 import org.talend.core.model.process.INode;
+import org.talend.designer.core.DesignerPlugin;
+import org.talend.designer.core.ui.preferences.TalendDesignerPrefConstants;
 import org.talend.designer.core.utils.ResourceDisposeUtil;
 
 /**
@@ -33,7 +35,6 @@ public class DummyConnectionFigure extends PolylineConnection {
      * @param node
      */
     public DummyConnectionFigure(IConnection connection, IConnectionProperty connectionProperty, INode node) {
-        this.setLineWidth(2);
         setConnectionProperty(connectionProperty);
     }
 
@@ -44,6 +45,11 @@ public class DummyConnectionFigure extends PolylineConnection {
         setLineStyle(connectionProperty.getLineStyle());
         Color color = ColorUtils.getCacheColor(connectionProperty.getRGB());
         ResourceDisposeUtil.setAndCheckColor(this, color, true);
+        if (!DesignerPlugin.getDefault().getPreferenceStore().getBoolean(TalendDesignerPrefConstants.EDITOR_LINESTYLE)) {
+            this.setLineWidth(1);
+        } else {
+            this.setLineWidth(2);
+        }
     }
 
     public void disposeColors() {
