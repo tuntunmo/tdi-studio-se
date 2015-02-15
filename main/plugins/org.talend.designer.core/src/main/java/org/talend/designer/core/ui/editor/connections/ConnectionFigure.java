@@ -83,7 +83,6 @@ public class ConnectionFigure extends PolylineConnectionEx implements IMapMode {
         linkedNode = node;
         this.connection = connection;
         setDecoration();
-        this.setLineWidth(2);
         this.setRoundedBendpointsRadius(32);
         setConnectionProperty(connectionProperty);
         if (PluginChecker.isAutoParalelPluginLoaded()) {
@@ -98,8 +97,10 @@ public class ConnectionFigure extends PolylineConnectionEx implements IMapMode {
     private void setDecoration() {
         if (!DesignerPlugin.getDefault().getPreferenceStore().getBoolean(TalendDesignerPrefConstants.EDITOR_LINESTYLE)) {
             this.setTargetDecoration(new PolygonDecoration());
+            this.setLineWidth(1);
             return;
         }
+        this.setLineWidth(2);
         PointList template = new PointList();
         PolygonDecoration targetDecoration = new DecorationFigure(this, false);
         targetDecoration.setScale(1, 1);
@@ -374,6 +375,20 @@ public class ConnectionFigure extends PolylineConnectionEx implements IMapMode {
     public Translatable DPtoLP(Translatable t) {
         t.performScale(32.0);
         return t;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx#setLineWidth(int)
+     */
+    @Override
+    public void setLineWidth(int w) {
+        if (!DesignerPlugin.getDefault().getPreferenceStore().getBoolean(TalendDesignerPrefConstants.EDITOR_LINESTYLE)) {
+            super.setLineWidth(1);
+        } else {
+            super.setLineWidth(2);
+        }
     }
 
 }

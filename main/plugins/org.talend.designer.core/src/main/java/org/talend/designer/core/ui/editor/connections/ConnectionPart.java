@@ -184,9 +184,11 @@ public class ConnectionPart extends AbstractConnectionEditPart implements Proper
         ConnectionFigure connection = new ConnectionFigure(conn, conn.getSourceNodeConnector().getConnectionProperty(
                 conn.getLineStyle()), conn.getSource());
 
-        connection.setLineWidth(2);
         if (DesignerPlugin.getDefault().getPreferenceStore().getBoolean(TalendDesignerPrefConstants.EDITOR_LINESTYLE)) {
+            connection.setLineWidth(2);
             connection.setConnectionRouter(new TalendBorderItemRectilinearRouter());
+        } else {
+            connection.setLineWidth(1);
         }
 
         if (((Connection) getModel()).isActivate()) {

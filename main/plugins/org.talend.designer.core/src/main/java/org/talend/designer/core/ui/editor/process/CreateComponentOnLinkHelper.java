@@ -362,8 +362,8 @@ public class CreateComponentOnLinkHelper {
 
     public static void unselectConnection(ConnectionPart connPart) {
         ConnectionFigure fig = (ConnectionFigure) connPart.getFigure();
-        if (fig.getLineWidth() != 2) {
-            fig.setLineWidth(2);
+        if (fig.getLineWidth() != 1) {
+            fig.setLineWidth(1);
             connPart.refresh();
         }
     }
