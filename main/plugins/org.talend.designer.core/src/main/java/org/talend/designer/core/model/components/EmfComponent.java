@@ -385,7 +385,7 @@ public class EmfComponent extends AbstractComponent {
                     } catch (RuntimeException re) {// unfortunatly this methos throws a runtime
                                                    // Exception which is bad
                         if (!CommonsPlugin.isHeadless()) {
-                            Exception compLoadException = new Exception("Coponent " + this.name //$NON-NLS-1$
+                            Exception compLoadException = new Exception("Component " + this.name //$NON-NLS-1$
                                     + " load error.\nbecause the exception:" + re.getCause().getMessage(), re); //$NON-NLS-1$
                             MessageBoxExceptionHandler.process(compLoadException);
                         }
