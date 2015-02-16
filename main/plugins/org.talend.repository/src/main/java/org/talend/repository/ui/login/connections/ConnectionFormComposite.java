@@ -40,6 +40,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -101,6 +102,8 @@ public class ConnectionFormComposite extends Composite {
     private Map<IRepositoryFactory, Map<String, LabelledCombo>> dynamicChoices = new HashMap<IRepositoryFactory, Map<String, LabelledCombo>>();
 
     public static final String URL_FIELD_NAME = "url"; //$NON-NLS-1$
+
+    Label passwordLabel = null;
 
     /**
      * DOC smallet ConnectionsComposite constructor comment.
@@ -165,7 +168,7 @@ public class ConnectionFormComposite extends Composite {
         formDefaultFactory.copy().grab(true, false).span(2, 1).applyTo(userText);
 
         // Password
-        Label passwordLabel = toolkit.createLabel(formBody, Messages.getString("connections.form.field.password")); //$NON-NLS-1$
+        passwordLabel = toolkit.createLabel(formBody, Messages.getString("connections.form.field.password")); //$NON-NLS-1$
         formDefaultFactory.copy().applyTo(passwordLabel);
 
         passwordText = toolkit.createText(formBody, "", SWT.PASSWORD | SWT.BORDER); //$NON-NLS-1$
@@ -366,14 +369,25 @@ public class ConnectionFormComposite extends Composite {
                     passwordText.setEnabled(true);
                     passwordText.setEditable(true);
                     passwordText.setBackground(LoginComposite.WHITE_COLOR);
+                    hideControl(passwordText, false);
+                    hideControl(passwordLabel, false);
                 } else {
                     passwordText.setText(""); //$NON-NLS-1$
                     passwordText.setEnabled(false);
                     passwordText.setEditable(false);
                     passwordText.setBackground(LoginComposite.GREY_COLOR);
+                    hideControl(passwordText, true);
+                    hideControl(passwordLabel, true);
                 }
             }
         }
+    }
+
+    private void hideControl(Control control, boolean hide) {
+        control.setVisible(!hide);
+        GridData layoutData = (GridData) control.getLayoutData();
+        layoutData.exclude = hide;
+        control.getParent().layout();
     }
 
     public IRepositoryFactory getRepository() {
