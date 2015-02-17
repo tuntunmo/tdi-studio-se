@@ -222,11 +222,11 @@ public class ImportTreeFromRepository extends SelectionAction {
             }
             File xmlFile = new File(file);
             if (xmlFile.exists() && !file.endsWith(".zip")) {
-                list = TreeUtil.getFoxTreeNodesForXmlMap(xmlFile.getAbsolutePath(), rootXpath);
+                list = TreeUtil.getFoxTreeNodesForXmlMap(xmlFile.getAbsolutePath(), rootXpath, true);
             } else if (connection.getFileContent() != null && connection.getFileContent().length > 0) {
                 String xsdFile = initFileContent(connection);
                 if (xsdFile != null && new File(xsdFile).exists()) {
-                    list = TreeUtil.getFoxTreeNodesForXmlMap(xsdFile, rootXpath);
+                    list = TreeUtil.getFoxTreeNodesForXmlMap(xsdFile, rootXpath, true);
                 } else {
                     // for manually created output
                     prepareEmfTreeFromConnection(connection);
@@ -270,11 +270,11 @@ public class ImportTreeFromRepository extends SelectionAction {
             List<FOXTreeNode> list = new ArrayList<FOXTreeNode>();
             File xmlFile = new File(file);
             if (xmlFile.exists()) {
-                list = TreeUtil.getFoxTreeNodesForXmlMap(xmlFile.getAbsolutePath(), absoluteXPathQuery);
+                list = TreeUtil.getFoxTreeNodesForXmlMap(xmlFile.getAbsolutePath(), absoluteXPathQuery, true);
             } else if (connection.getFileContent() != null && connection.getFileContent().length > 0) {
                 String xsdFile = initFileContent(connection);
                 if (xsdFile != null && new File(xsdFile).exists()) {
-                    list = TreeUtil.getFoxTreeNodesForXmlMap(xsdFile, absoluteXPathQuery);
+                    list = TreeUtil.getFoxTreeNodesForXmlMap(xsdFile, absoluteXPathQuery, true);
                 }
             } else {
                 throw new FileNotFoundException();
@@ -638,7 +638,7 @@ public class ImportTreeFromRepository extends SelectionAction {
                         }
 
                         List<FOXTreeNode> list = TreeUtil.getFoxTreeNodesForXmlMap(getTempTemplateXSDFile().getAbsolutePath(),
-                                absoluteXPathQuery);
+                                absoluteXPathQuery, true);
 
                         TreeNode pNode = schemaNode;
                         if (MdmConceptType.RECEIVE.equals(selected.getConceptType())) {
@@ -676,7 +676,7 @@ public class ImportTreeFromRepository extends SelectionAction {
                         prepareEmfTree(list, pNode);
                     } else {
                         List<FOXTreeNode> list = TreeUtil.getFoxTreeNodesForXmlMap(getTempTemplateXSDFile().getAbsolutePath(),
-                                selected.getRoot().get(0).getXMLPath());
+                                selected.getRoot().get(0).getXMLPath(), true);
                         schemaNode.getChildren().clear();
                         root = selected.getRoot();
                         loop = selected.getLoop();
