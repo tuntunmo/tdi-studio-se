@@ -136,6 +136,7 @@ for (IConnection conn : conns) {//1
 							if(rejectConnName != null && rejectColumnList != null && rejectColumnList.size() > 0) {%>
 								errorMsg_<%=cid%> = ex_<%=cid%>.getMessage();
 								marketoId_<%=cid%> = <%=conn.getName() %>.Id;
+								marketoStatus_<%=cid%> = "FAILED";
 							<%}else{%>
 								System.err.println(ex_<%=cid%>.getMessage());
 							<%}
@@ -188,20 +189,23 @@ for (IConnection conn : conns) {//1
 									<%=outgoingConn.getName()%> = new <%=outgoingConn.getName()%>Struct();
 									//<%=outgoingConn.getName() %>.SYNC_STATUS = syncStatus_<%=cid%>.getStatus().toString();
 									<%
-									for (IMetadataColumn column: metadata.getListColumns()) {
-										if("Id".equals(column.getLabel())){
-										%>
-											<%=outgoingConn.getName()%>.Id = marketoId_<%=cid%>;
-										<%
-										}else if("Status".equals(column.getLabel())){
-										%>
-											<%=outgoingConn.getName()%>.Status = marketoStatus_<%=cid%>;
-										<%
-										}else{
-										%>			
-											<%=outgoingConn.getName()%>.<%=column.getLabel() %> = <%=conn.getName() %>.<%=column.getLabel() %>;
-										<%
-										}				 
+									IMetadataTable outputMetadata = metadatas.get(0);
+									if(outputMetadata!=null){
+										for (IMetadataColumn column: outputMetadata.getListColumns()) {
+											if("Id".equals(column.getLabel())){
+											%>
+												<%=outgoingConn.getName()%>.Id = marketoId_<%=cid%>;
+											<%
+											}else if("Status".equals(column.getLabel())){
+											%>
+												<%=outgoingConn.getName()%>.Status = marketoStatus_<%=cid%>;
+											<%
+											}else{
+											%>			
+												<%=outgoingConn.getName()%>.<%=column.getLabel() %> = <%=conn.getName() %>.<%=column.getLabel() %>;
+											<%
+											}				 
+										}
 									}
 									%>
 								}
@@ -218,20 +222,23 @@ for (IConnection conn : conns) {//1
 							
 	            			<%=rejectConnName %>.ERROR_MSG = errorMsg_<%=cid%>;
 							<%
-							for (IMetadataColumn column: metadata.getListColumns()) {
-								if("Id".equals(column.getLabel())){
-								%>
-									<%=rejectConnName %>.Id = marketoId_<%=cid%>;
-								<%
-								}else if("Status".equals(column.getLabel())){
-								%>
-									<%=rejectConnName %>.Status = marketoStatus_<%=cid%>;
-								<%
-								}else{
-								%>			
-									<%=rejectConnName %>.<%=column.getLabel() %> = <%=conn.getName() %>.<%=column.getLabel() %>;
-								<%
-								}				 
+							IMetadataTable outputMetadata = metadatas.get(0);
+							if(outputMetadata!=null){
+								for (IMetadataColumn column: outputMetadata.getListColumns()) {
+									if("Id".equals(column.getLabel())){
+									%>
+										<%=rejectConnName %>.Id = marketoId_<%=cid%>;
+									<%
+									}else if("Status".equals(column.getLabel())){
+									%>
+										<%=rejectConnName %>.Status = marketoStatus_<%=cid%>;
+									<%
+									}else{
+									%>			
+										<%=rejectConnName %>.<%=column.getLabel() %> = <%=conn.getName() %>.<%=column.getLabel() %>;
+									<%
+									}				 
+								}
 							}
 							%>
 						}

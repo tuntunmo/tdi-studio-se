@@ -2330,6 +2330,15 @@
               description="change the checkbox parameter to closedlist parameter for tFileInputJSON"
               version="5.6.2">
         </projecttask>
+  		<projecttask
+        	beforeLogon="false"
+        	breaks="6.0"
+        	class="org.talend.repository.model.migration.ChangeDefaultValue4tMarketoOutput"
+        	description="Change the default value of IS_VIRTUAL_COMPONENT for syncMultipleLeads mode"
+        	id="org.talend.repository.model.migration.ChangeDefaultValue4tMarketoOutput"
+        	name="ChangeDefaultValue4tMarketoOutput"
+        	version="6.0.0">
+  		</projecttask>
    </extension>
 
    <extension

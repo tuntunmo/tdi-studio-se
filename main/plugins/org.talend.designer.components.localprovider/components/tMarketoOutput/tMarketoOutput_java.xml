@@ -32,7 +32,7 @@
     <CONNECTOR CTYPE="FLOW" MAX_OUTPUT="1" MAX_INPUT="1"/>
     <!-- <CONNECTOR NAME="MAIN" CTYPE="FLOW" MAX_OUTPUT="1" BASE_SCHEMA="FLOW"/>-->
     <CONNECTOR NAME="REJECT" CTYPE="FLOW" MAX_INPUT="0" MAX_OUTPUT="1" LINE_STYLE="2" COLOR="FF0000" BASE_SCHEMA="FLOW"
-     NOT_SHOW_IF="(OPERATION=='syncMultipleLeads') or (DIE_ON_ERROR == 'true') or (IS_VIRTUAL_COMPONENT == 'true')"/>
+     NOT_SHOW_IF="(OPERATION=='syncMultipleLeads') or (DIE_ON_ERROR == 'true')"/>
     <CONNECTOR CTYPE="ITERATE" MAX_INPUT="0" MAX_OUTPUT="0"/>
     <CONNECTOR CTYPE="SUBJOB_OK" MAX_INPUT="1" />
     <CONNECTOR CTYPE="SUBJOB_ERROR" MAX_INPUT="1" />
@@ -47,14 +47,14 @@
       NAME="SCHEMA_FLOW"
       FIELD="SCHEMA_TYPE"
       NUM_ROW="1">
-      <TABLE IF="(IS_VIRTUAL_COMPONENT == 'false')">
+      <TABLE IF="(OPERATION=='syncLead')">
         <COLUMN NAME="Id" TYPE="id_Integer" READONLY="true" />
         <COLUMN NAME="Email" TYPE="id_String" />
         <COLUMN NAME="ForeignSysPersonId" TYPE="id_String" />
         <COLUMN NAME="ForeignSysType" TYPE="id_String" />
         <COLUMN NAME="Status" TYPE="id_String" READONLY="true" CUSTOM="true"/>
       </TABLE>
-      <TABLE IF="(IS_VIRTUAL_COMPONENT == 'true')">
+      <TABLE IF="(OPERATION=='syncMultipleLeads')">
       	<COLUMN NAME="Id" TYPE="id_Integer" READONLY="false" />
 		<COLUMN NAME="Email" TYPE="id_String" />
 		<COLUMN NAME="ForeignSysPersonId" TYPE="id_String" />
@@ -64,16 +64,6 @@
       </TABLE>
     </PARAMETER>
 
-    <!-- <PARAMETER
-      NAME="SCHEMA_FLOW"
-      FIELD="SCHEMA_TYPE"
-      NUM_ROW="1"
-      CONTEXT="MAIN">
-      <TABLE>
-        <COLUMN NAME="SYNC_STATUS" TYPE="id_String" READONLY="false" CUSTOM="true"/>
-      </TABLE>
-    </PARAMETER>
-    -->
     <PARAMETER
       NAME="SCHEMA_REJECT"
       FIELD="SCHEMA_TYPE"
@@ -123,8 +113,9 @@
 		<DEFAULT>600000</DEFAULT>
 	</PARAMETER>
 	
-	<PARAMETER NAME="IS_VIRTUAL_COMPONENT" FIELD="CHECK" REQUIRED="true" NUM_ROW="95" >
-    	<DEFAULT>false</DEFAULT>
+	<PARAMETER NAME="IS_VIRTUAL_COMPONENT" FIELD="CHECK" REQUIRED="true" NUM_ROW="95" SHOW="false">
+    	<DEFAULT IF="OPERATION=='syncMultipleLeads'">true</DEFAULT>
+    	<DEFAULT IF="OPERATION=='syncLead'">false</DEFAULT>
 	</PARAMETER>
 
 	<PARAMETER NAME="DIE_ON_ERROR" FIELD="CHECK" NUM_ROW="100" REQUIRED="true">
@@ -152,10 +143,10 @@
       <TEMPLATE_PARAM SOURCE="self.BATCH_SIZE" TARGET="Out.BATCH_SIZE" />
       <TEMPLATE_PARAM SOURCE="self.TIMEOUT" TARGET="Out.TIMEOUT" />
       <TEMPLATE_PARAM SOURCE="self.DIE_ON_ERROR" TARGET="Out.DIE_ON_ERROR" />
-      <TEMPLATE_PARAM SOURCE="self.SCHEMA_FLOW" TARGET="Out.SCHEMA" />
+      <TEMPLATE_PARAM SOURCE="self.SCHEMA_FLOW" TARGET="Out.SCHEMA_FLOW" />
       
 
-      <TEMPLATE_PARAM SOURCE="self.SCHEMA_FLOW" TARGET="In.SCHEMA" />
+      <TEMPLATE_PARAM SOURCE="self.SCHEMA_FLOW" TARGET="In.SCHEMA_FLOW" />
       <TEMPLATE_PARAM SOURCE="self.DIE_ON_ERROR" TARGET="In.DIE_ON_ERROR" />
 
      </TEMPLATES>
