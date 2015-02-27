@@ -382,13 +382,10 @@ public class EmfComponent extends AbstractComponent {
                 if (compType.getHEADER().getEXTENSION() != null) {
                     try {
                         ExternalNodesFactory.getInstance(this.getPluginExtension());
-                    } catch (RuntimeException re) {// unfortunatly this methos throws a runtime
-                                                   // Exception which is bad
-                        if (!CommonsPlugin.isHeadless()) {
-                            Exception compLoadException = new Exception("Component " + this.name //$NON-NLS-1$
-                                    + " load error.\nbecause the exception:" + re.getCause().getMessage(), re); //$NON-NLS-1$
-                            MessageBoxExceptionHandler.process(compLoadException);
-                        }
+                    } catch (RuntimeException re) {// unfortunatly this methos throws a runtime Exception which is bad
+                        Exception compLoadException = new Exception("Component " + this.name //$NON-NLS-1$
+                                + " load error.\nbecause the exception:" + re.getCause().getMessage(), re); //$NON-NLS-1$
+                        MessageBoxExceptionHandler.process(compLoadException);
                         throw new BusinessException("Failed to load plugin :" + this.getPluginExtension(), re); //$NON-NLS-1$
                     }
                 }
