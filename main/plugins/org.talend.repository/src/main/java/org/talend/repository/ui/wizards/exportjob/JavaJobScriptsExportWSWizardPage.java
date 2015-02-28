@@ -299,6 +299,28 @@ public class JavaJobScriptsExportWSWizardPage extends JavaJobScriptsExportWizard
         if (os.toLowerCase().startsWith("win")) {
             String fName = this.getDestinationValue().trim();
             try {
+                String fNameStrDeleteDisk = fName.substring(3, fName.length());
+                String[] fNameStr = fNameStrDeleteDisk.split("\\\\");
+                for (String element : fNameStr) {
+                    if (element.contains("/") || element.contains(":") || element.contains("*") || element.contains("?")
+                            || element.contains("\"") || element.contains("<") || element.contains(">") || element.contains("|")) {
+                        throw new Exception();
+                    }
+                    if (element.contains(".")) {
+                        int flag = 0;
+                        for (int j = 0; j < element.length(); j++) {
+                            if (".".equals(element.substring(j, j + 1))) {
+                                flag++;
+                            }
+                        }
+                        if (flag == element.length()) {
+                            throw new Exception();
+                        }
+                    }
+                    if ("".equals(element)) {
+                        throw new Exception();
+                    }
+                }
                 File file = new File(fName);
                 if (!file.exists()) {
                     file.toPath();
@@ -311,6 +333,16 @@ public class JavaJobScriptsExportWSWizardPage extends JavaJobScriptsExportWizard
         if (os.toLowerCase().startsWith("lin") || os.toLowerCase().startsWith("mac")) {
             String fName = this.getDestinationValue().trim();
             try {
+                String fNameStrDeleteDisk = fName.substring(1, fName.length());
+                String[] fNameStr = fNameStrDeleteDisk.split("/");
+                for (String element : fNameStr) {
+                    if (element.startsWith(".")) {
+                        throw new Exception();
+                    }
+                    if ("".equals(element)) {
+                        throw new Exception();
+                    }
+                }
                 File file = new File(fName);
                 if (!file.exists()) {
                     file.toPath();
