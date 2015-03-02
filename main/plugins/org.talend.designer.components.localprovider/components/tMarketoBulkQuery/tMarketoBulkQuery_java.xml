@@ -1,0 +1,176 @@
+<COMPONENT>
+	<HEADER
+		PLATEFORM="ALL"
+		SERIAL=""
+		VERSION="0.101"
+		STATUS="ALPHA"
+		COMPATIBILITY="ALL"
+		AUTHOR="Talend"
+		RELEASE_DATE="20150227A"
+		STARTABLE="false"
+		TECHNICAL="true"
+		SCHEMA_AUTO_PROPAGATE="false"
+		DATA_AUTO_PROPAGATE="false"
+	>
+		<SIGNATURE></SIGNATURE>
+	</HEADER>
+
+	<FAMILIES>
+		<FAMILY>Business/Marketo</FAMILY>
+		<FAMILY>Cloud/Marketo</FAMILY>
+	</FAMILIES>
+
+	<DOCUMENTATION>
+		<URL />
+	</DOCUMENTATION>
+
+  <CONNECTORS>
+    <CONNECTOR CTYPE="FLOW" MAX_INPUT="1" MAX_OUTPUT="1" />
+    <CONNECTOR CTYPE="ITERATE" MAX_OUTPUT="1" MAX_INPUT="1"/>
+    <CONNECTOR CTYPE="SUBJOB_OK" MAX_INPUT="1" />
+    <CONNECTOR CTYPE="SUBJOB_ERROR" MAX_INPUT="1" />
+    <CONNECTOR CTYPE="COMPONENT_OK"/>
+    <CONNECTOR CTYPE="COMPONENT_ERROR"/>
+    <CONNECTOR CTYPE="RUN_IF"/>
+  </CONNECTORS>
+
+  <PARAMETERS>
+	<PARAMETER
+		NAME="ENDPOINT"
+		FIELD="TEXT"
+		NUM_ROW="10"
+		REQUIRED="true"
+	>
+		<DEFAULT>"https://123-ABC-456.mktoapi.com/soap/mktows/2_7"</DEFAULT>
+	</PARAMETER>
+	
+	<PARAMETER
+		NAME="SECRET_KEY"
+		FIELD="PASSWORD"
+		NUM_ROW="20"
+		REQUIRED="true"
+	>
+		<DEFAULT>""</DEFAULT>
+	</PARAMETER>
+
+	<PARAMETER
+		NAME="CLIENT_ACCESSID"
+		FIELD="TEXT"
+		NUM_ROW="20"
+		REQUIRED="true"
+	>
+		<DEFAULT>""</DEFAULT>
+	</PARAMETER>
+	
+	<PARAMETER NAME="OPERATION" FIELD="CLOSED_LIST" NUM_ROW="30"
+			REQUIRED="true">
+		<ITEMS DEFAULT="getLead">
+			<ITEM NAME="getLead" VALUE="getLead" />
+			<ITEM NAME="getMutipleLeads" VALUE="getMutipleLeads" />
+			<ITEM NAME="getLeadActivity" VALUE="getLeadActivity" />
+			<ITEM NAME="getLeadChanges" VALUE="getLeadChanges" />
+		</ITEMS>
+	</PARAMETER>
+
+	<PARAMETER
+		NAME="SCHEMA"
+		FIELD="SCHEMA_TYPE"
+		NUM_ROW="40"
+		REQUIRED="true"
+	>
+	</PARAMETER>
+
+	<PARAMETER
+		NAME="MAPPING_INPUT"
+		FIELD="TABLE"
+		NUM_ROW="45"
+		NB_LINES="6"
+		REQUIRED="true"
+	>
+		<ITEMS BASED_ON_SCHEMA="true">
+			<ITEM NAME="PARAMETER_NAME" FIELD="String" VALUE='""' />
+		</ITEMS>
+	</PARAMETER>
+	
+	<PARAMETER NAME="LEAD_SELECTOR" FIELD="CLOSED_LIST" NUM_ROW="50"
+			REQUIRED="true" SHOW_IF="(OPERATION=='getMutipleLeads')">
+		<ITEMS DEFAULT="LAST_UPDATE_AT_SELECTOR">
+			<ITEM NAME="LEAD_KEY_SELECTOR" VALUE="LeadKeySelector" />
+			<ITEM NAME="STATIC_LIST_SELECTOR" VALUE="StaticListSelector" />
+			<ITEM NAME="LAST_UPDATE_AT_SELECTOR" VALUE="LastUpdateAtSelector" />
+		</ITEMS>
+	</PARAMETER>
+	
+	<PARAMETER NAME="LEAD_KEYTYPE" FIELD="CLOSED_LIST" NUM_ROW="60"
+			REQUIRED="true" >
+		<ITEMS DEFAULT="IDNUM">
+			<ITEM NAME="IDNUM" VALUE="IDNUM" />
+			<ITEM NAME="COOKIE" VALUE="COOKIE" />
+			<ITEM NAME="EMAIL" VALUE="EMAIL" />
+			<ITEM NAME="LEADOWNEREMAIL" VALUE="LEADOWNEREMAIL" />
+			<ITEM NAME="SFDCACCOUNTID" VALUE="SFDCACCOUNTID" />
+			<ITEM NAME="SFDCCONTACTID" VALUE="SFDCCONTACTID" />
+			<ITEM NAME="SFDCLEADID" VALUE="SFDCLEADID" />
+			<ITEM NAME="SFDCLEADOWNERID" VALUE="SFDCLEADOWNERID" />
+			<ITEM NAME="SFDCOPPTYID" VALUE="SFDCOPPTYID" />
+		</ITEMS>
+	</PARAMETER>
+
+	<PARAMETER
+		NAME="LEAD_KEYVALUES"
+		FIELD="PREV_COLUMN_LIST"
+		REQUIRED="true"
+		NUM_ROW="60"
+	>
+	</PARAMETER>
+
+	<PARAMETER
+		NAME="BATCH_SIZE"
+		FIELD="TEXT"
+		NUM_ROW="100"
+		REQUIRED="true"
+	>
+		<DEFAULT>100</DEFAULT>
+	</PARAMETER>
+
+	<PARAMETER
+		NAME="TIMEOUT"
+		FIELD="TEXT"
+		NUM_ROW="105"
+		REQUIRED="true"
+	>
+		<DEFAULT>600000</DEFAULT>
+	</PARAMETER>
+
+	<PARAMETER
+		NAME="DIE_ON_ERROR"
+		FIELD="CHECK"
+		NUM_ROW="150"
+		REQUIRED="true"
+	>
+		<DEFAULT>true</DEFAULT>
+	</PARAMETER>
+
+  </PARAMETERS>
+  <ADVANCED_PARAMETERS/>
+  <CODEGENERATION>
+     <IMPORTS>
+		<IMPORT NAME="SOAP-axis" MODULE="axis.jar" UrlPath="platform:/plugin/org.talend.libraries.apache.axis2/lib/axis.jar" REQUIRED="true" />
+		<IMPORT NAME="SOAP-discovery" MODULE="commons-discovery-0.2.jar" UrlPath="platform:/plugin/org.talend.libraries.apache.common/lib/commons-discovery-0.2.jar" REQUIRED="true" />
+		<IMPORT NAME="SOAP-jaxrpc" MODULE="jaxrpc.jar" UrlPath="platform:/plugin/org.talend.libraries.jax/lib/jaxrpc.jar" REQUIRED="true" />
+		<IMPORT NAME="SOAP-saaj" MODULE="saaj.jar" UrlPath="platform:/plugin/org.talend.libraries.saaj/lib/saaj.jar" REQUIRED="true" />
+		<IMPORT NAME="WSDL4J-1_6_3" MODULE="wsdl4j-1.6.3.jar" BundleID="org.apache.servicemix.bundles.wsdl4j" REQUIRED="true" />
+		<IMPORT NAME="SOAP-logging" MODULE="commons-logging-1.1.jar" UrlPath="platform:/plugin/org.talend.libraries.apache.common/lib/commons-logging-1.1.jar" REQUIRED="true" />
+		<IMPORT NAME="SOAP-JavaMail" MODULE="mail.jar" UrlPath="platform:/plugin/org.talend.libraries.apache.axis2/lib/mail.jar" REQUIRED="true" />
+		<IMPORT NAME="SOAP-JAF" MODULE="activation.jar" UrlPath="platform:/plugin/org.talend.libraries.apache.axis2/lib/activation.jar" REQUIRED="true" />
+		<IMPORT NAME="XML-DOM4J" MODULE="dom4j-1.6.1.jar" UrlPath="platform:/plugin/org.talend.libraries.dom4j-jaxen/lib/dom4j-1.6.1.jar" REQUIRED="true" BundleID="" />
+		<IMPORT NAME="XML-XPATH-JAXEN" MODULE="jaxen-1.1.1.jar" UrlPath="platform:/plugin/org.talend.libraries.dom4j-jaxen/lib/jaxen-1.1.1.jar" REQUIRED="true" BundleID="" />
+		<IMPORT NAME="TALEND-MARKETO" MODULE="talend-marketo-2.7.jar" REQUIRED="true" />
+     </IMPORTS>
+  </CODEGENERATION>
+
+  <RETURNS>
+  	  <RETURN NAME="NB_CALL" TYPE="id_Integer" AVAILABILITY="AFTER" />
+  </RETURNS>
+
+</COMPONENT>
