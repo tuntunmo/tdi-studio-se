@@ -134,7 +134,7 @@ public class JavaProcessUtil {
                 if (headerLibraries.indexOf(File.separatorChar) > 0
                         && headerLibraries.length() > headerLibraries.lastIndexOf(File.separatorChar) + 1) {
                     String substring = headerLibraries.substring(headerLibraries.lastIndexOf(File.separatorChar) + 1);
-                    if (!"".equals(substring)) {//$NON-NLS-1$
+                    if (!"".equals(substring)) { //$NON-NLS-1$
                         modulesNeeded.add(getModuleValue(process, substring));
                     }
                 }
@@ -148,7 +148,7 @@ public class JavaProcessUtil {
                 if (footerLibraries.indexOf(File.separatorChar) > 0
                         && footerLibraries.length() > footerLibraries.lastIndexOf(File.separatorChar) + 1) {
                     String substring = footerLibraries.substring(footerLibraries.lastIndexOf(File.separatorChar) + 1);
-                    if (!"".equals(substring)) {//$NON-NLS-1$
+                    if (!"".equals(substring)) { //$NON-NLS-1$
                         modulesNeeded.add(getModuleValue(process, substring));
                     }
                 }
@@ -178,42 +178,59 @@ public class JavaProcessUtil {
 
         List<? extends INode> nodeList = process.getGeneratingNodes();
         for (INode node : nodeList) {
-            addNodeRelatedModules(process, modulesNeeded, node, forMR);
-
-            if (withChildrens) {
-                if (node.getComponent().getName().equals("tRunJob")) { //$NON-NLS-1$
-                    IElementParameter processIdparam = node.getElementParameter("PROCESS_TYPE_PROCESS"); //$NON-NLS-1$
-                    IElementParameter processVersionParam = node.getElementParameter(EParameterName.PROCESS_TYPE_VERSION
-                            .getName());
-
-                    ProcessItem processItem = null;
-                    if (processVersionParam != null) {
-                        processItem = ItemCacheManager.getProcessItem((String) processIdparam.getValue(),
-                                (String) processVersionParam.getValue());
-                    } else {
-                        processItem = ItemCacheManager.getProcessItem((String) processIdparam.getValue());
-                    }
-
-                    String context = (String) node.getElementParameter("PROCESS_TYPE_CONTEXT").getValue(); //$NON-NLS-1$
-                    if (processItem != null && !searchItems.contains(processItem)) {
-                        // avoid dead loop of method call
-                        searchItems.add(processItem);
-                        JobInfo subJobInfo = new JobInfo(processItem, context);
-                        // achen modify to fix 0006107
-                        IDesignerCoreService service = CorePlugin.getDefault().getDesignerCoreService();
-                        IProcess child = service.getProcessFromItem(subJobInfo.getProcessItem());
-                        // Process child = new Process(subJobInfo.getProcessItem().getProperty());
-                        // child.loadXmlFile();
-                        JavaProcessUtil.getNeededModules(child, true, searchItems, modulesNeeded, forMR);
-                    }
-                }
+            Set<ModuleNeeded> nodeNeededModules = getNeededModules(node, searchItems, withChildrens, forMR);
+            if (nodeNeededModules != null) {
+                modulesNeeded.addAll(nodeNeededModules);
             }
         }
     }
 
+    public static Set<ModuleNeeded> getNeededModules(final INode node, boolean withChildrens, boolean forMR) {
+        return getNeededModules(node, null, withChildrens, forMR);
+    }
+
+    private static Set<ModuleNeeded> getNeededModules(final INode node, Set<ProcessItem> searchItems, boolean withChildrens,
+            boolean forMR) {
+        if (searchItems == null) {
+            searchItems = new HashSet<ProcessItem>();
+        }
+
+        List<ModuleNeeded> modulesNeeded = new ArrayList<ModuleNeeded>();
+        addNodeRelatedModules(node.getProcess(), modulesNeeded, node, forMR);
+
+        if (withChildrens) {
+            if (node.getComponent().getName().equals("tRunJob")) { //$NON-NLS-1$
+                IElementParameter processIdparam = node.getElementParameter("PROCESS_TYPE_PROCESS"); //$NON-NLS-1$
+                IElementParameter processVersionParam = node.getElementParameter(EParameterName.PROCESS_TYPE_VERSION.getName());
+
+                ProcessItem processItem = null;
+                if (processVersionParam != null) {
+                    processItem = ItemCacheManager.getProcessItem((String) processIdparam.getValue(),
+                            (String) processVersionParam.getValue());
+                } else {
+                    processItem = ItemCacheManager.getProcessItem((String) processIdparam.getValue());
+                }
+
+                String context = (String) node.getElementParameter("PROCESS_TYPE_CONTEXT").getValue(); //$NON-NLS-1$
+                if (processItem != null && !searchItems.contains(processItem)) {
+                    // avoid dead loop of method call
+                    searchItems.add(processItem);
+                    JobInfo subJobInfo = new JobInfo(processItem, context);
+                    // achen modify to fix 0006107
+                    IDesignerCoreService service = CorePlugin.getDefault().getDesignerCoreService();
+                    IProcess child = service.getProcessFromItem(subJobInfo.getProcessItem());
+                    // Process child = new Process(subJobInfo.getProcessItem().getProperty());
+                    // child.loadXmlFile();
+                    JavaProcessUtil.getNeededModules(child, true, searchItems, modulesNeeded, forMR);
+                }
+            }
+        }
+        return new HashSet<ModuleNeeded>(modulesNeeded);
+    }
+
     /**
      * DOC nrousseau Comment method "addNodeRelatedModules".
-     * 
+     *
      * @param process
      * @param modulesNeeded
      * @param node
@@ -335,7 +352,7 @@ public class JavaProcessUtil {
 
     /**
      * DOC YeXiaowei Comment method "findMoreLibraries".
-     * 
+     *
      * @param neededLibraries
      * @param curParam
      */
@@ -348,7 +365,7 @@ public class JavaProcessUtil {
                 List list = (List) value;
                 for (int i = 0; i < list.size(); i++) {
                     if (list.get(i) instanceof HashMap) {
-                        HashMap map = (HashMap) list.get(i);// JAR_NAME
+                        HashMap map = (HashMap) list.get(i); // JAR_NAME
                         Object object = map.get("JAR_NAME"); //$NON-NLS-1$
                         if (object != null && object instanceof String) {
                             String driverName = (String) object;
@@ -373,10 +390,13 @@ public class JavaProcessUtil {
                 String separator = ";"; //$NON-NLS-1$
                 if (jars.contains(separator)) {
                     for (String jar : jars.split(separator)) {
+                        if (!jar.contains(".")) { //$NON-NLS-1$
+                            continue;
+                        }
                         ModuleNeeded module = new ModuleNeeded(null, jar, null, true);
                         modulesNeeded.add(module);
                     }
-                } else {
+                } else if (jars.contains(".")) { //$NON-NLS-1$
                     ModuleNeeded module = new ModuleNeeded(null, jars, null, true);
                     modulesNeeded.add(module);
                 }
@@ -444,7 +464,7 @@ public class JavaProcessUtil {
             String values = contextParam.getValue();
             if (StringUtils.isNotBlank(values)) {
                 IPath path = new Path(values); // if it's path
-                String fileName = path.lastSegment();// get the file name only.
+                String fileName = path.lastSegment(); // get the file name only.
                 ModuleNeeded module = new ModuleNeeded(null, fileName, null, true);
                 return module;
             }
@@ -453,9 +473,9 @@ public class JavaProcessUtil {
     }
 
     /**
-     * 
+     *
      * DOC hcyi Comment method "getContextOriginalValue".
-     * 
+     *
      * @param process
      * @param contextStr
      */
@@ -480,7 +500,7 @@ public class JavaProcessUtil {
      * <p>
      * Get the real parameter value by resolving the selected context on the run process view.
      * </p>
-     * 
+     *
      * @param process
      * @param value
      * @return
@@ -495,7 +515,7 @@ public class JavaProcessUtil {
      * <p>
      * Get the real parameter value by resolving the default context of process.
      * </p>
-     * 
+     *
      * @param process
      * @param value
      * @return
@@ -509,7 +529,7 @@ public class JavaProcessUtil {
      * <p>
      * Get the real parameter value by resolving the selected context.
      * </p>
-     * 
+     *
      * @param process
      * @param value
      * @param selectedContext

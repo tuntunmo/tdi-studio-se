@@ -37,6 +37,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.MultiPageEditorPart;
 import org.talend.commons.ui.runtime.exception.ExceptionHandler;
 import org.talend.core.CorePlugin;
+import org.talend.core.model.components.ComponentCategory;
 import org.talend.core.model.components.ComponentPaletteUtilities;
 import org.talend.core.model.components.IComponent;
 import org.talend.core.model.components.IComponentsFactory;
@@ -101,9 +102,9 @@ import org.talend.repository.ui.actions.routines.CreateRoutineAction;
 /**
  * Detailled comment <br/>
  * .
- * 
- * $Id: DesignerCoreService.java 1 2006-12-19 上午10:25:42 bqian
- * 
+ *
+ * $Id: DesignerCoreService.java 1 2006 -12 -19 上午10:25:42 bqian
+ *
  */
 public class DesignerCoreService implements IDesignerCoreService {
 
@@ -385,9 +386,9 @@ public class DesignerCoreService implements IDesignerCoreService {
     }
 
     /**
-     * 
+     *
      * DOC YeXiaowei Comment method "getDisplayForProcessParameterFromName".
-     * 
+     *
      * @param name
      * @return
      */
@@ -480,7 +481,7 @@ public class DesignerCoreService implements IDesignerCoreService {
 
     /**
      * DOC hcw Comment method "checkRepository".
-     * 
+     *
      * @param node
      * @param item
      * @param stack
@@ -542,7 +543,7 @@ public class DesignerCoreService implements IDesignerCoreService {
     }
 
     /**
-     * 
+     *
      * nrousseau Comment method "removeConnection".
      */
     @Override
@@ -607,7 +608,7 @@ public class DesignerCoreService implements IDesignerCoreService {
                         Map<String, Object> foundLine = null;
                         for (Map<String, Object> line : traceFilterValues) {
                             Object column = line.get(IConnection.TRACE_SCHEMA_COLUMN);
-                            if (oldName.equals(column)) {// found
+                            if (oldName.equals(column)) { // found
                                 foundLine = line;
                                 break;
                             }
@@ -705,6 +706,12 @@ public class DesignerCoreService implements IDesignerCoreService {
     @Override
     public Set<ModuleNeeded> getNeededLibrariesForProcess(IProcess process, boolean withChildrens) {
         return JavaProcessUtil.getNeededModules(process, withChildrens);
+    }
+
+    @Override
+    public Set<ModuleNeeded> getNeededModules(INode node, boolean withChildrens) {
+        return JavaProcessUtil.getNeededModules(node, withChildrens,
+                ComponentCategory.CATEGORY_4_MAPREDUCE.getName().equals(node.getProcess().getComponentsType()));
     }
 
     @Override

@@ -28,7 +28,6 @@ import org.talend.core.model.process.EComponentCategory;
 import org.talend.core.model.process.Element;
 import org.talend.designer.core.i18n.Messages;
 import org.talend.designer.core.ui.editor.nodes.Node;
-import org.talend.designer.core.utils.JavaProcessUtil;
 import org.talend.designer.core.utils.ModulesInstallerUtil;
 import org.talend.librariesmanager.prefs.LibrariesManagerUtils;
 
@@ -56,16 +55,9 @@ public class MissingSettingsMultiThreadDynamicComposite extends TopMessagesMulti
         missModulesNeeded.clear();
         final Element ele = this.getElement();
         if (ele instanceof Node) {
-            List<ModuleNeeded> modules = new ArrayList<ModuleNeeded>();
-            // find the all required modules.
-            JavaProcessUtil.addNodeRelatedModules(((Node) ele).getProcess(), modules, ((Node) ele));
             // get not installed modules
-            List<ModuleNeeded> updatedModules = LibrariesManagerUtils.getNotInstalledModules(modules);
-            for (ModuleNeeded needed : updatedModules) {
-                if (needed.isRequired(((Node) ele).getElementParameters())) {
-                    needed.setRequired(true);
-                }
-            }
+            List<ModuleNeeded> updatedModules = LibrariesManagerUtils.getNotInstalledModules(((Node) ele));
+
             missModulesNeeded.addAll(updatedModules);
         }
         setVisibleTopMessage(!missModulesNeeded.isEmpty());
@@ -85,7 +77,7 @@ public class MissingSettingsMultiThreadDynamicComposite extends TopMessagesMulti
 
                 messWithActionComposite.updateActionButton(
                         Messages.getString("MissingSettingsMultiThreadDynamicComposite.installName") //$NON-NLS-1$
-                                + "...", null);//$NON-NLS-1$
+                                + "...", null); //$NON-NLS-1$
                 messWithActionComposite.addActionListener(new SelectionAdapter() {
 
                     @Override
