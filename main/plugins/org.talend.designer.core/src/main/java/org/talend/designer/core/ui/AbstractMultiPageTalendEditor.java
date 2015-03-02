@@ -337,7 +337,7 @@ public abstract class AbstractMultiPageTalendEditor extends MultiPageEditorPart 
             return;
         }
         Property property = processEditorInput.getItem().getProperty();
-        if (!CollectionUtils.isEqualCollection(propertyInformation, property.getInformations())) {
+        if (propertyInformation != null && !CollectionUtils.isEqualCollection(propertyInformation, property.getInformations())) {
             Problems.computePropertyMaxInformationLevel(property, true);
         }
     }
