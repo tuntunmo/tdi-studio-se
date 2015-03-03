@@ -18,9 +18,13 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -294,65 +298,18 @@ public class JavaJobScriptsExportWSWizardPage extends JavaJobScriptsExportWizard
         if (!superValidationResult) {
             return false;
         }
+        Properties properties = new Properties(System.getProperties());
         boolean additionalValidationResult = true;
-        String os = System.getProperty("os.name");
-        if (os.toLowerCase().startsWith("win")) {
-            String fName = this.getDestinationValue().trim();
-            try {
-                String fNameStrDeleteDisk = fName.substring(3, fName.length());
-                String[] fNameStr = fNameStrDeleteDisk.split("\\\\");
-                for (String element : fNameStr) {
-                    if (element.contains("/") || element.contains(":") || element.contains("*") || element.contains("?")
-                            || element.contains("\"") || element.contains("<") || element.contains(">") || element.contains("|")) {
-                        throw new Exception();
-                    }
-                    if (element.contains(".")) {
-                        int flag = 0;
-                        for (int j = 0; j < element.length(); j++) {
-                            if (".".equals(element.substring(j, j + 1))) {
-                                flag++;
-                            }
-                        }
-                        if (flag == element.length()) {
-                            throw new Exception();
-                        }
-                    }
-                    if ("".equals(element)) {
-                        throw new Exception();
-                    }
-                }
-                File file = new File(fName);
-                if (!file.exists()) {
-                    file.toPath();
-                }
-            } catch (Exception e) {
-                setMessage(Messages.getString("FileStep1.fileIncomplete")); //$NON-NLS-1$
-                return false;
-            }
+        String fName = this.getDestinationValue().trim();
+        String separator = properties.getProperty("file.separator");
+        String jobName = fName.substring(fName.lastIndexOf(separator) + 1, fName.lastIndexOf(".")); //$NON-NLS-1$
+        @SuppressWarnings("restriction")
+        IStatus nameStauts = JavaPlugin.getWorkspace().validateName(jobName, IResource.PROJECT);
+        if (!nameStauts.isOK()) {
+            setErrorMessage(nameStauts.getMessage());
+            setPageComplete(false);
+            additionalValidationResult = false;
         }
-        if (os.toLowerCase().startsWith("lin") || os.toLowerCase().startsWith("mac")) {
-            String fName = this.getDestinationValue().trim();
-            try {
-                String fNameStrDeleteDisk = fName.substring(1, fName.length());
-                String[] fNameStr = fNameStrDeleteDisk.split("/");
-                for (String element : fNameStr) {
-                    if (element.startsWith(".")) {
-                        throw new Exception();
-                    }
-                    if ("".equals(element)) {
-                        throw new Exception();
-                    }
-                }
-                File file = new File(fName);
-                if (!file.exists()) {
-                    file.toPath();
-                }
-            } catch (Exception e) {
-                setMessage(Messages.getString("FileStep1.fileIncomplete")); //$NON-NLS-1$
-                return false;
-            }
-        }
-        // validation
         return superValidationResult && additionalValidationResult;
     }
 
