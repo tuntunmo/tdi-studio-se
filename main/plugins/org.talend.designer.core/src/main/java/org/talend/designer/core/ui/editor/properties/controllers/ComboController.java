@@ -143,6 +143,7 @@ public class ComboController extends AbstractElementPropertySectionController {
 
     IControlCreator cbCtrl = new IControlCreator() {
 
+        @Override
         public Control createControl(final Composite parent, final int style) {
             CCombo cb = new CCombo(parent, style);
             return cb;
@@ -290,12 +291,14 @@ public class ComboController extends AbstractElementPropertySectionController {
      * 
      * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         // TODO Auto-generated method stub
     }
 
     SelectionListener listenerSelection = new SelectionAdapter() {
 
+        @Override
         public void widgetSelected(SelectionEvent event) {
             // dynamicProperty.updateRepositoryList();
             Command cmd = createCommand(event);
@@ -368,8 +371,8 @@ public class ComboController extends AbstractElementPropertySectionController {
                     if (elem instanceof Node) {
 
                         // this.dynamicProperty.updateRepositoryList();
-                        String connectionId = value.toString().split(" - ")[0]; //$NON-NLS-N$
-                        String tableLabel = value.toString().split(" - ")[1]; //$NON-NLS-N$
+                        String connectionId = value.toString().split(" - ")[0];
+                        String tableLabel = value.toString().split(" - ")[1];
                         IProxyRepositoryFactory factory = ProxyRepositoryFactory.getInstance();
                         Item item = null;
                         try {
@@ -425,8 +428,8 @@ public class ComboController extends AbstractElementPropertySectionController {
             String schemaSelected = (String) node.getPropertyValue(EParameterName.REPOSITORY_SCHEMA_TYPE.getName());
             if (schemaSelected != null) {
 
-                String connectionId = schemaSelected.toString().split(" - ")[0]; //$NON-NLS-N$
-                String tableLabel = schemaSelected.toString().split(" - ")[1]; //$NON-NLS-N$
+                String connectionId = schemaSelected.toString().split(" - ")[0];
+                String tableLabel = schemaSelected.toString().split(" - ")[1];
                 IProxyRepositoryFactory factory = ProxyRepositoryFactory.getInstance();
                 Item item = null;
                 try {
@@ -535,7 +538,11 @@ public class ComboController extends AbstractElementPropertySectionController {
             if (isPatternList || isRule) {
                 combo.setText("".equals(strValue) ? (String) value : strValue);
             } else {
-                combo.setText(strValue);
+                if (!StringUtils.isEmpty(strValue)) {
+                    combo.setText(strValue);
+                } else {
+                    combo.setText((String) value);
+                }
             }
 
             combo.setVisible(true);
