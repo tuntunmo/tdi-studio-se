@@ -18,7 +18,6 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
@@ -298,13 +297,12 @@ public class JavaJobScriptsExportWSWizardPage extends JavaJobScriptsExportWizard
         if (!superValidationResult) {
             return false;
         }
-        Properties properties = new Properties(System.getProperties());
         boolean additionalValidationResult = true;
         String fName = this.getDestinationValue().trim();
-        String separator = properties.getProperty("file.separator");
-        String jobName = fName.substring(fName.lastIndexOf(separator) + 1, fName.lastIndexOf(".")); //$NON-NLS-1$
+        String jobName = new Path(fName).removeFileExtension().lastSegment();
+
         @SuppressWarnings("restriction")
-        IStatus nameStauts = JavaPlugin.getWorkspace().validateName(jobName, IResource.PROJECT);
+        IStatus nameStauts = JavaPlugin.getWorkspace().validateName(jobName, IResource.FILE);
         if (!nameStauts.isOK()) {
             setErrorMessage(nameStauts.getMessage());
             setPageComplete(false);
