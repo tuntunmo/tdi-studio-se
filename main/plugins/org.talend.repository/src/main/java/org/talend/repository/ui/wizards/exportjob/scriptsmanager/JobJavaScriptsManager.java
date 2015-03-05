@@ -57,6 +57,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
@@ -80,6 +81,7 @@ import org.talend.core.model.process.JobInfo;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.ProcessItem;
 import org.talend.core.model.properties.Project;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.RoutineItem;
 import org.talend.core.model.properties.RulesItem;
 import org.talend.core.model.repository.ERepositoryObjectType;
@@ -91,6 +93,8 @@ import org.talend.core.model.utils.JavaResourcesHelper;
 import org.talend.core.repository.constants.FileConstants;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.repository.utils.Log4jUtil;
+import org.talend.core.repository.utils.URIHelper;
+import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.core.services.resource.IExportJobResourcesService;
 import org.talend.core.ui.CoreUIPlugin;
 import org.talend.core.ui.branding.IBrandingService;
@@ -944,26 +948,16 @@ public class JobJavaScriptsManager extends JobScriptsManager {
             return;
         }
         try {
+            // ProxyRepositoryFactory.getSpecificVersion(projectprocessItem.getProperty().getId,);
+
             String projectName = getCorrespondingProjectName(processItem);
-            String jobName = processItem.getProperty().getLabel();
-            String jobVersion = processItem.getProperty().getVersion();
-            if (!isMultiNodes() && selectedJobVersion != null && selectedJobVersion.length == 1) {
-                jobVersion = selectedJobVersion[0];
-            }
 
             IPath projectFilePath = getCorrespondingProjectRootPath(processItem).append(FileConstants.LOCAL_PROJECT_FILENAME);
 
-            String processPath = processItem.getState().getPath();
-            processPath = processPath == null || processPath.equals("") ? "" : processPath; //$NON-NLS-1$ //$NON-NLS-2$
-            IPath emfFileRootPath = getEmfFileRootPath(processItem);
-            ERepositoryObjectType itemType = ERepositoryObjectType.getItemType(processItem);
-            IPath typeFolderPath = new Path(ERepositoryObjectType.getFolderName(itemType));
-            IPath itemFilePath = emfFileRootPath.append(processPath).append(
-                    jobName + "_" + jobVersion + "." + FileConstants.ITEM_EXTENSION); //$NON-NLS-1$ //$NON-NLS-2$
-            IPath propertiesFilePath = emfFileRootPath.append(processPath).append(
-                    jobName + "_" + jobVersion + "." + FileConstants.PROPERTIES_EXTENSION); //$NON-NLS-1$ //$NON-NLS-2$
-            IPath screenshotFilePath = emfFileRootPath.append(processPath).append(
-                    jobName + "_" + jobVersion + "." + FileConstants.SCREENSHOT_EXTENSION); //$NON-NLS-1$ //$NON-NLS-2$
+            IPath itemFilePath = getProcessItemPath(processItem, null, false, selectedJobVersion);
+            IPath propertiesFilePath = itemFilePath.removeFileExtension().addFileExtension(FileConstants.PROPERTIES_EXTENSION);
+            IPath screenshotFilePath = itemFilePath.removeFileExtension().addFileExtension(FileConstants.SCREENSHOT_EXTENSION);
+
             // project file
             checkAndAddProjectResource(allResources, resource, JOB_ITEMS_FOLDER_NAME + PATH_SEPARATOR + projectName,
                     FileLocator.toFileURL(projectFilePath.toFile().toURL()));
@@ -972,15 +966,55 @@ public class JobJavaScriptsManager extends JobScriptsManager {
             emfFileUrls.add(FileLocator.toFileURL(itemFilePath.toFile().toURL()));
             emfFileUrls.add(FileLocator.toFileURL(propertiesFilePath.toFile().toURL()));
             emfFileUrls.add(FileLocator.toFileURL(screenshotFilePath.toFile().toURL()));
+
+            ERepositoryObjectType itemType = ERepositoryObjectType.getItemType(processItem);
+            IPath typeFolderPath = new Path(ERepositoryObjectType.getFolderName(itemType));
             String relativePath = JOB_ITEMS_FOLDER_NAME + PATH_SEPARATOR + projectName + PATH_SEPARATOR
                     + typeFolderPath.toOSString();
-            if (processPath != null && !"".equals(processPath)) { //$NON-NLS-1$
-                relativePath = relativePath + PATH_SEPARATOR + processPath;
+            IPath itemFolderPath = itemFilePath.makeRelativeTo(projectFilePath.removeLastSegments(1).append(typeFolderPath))
+                    .removeLastSegments(1);
+            if (itemFolderPath != null && !"".equals(itemFolderPath)) { //$NON-NLS-1$
+                relativePath = relativePath + PATH_SEPARATOR + itemFolderPath;
             }
             resource.addResources(relativePath, emfFileUrls);
         } catch (Exception e) {
             ExceptionHandler.process(e);
         }
+    }
+
+    protected IPath getProcessItemPath(ProcessItem processItem, String path, boolean flag, String... selectedJobVersion)
+            throws Exception {
+        String processPath = processItem.getState().getPath();
+        if (path != null) {
+            processPath = path;
+        }
+        processPath = processPath == null || processPath.equals("") ? "" : processPath; //$NON-NLS-1$ //$NON-NLS-2$
+        IPath emfFileRootPath = getEmfFileRootPath(processItem);
+
+        String jobName = processItem.getProperty().getLabel();
+        String jobVersion = processItem.getProperty().getVersion();
+        if (!isMultiNodes() && selectedJobVersion != null && selectedJobVersion.length == 1) {
+            jobVersion = selectedJobVersion[0];
+        }
+        IPath itemPath = emfFileRootPath.append(processPath).append(
+                jobName + '_' + jobVersion + '.' + FileConstants.ITEM_EXTENSION);
+
+        File itemFile = itemPath.toFile();
+        if (!flag && !itemFile.exists()) {
+            IRepositoryViewObject specificVersion = CoreRuntimePlugin.getInstance().getProxyRepositoryFactory()
+                    .getSpecificVersion(processItem.getProperty().getId(), jobVersion, true);
+            if (specificVersion != null) {
+                Property property = specificVersion.getProperty();
+                URI uri = property.eResource().getURI();
+                IPath fullPath = URIHelper.convert(uri);
+                IPath relativePath = fullPath.makeRelativeTo(emfFileRootPath);
+                String realProcessPath = relativePath.removeLastSegments(1).removeFirstSegments(2).toString();
+
+                return getProcessItemPath(processItem, realProcessPath, true, selectedJobVersion);
+            }
+        }
+
+        return itemPath;
     }
 
     protected void addSourceCode(ExportFileResource[] allResources, ProcessItem processItem, boolean needSource,
