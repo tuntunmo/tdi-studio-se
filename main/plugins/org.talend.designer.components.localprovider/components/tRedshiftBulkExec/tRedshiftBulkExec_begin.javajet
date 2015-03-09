@@ -105,35 +105,40 @@ skeleton="../templates/db_output_bulk.skeleton"
 	boolean	log4jEnabled = ("true").equals(ElementParameterParser.getValue(node.getProcess(), "__LOG4J_ACTIVATE__"));
 	String fieldSeparator = ElementParameterParser.getValue(node,"__FIELDSEPARATOR__");
 	String textEnclosure = ElementParameterParser.getValue(node, "__TEXT_ENCLOSURE__");
+	String importType = ElementParameterParser.getValue(node, "__IMPORT_TYPE__");
 %>
 	StringBuilder command_<%=cid%> = new StringBuilder();
-	char fieldSeparator_<%=cid %> = 
 <%
-	if(fieldSeparator.trim().isEmpty()) {
+	if("DELIMITED_OR_CSV".equals(importType)) {
 %>
-	',';
+		char fieldSeparator_<%=cid %> = 
 <%
-	} else {
+		if(fieldSeparator.trim().isEmpty()) {
 %>
-	String.valueOf(<%=fieldSeparator.trim()%>).charAt(0);
+		',';
 <%
-	}
+		} else {
 %>
-	char textEnclosure_<%=cid %> = 
+		String.valueOf(<%=fieldSeparator.trim()%>).charAt(0);
 <%
-	if("EMPTY".equals(textEnclosure)) {
+		}
 %>
-	'\0';
+		char textEnclosure_<%=cid %> = 
+<%
+		if("EMPTY".equals(textEnclosure)) {
+%>
+		'\0';
 	
 <%
-	} else if("DOUBLE_QUOTE".equals(textEnclosure)) {
+		} else if("DOUBLE_QUOTE".equals(textEnclosure)) {
 %>
-	'"';
+		'"';
 <%
-	} else {
+		} else {
 %>
-	String.valueOf(<%=textEnclosure%>).charAt(0);
+		String.valueOf(<%=textEnclosure%>).charAt(0);
 <%
+		}
 	}
 %>
 	command_<%=cid%>.append("COPY ").append(tableName2_<%=cid%>)
@@ -175,13 +180,33 @@ skeleton="../templates/db_output_bulk.skeleton"
 	command_<%=cid%>.append("s3://").append(<%=bucket%>).append("/").append(<%=key%>)
 	.append("' ")
 	.append("credentials 'aws_access_key_id=").append(<%=access_key%>).append(";aws_secret_access_key=").append(decryptedPwd_<%=cid%>).append("' ")
-	.append("DELIMITER '").append(fieldSeparator_<%=cid%>).append("' ");
-	
+<%
+	if("DELIMITED_OR_CSV".equals(importType)) {
+%>
+	.append("DELIMITER '").append(fieldSeparator_<%=cid%>).append("' ")
+<%
+	} else if("JSON".equals(importType)) {
+		String mapping = ElementParameterParser.getValue(node, "__JSON_MAPPING__");
+%>
+	.append("JSON '").append(<%=mapping%>).append("' ")
+<%
+	} else if("FIXEDWIDTH".equals(importType)) {
+		String mapping = ElementParameterParser.getValue(node, "__FIXEDWIDTH_MAPPING__");
+%>
+	.append("FIXEDWIDTH '").append(<%=mapping%>).append("' ")
+<%
+	}
+%>
+	;
+<%
+	if("DELIMITED_OR_CSV".equals(importType)) {
+%>
 	if(textEnclosure_<%=cid %>!='\0') {
 		command_<%=cid%>.append("CSV QUOTE '").append(textEnclosure_<%=cid %>).append("' ");
 	}
-	
 <%
+	}
+	
 	String encoding = ElementParameterParser.getValue(node, "__ENCODING__");
 %>
 	command_<%=cid%>.append("ENCODING ").append(<%=encoding%>).append(" ")
@@ -192,25 +217,45 @@ skeleton="../templates/db_output_bulk.skeleton"
 		for(Map<String, String> parameter : settings) {
 			String parameterKey = parameter.get("OTHER_PARAMETER");
 			String value = parameter.get("DATA_VALUE");
-			if("ESCAPE,EXPLICIT_IDS,IGNOREBLANKLINES,TRIMBLANKS,EMPTYASNULL,BLANKSASNULL".contains(parameterKey)) {
+			if("REGION,NULL".contains(parameterKey)) {
+%>
+			.append("<%=parameterKey%> '").append(<%=value%>).append("' ")
+<%
+			} else if("ESCAPE,EXPLICIT_IDS,IGNOREBLANKLINES,TRIMBLANKS,EMPTYASNULL,BLANKSASNULL,SSH,ENCRYPTED,REMOVEQUOTES,ACCEPTANYDATE,TRUNCATECOLUMNS,FILLRECORD,NOLOAD,ROUNDEC".contains(parameterKey)) {
 				if("true".equals(value)) {
 %>
 				.append("<%=parameterKey%> ")
 <%
 				}
-			} else if("REGION".equals(parameterKey)) {
-%>
-			.append("REGION '").append(<%=value%>).append("' ")
-<%
-			} else if("IGNOREHEADER".equals(parameterKey)) {
+			} else if("IGNOREHEADER,COMPROWS".contains(parameterKey)) {
 %>
 			.append("<%=parameterKey%> ").append(<%=value%>).append(" ")
 <%
 			} else if("MAXERROR".equals(parameterKey)) {
 				isSetMaxError = true;
 %>
-			.append("<%=parameterKey%> ").append(<%=value%>).append(" ")
+			.append("MAXERROR ").append(<%=value%>).append(" ")
 <%
+			} else if("ACCEPTINVCHARS".equals(parameterKey)) {
+				if("true".equals(value)) {
+%>
+				.append("ACCEPTINVCHARS ")
+<%
+				} else {
+%>
+				.append("ACCEPTINVCHARS '").append(<%=value%>).append("' ")
+<%
+				}
+			} else if("COMPUPDATE,STATUPDATE".contains(parameterKey)) {
+				if("true,TRUE,\"TRUE\",\"ON\"".contains(value)) {
+%>
+				.append("<%=parameterKey%> ON")
+<%
+				} else if("false,FALSE,\"FALSE\",\"OFF\"".contains(value)) {
+%>
+				.append("<%=parameterKey%> OFF")
+<%
+				}
 			}
  		}
 	}
