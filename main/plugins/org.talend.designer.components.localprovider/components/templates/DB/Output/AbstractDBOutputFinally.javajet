@@ -16,6 +16,11 @@ imports="
 	INode node = (INode)codeGenArgument.getArgument();
 	dbLog = new DBLogUtil(node);
 	String cid = node.getUniqueName();
+
+	if(cid.matches("^.*?tAmazonAuroraOutput_\\d+_out$")){
+	     cid = cid.substring(0,cid.length()-4);
+	}
+
 	boolean useExistingConnection = "true".equals(ElementParameterParser.getValue(node,"__USE_EXISTING_CONNECTION__"));
 %>
 	<%
