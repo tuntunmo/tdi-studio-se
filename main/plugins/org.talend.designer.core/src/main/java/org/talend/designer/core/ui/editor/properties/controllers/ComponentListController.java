@@ -242,12 +242,29 @@ public class ComponentListController extends AbstractElementPropertySectionContr
             INode currentNode = (INode) elem;
 
             List<INode> nodeList = null;
-
+            List<INode> list = null;
             IJobletProviderService jobletService = getJobletProviderService(param);
             if (jobletService != null) {
                 nodeList = jobletService.getConnNodesForInputTrigger(currentNode, param);
             } else {
-                List<INode> list = (List<INode>) ((Node) elem).getProcess().getNodesOfType(param.getFilter());
+                if (PluginChecker.isJobLetPluginLoaded()) {
+                    IJobletProviderService jobletProviderService = (IJobletProviderService) GlobalServiceRegister.getDefault()
+                            .getService(IJobletProviderService.class);
+                    INode jobletNode = ((Node) elem).getJobletNode();
+                    if (jobletNode != null && jobletProviderService.isJobletComponent(jobletNode)) {
+                        List<INode> jobletNodes = (List<INode>) jobletProviderService.getGraphNodesForJoblet(jobletNode);
+                        for (INode node : jobletNodes) {
+                            if (node != null && node.getUniqueName() != null
+                                    && node.getUniqueName().equals(currentNode.getUniqueName())) {
+                                list = (List<INode>) node.getProcess().getNodesOfType(param.getFilter());
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (list == null) {
+                    list = (List<INode>) ((Node) elem).getProcess().getNodesOfType(param.getFilter());
+                }
                 nodeList = new ArrayList<INode>();
                 if (list != null) {
                     for (INode datanode : list) {
@@ -255,15 +272,6 @@ public class ComponentListController extends AbstractElementPropertySectionContr
                                 && !datanode.getUniqueName().equals(StatsAndLogsManager.CONNECTION_UID)) {
                             nodeList.add(datanode);
                         }
-                    }
-                }
-            }
-            List<INode> jobletnodeList = new ArrayList<INode>(nodeList);
-            if (((Node) elem).getJobletNode() != null) {
-                String jobletUniName = ((Node) elem).getJobletNode().getUniqueName();
-                for (INode node : jobletnodeList) {
-                    if (!node.getUniqueName().startsWith(jobletUniName)) {
-                        nodeList.remove(node);
                     }
                 }
             }
