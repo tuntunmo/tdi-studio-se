@@ -155,7 +155,7 @@
     </PARAMETER>
 
     <PARAMETER NAME="IS_TRANSACTED"  FIELD="CHECK" REQUIRED="false" NUM_ROW="47"
-        SHOW_IF="(SERVER == 'ACTIVEMQ') and (USE_CONNECTION == 'false')">
+        SHOW_IF="((SERVER == 'ACTIVEMQ') OR (SERVER == 'WEBSPHERE')) and (USE_CONNECTION == 'false')">
       <DEFAULT>false</DEFAULT>
     </PARAMETER>
 
