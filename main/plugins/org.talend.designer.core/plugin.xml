@@ -172,7 +172,7 @@
             allowMultiple="false"
             category="org.talend.core.root"
             class="org.talend.designer.core.ui.views.CodeView"
-            icon="icons/codeViewer_view.gif"
+            icon="icons/codeViewer_view.png"
             id="org.talend.designer.core.codeView"
             name="%codeViewer"/>
                   <view
@@ -185,7 +185,7 @@
                   <view
                         category="org.talend.core.root"
                         class="org.talend.designer.core.ui.views.contexts.ContextsView"
-                        icon="platform:/plugin/org.talend.common.ui.runtime/icons1/context_icon.gif"
+                        icon="platform:/plugin/org.talend.common.ui.runtime/icons1/context_icon.png"
                         id="org.talend.designer.core.ui.views.ContextsView"
                         name="%contexts"/>
                   <view
@@ -200,7 +200,7 @@
                         allowMultiple="false"
                         category="org.talend.core.root"
                         class="org.talend.designer.core.ui.views.jobsettings.JobSettingsView"
-                        icon="platform:/plugin/org.talend.common.ui.runtime/icons1/process_icon.gif"
+                        icon="platform:/plugin/org.talend.common.ui.runtime/icons1/process_icon.png"
                         id="org.talend.designer.core.ui.views.jobsettings.JobSettingsView"
                         name="%jobSettingsView">
                   </view>
@@ -606,7 +606,7 @@
 	<extension
          point="org.eclipse.debug.ui.launchConfigurationTypeImages">
       <launchConfigurationTypeImage
-            icon="icons/process_icon.gif"
+            icon="icons/process_icon.png"
             configTypeID="org.talend.designer.runprocess.jobLaunchConfiguration"
             id="org.talend.designer.runprocess.launchImage">
       </launchConfigurationTypeImage>
@@ -616,7 +616,7 @@
          point="org.eclipse.debug.ui.launchShortcuts">
       <shortcut
             class="org.talend.designer.core.debug.JobLaunchShortcut"
-            icon="platform:/plugin/org.talend.core/icons/process_icon.gif"
+            icon="platform:/plugin/org.talend.core/icons/process_icon.png"
             id="org.talend.designer.runprocess.debug.JobLaunchShortcut"
             label="Job"
             modes="run">

@@ -20,7 +20,7 @@ import org.talend.commons.ui.runtime.image.IImage;
 public enum EJobSettingImage implements IImage {
 
     PROCESS_MR_ICON_X16("/icons/process_mr.png"), //$NON-NLS-1$
-    PROCESS_ICON_X16("/icons/process_icon.gif"), //$NON-NLS-1$
+    PROCESS_ICON_X16("/icons/process_icon.png"), //$NON-NLS-1$
     ;
 
     private String path;

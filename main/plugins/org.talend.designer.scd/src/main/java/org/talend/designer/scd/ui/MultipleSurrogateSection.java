@@ -120,7 +120,7 @@ public class MultipleSurrogateSection extends ScdSection {
         toolBar.setLayoutData(new GridData(157, SWT.DEFAULT));
 
         ToolItem addToolItem = new ToolItem(toolBar, SWT.PUSH);
-        addToolItem.setImage(SWTResourceManager.getPluginImage(ScdPlugin.getDefault(), "icons/add.gif")); //$NON-NLS-1$
+        addToolItem.setImage(SWTResourceManager.getPluginImage(ScdPlugin.getDefault(), "icons/add.png")); //$NON-NLS-1$
         addToolItem.addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -130,7 +130,7 @@ public class MultipleSurrogateSection extends ScdSection {
         });
 
         ToolItem removeToolItem = new ToolItem(toolBar, SWT.PUSH);
-        removeToolItem.setImage(SWTResourceManager.getPluginImage(ScdPlugin.getDefault(), "icons/delete.gif")); //$NON-NLS-1$
+        removeToolItem.setImage(SWTResourceManager.getPluginImage(ScdPlugin.getDefault(), "icons/delete.png")); //$NON-NLS-1$
         removeToolItem.addSelectionListener(new SelectionAdapter() {
 
             @Override

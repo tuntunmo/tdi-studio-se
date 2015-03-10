@@ -22,8 +22,8 @@ public enum ImageInfo {
 
     MINIMIZE_ICON("/icons/collapse16.png"), //$NON-NLS-1$
     RESTORE_ICON("/icons/uncollapse16.png"), //$NON-NLS-1$
-    ADD("/icons/add.gif"), //$NON-NLS-1$
-    DELETE("/icons/delete.gif"), //$NON-NLS-1$
+    ADD("/icons/add.png"), //$NON-NLS-1$
+    DELETE("/icons/delete.png"), //$NON-NLS-1$
     REFRESH("/icons/arrow_refresh.png"), //$NON-NLS-1$
     REFRESH_CACHE("/icons/arrow_refresh_cache.png"), //$NON-NLS-1$
     ACTIVATE_FILTER_ICON("/icons/addfilter.png"), //$NON-NLS-1$

@@ -12,7 +12,7 @@
       <view
             category="org.talend.core.root"
             class="org.talend.repository.ui.views.RepositoryView"
-            icon="icons/nav_home_003.gif"
+            icon="icons/nav_home_003.png"
             id="org.talend.repository.views.repository.deprecated"
             name="Repository [deprecated]"/>
     -->
@@ -326,7 +326,7 @@
          </action>
          <!--action
                class="org.talend.repository.ui.actions.importproject.DeleteProjectsAsAction"
-               icon="icons/delete.gif"
+               icon="icons/delete.png"
                id="org.talend.repository.deleteProjects"
                label="%deleteProjectsAction.title"
                style="push"

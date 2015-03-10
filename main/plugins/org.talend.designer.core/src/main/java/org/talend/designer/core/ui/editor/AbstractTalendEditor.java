@@ -2224,7 +2224,7 @@ public abstract class AbstractTalendEditor extends GraphicalEditorWithFlyoutPale
                     showPage(ID_OUTLINE);
                 }
             };
-            showOutlineAction.setImageDescriptor(ImageDescriptor.createFromFile(DesignerPlugin.class, "/icons/outline.gif")); //$NON-NLS-1$
+            showOutlineAction.setImageDescriptor(ImageDescriptor.createFromFile(DesignerPlugin.class, "/icons/outline.png")); //$NON-NLS-1$
             tbm.add(showOutlineAction);
             showOverviewAction = new Action() {
 
