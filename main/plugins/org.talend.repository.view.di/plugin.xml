@@ -129,7 +129,7 @@
             activeByDefault="true"
             appearsBefore="org.talend.repository.viewer.root.sqlTemplates"
             contentProvider="org.talend.repository.view.di.viewer.content.ContextsContentProvider"
-            icon="icons/contexts.gif"
+            icon="icons/contexts.png"
             id="org.talend.repository.viewer.root.contexts"
             labelProvider="org.talend.repository.viewer.label.RepositoryViewLabelProvider"
             name="%NavigatorContent.contexts"
@@ -456,7 +456,7 @@
       </repositoryNode>
       <repositoryNode
             folder="context"
-            icon="icons/contexts.gif"
+            icon="icons/contexts.png"
             isResouce="true"
             key="repository.context"
             label="%NavigatorContent.contexts"

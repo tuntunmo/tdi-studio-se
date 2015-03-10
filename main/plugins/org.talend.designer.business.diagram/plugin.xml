@@ -25,7 +25,7 @@
      <editor
         id="org.talend.designer.business.model.business.diagram.part.BusinessDiagramEditorID"
         name="Business Diagram Editor"
-        icon="icons/obj16/BusinessDiagramFile.gif"
+        icon="icons/obj16/BusinessDiagramFile.png"
         extensions="business_diagram"
         default="true"
         class="org.talend.designer.business.model.business.diagram.part.BusinessDiagramEditor"
@@ -38,7 +38,7 @@
    <extension point="org.eclipse.ui.newWizards">
   	  <wizard
   	     name="Business Diagram"
-  	     icon="icons/obj16/BusinessDiagramFile.gif"
+  	     icon="icons/obj16/BusinessDiagramFile.png"
   	     category="org.talend.designer.core.ui"
   	     class="org.talend.designer.business.model.business.diagram.part.BusinessCreationWizard"
   	     id="org.talend.designer.business.model.business.diagram.part.BusinessCreationWizardID">
@@ -581,7 +581,7 @@
       <repositoryNode
             alias="BM"
             folder="businessProcess"
-            icon="icons/obj16/BusinessDiagramFile.gif"
+            icon="icons/obj16/BusinessDiagramFile.png"
             isResouce="true"
             key="repository.businessProcess"
             label="%repository.businessProcess"
