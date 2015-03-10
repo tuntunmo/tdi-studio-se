@@ -244,6 +244,19 @@ public class NodesSubTree {
                 buildSparkSubTree(sourceNode);
             }
         }
+        if (node.getComponent().useLookup()) {
+            for (IConnection connection : node.getIncomingConnections(EConnectionType.FLOW_REF)) {
+                if (this.visitedNodesMainCode.get(connection.getSource()) != null) {
+                    // The node has been visited, continue the loop.
+                    continue;
+                }
+                INode sourceNode = connection.getSource();
+                while (sourceNode.getIncomingConnections().size() > 0) {
+                    sourceNode = sourceNode.getIncomingConnections().get(0).getSource();
+                }
+                buildSparkSubTree(sourceNode);
+            }
+        }
         for (IConnection connection : node.getOutgoingSortedConnections()) {
             if (connection.getTarget().isActivate() && this.visitedNodesMainCode.get(connection.getTarget()) == null) {
                 if (connection.getLineStyle().hasConnectionCategory(IConnectionCategory.DATA)) {
