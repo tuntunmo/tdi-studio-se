@@ -55,8 +55,10 @@ public class NodesTree {
         if (init) {
             if (typeGen == ETypeGen.CAMEL) {
                 buildCamelSubTrees(true);
-            } else if (typeGen == ETypeGen.MR || typeGen == ETypeGen.SPARK || typeGen == ETypeGen.STORM) {
+            } else if (typeGen == ETypeGen.MR || typeGen == ETypeGen.STORM) {
                 buildBigDataSubTrees(typeGen);
+            } else if (typeGen == ETypeGen.SPARK) {
+                buildSparkSubTrees(typeGen);
             }
         }
     }
@@ -103,6 +105,15 @@ public class NodesTree {
         for (INode node : nodes) {
             if (((node.isSubProcessStart()) && (node.isActivate()) && !((AbstractNode) node).isRefNode())
                     || (rootNodes.contains(node))) {
+                subTrees.add(new NodesSubTree(node, nodes, typeGen));
+            }
+        }
+    }
+
+    private void buildSparkSubTrees(ETypeGen typeGen) {
+        subTrees = new ArrayList<NodesSubTree>();
+        for (INode node : nodes) {
+            if (((rootNodes.contains(node)) && (node.isActivate()) && !((AbstractNode) node).isRefNode())) {
                 subTrees.add(new NodesSubTree(node, nodes, typeGen));
             }
         }

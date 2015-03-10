@@ -124,7 +124,7 @@ public class NodesSubTree {
             allMainSubTreeConnections = new ArrayList<IConnection>();
 
             buildCamelSubTree(node, false);
-        } else if ((typeGen == ETypeGen.MR) || (typeGen == ETypeGen.STORM) || (typeGen == ETypeGen.SPARK)) {
+        } else if ((typeGen == ETypeGen.MR) || (typeGen == ETypeGen.STORM)) {
             this.rootNode = node;
             this.name = node.getUniqueName();
             this.nodes = new ArrayList<INode>();
@@ -134,6 +134,17 @@ public class NodesSubTree {
             allMainSubTreeConnections = new ArrayList<IConnection>();
 
             buildBigDataSubTree(node);
+        } else if (typeGen == ETypeGen.SPARK) {
+            this.rootNode = node;
+            this.name = node.getUniqueName();
+            this.nodes = new ArrayList<INode>();
+            this.visitedNodesMainCode = new HashMap<INode, Integer>();
+            afterSubProcesses = new ArrayList<String>();
+            beforeSubProcesses = new ArrayList<String>();
+
+            allMainSubTreeConnections = new ArrayList<IConnection>();
+
+            buildSparkSubTree(node);
         }
     }
 
@@ -205,6 +216,39 @@ public class NodesSubTree {
                         allMainSubTreeConnections.add(connection);
                     }
                     buildBigDataSubTree(connection.getTarget());
+                }
+                if (connection.getLineStyle().equals(EConnectionType.RUN_AFTER)) {
+                    afterSubProcesses.add(connection.getTarget().getUniqueName());
+                }
+                if (connection.getLineStyle().equals(EConnectionType.ON_SUBJOB_OK)) {
+                    beforeSubProcesses.add(connection.getTarget().getUniqueName());
+                }
+            }
+        }
+
+        nodes.add(node);
+    }
+
+    private void buildSparkSubTree(INode node) {
+        this.visitedNodesMainCode.put(node, 0);
+        if (node.getComponent().useMerge()) {
+            for (IConnection connection : node.getIncomingConnections(EConnectionType.FLOW_MERGE)) {
+                if (this.visitedNodesMainCode.get(connection.getSource()) != null) {
+                    // The node has been visited, continue the loop.
+                    continue;
+                }
+                INode sourceNode = connection.getSource();
+                while (sourceNode.getIncomingConnections().size() > 0) {
+                    sourceNode = sourceNode.getIncomingConnections().get(0).getSource();
+                }
+                buildSparkSubTree(sourceNode);
+            }
+        }
+        for (IConnection connection : node.getOutgoingSortedConnections()) {
+            if (connection.getTarget().isActivate() && this.visitedNodesMainCode.get(connection.getTarget()) == null) {
+                if (connection.getLineStyle().hasConnectionCategory(IConnectionCategory.DATA)) {
+                    allMainSubTreeConnections.add(connection);
+                    buildSparkSubTree(connection.getTarget());
                 }
                 if (connection.getLineStyle().equals(EConnectionType.RUN_AFTER)) {
                     afterSubProcesses.add(connection.getTarget().getUniqueName());
