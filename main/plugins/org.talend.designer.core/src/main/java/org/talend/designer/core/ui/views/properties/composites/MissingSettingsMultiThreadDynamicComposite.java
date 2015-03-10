@@ -26,6 +26,7 @@ import org.talend.core.model.components.IComponent;
 import org.talend.core.model.general.ModuleNeeded;
 import org.talend.core.model.process.EComponentCategory;
 import org.talend.core.model.process.Element;
+import org.talend.core.ui.CoreUIPlugin;
 import org.talend.designer.core.i18n.Messages;
 import org.talend.designer.core.ui.editor.nodes.Node;
 import org.talend.designer.core.utils.ModulesInstallerUtil;
@@ -46,7 +47,24 @@ public class MissingSettingsMultiThreadDynamicComposite extends TopMessagesMulti
 
     @Override
     protected MessagesComposite createMessagesComposite() {
-        return new MessagesWithActionComposite(getComposite(), SWT.NONE);
+        MessagesWithActionComposite messagesComposite = new MessagesWithActionComposite(getComposite(), SWT.NONE) {
+
+            @Override
+            protected void changeBackgroundColor(int status) {
+                switch (status) {
+                case IStatus.WARNING:
+                    CoreUIPlugin.setCSSId(this, CSS_MESSAGES_WITH_ACTION_COMPOSITE_WARN);
+                    break;
+                case IStatus.ERROR:
+                    CoreUIPlugin.setCSSId(this, CSS_MESSAGES_WITH_ACTION_COMPOSITE_ERROR);
+                    break;
+                default:
+                }
+            }
+        };
+        // CSS
+        CoreUIPlugin.setCSSClass(messagesComposite, MessagesWithActionComposite.class.getSimpleName());
+        return messagesComposite;
 
     }
 
