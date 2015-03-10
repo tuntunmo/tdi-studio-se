@@ -113,7 +113,7 @@ public class NodesTree {
     private void buildSparkSubTrees(ETypeGen typeGen) {
         subTrees = new ArrayList<NodesSubTree>();
         for (INode node : nodes) {
-            if (((rootNodes.contains(node)) && (node.isActivate()) && !((AbstractNode) node).isRefNode())) {
+            if (((node == node.getSubProcessStartNode(false)) && (node.isActivate()) && !((AbstractNode) node).isRefNode())) {
                 subTrees.add(new NodesSubTree(node, nodes, typeGen));
             }
         }
