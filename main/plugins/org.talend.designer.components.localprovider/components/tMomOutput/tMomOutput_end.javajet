@@ -23,7 +23,7 @@ List<? extends INode> rollBackNodes=node.getProcess().getNodesOfType("tMomRollba
 boolean isCommitRollback = false;
 for(INode cNode:commitNodes){
 	String cNodeName = ElementParameterParser.getValue(cNode,"__CONNECTION__");
-	if(cid.equals(cNodeName)){
+	if(cid.equals(cNodeName) || (isUseExistConnection && connectionComponentName.equals(cNodeName))){
 		isCommitRollback = true;
 		break;
 	}
@@ -31,7 +31,7 @@ for(INode cNode:commitNodes){
 if(!isCommitRollback){
 	for(INode rNode:rollBackNodes){
 		String rNodeName = ElementParameterParser.getValue(rNode,"__CONNECTION__");
-		if(cid.equals(rNodeName)){
+		if(cid.equals(rNodeName) || (isUseExistConnection && connectionComponentName.equals(rNodeName))){
 			isCommitRollback = true;
 			break;
 		}
