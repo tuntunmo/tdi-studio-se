@@ -232,8 +232,8 @@ public class StatsAndLogsHelper extends Utils {
 
         // stats log encoding
         ElementParameter encodingParam = new ElementParameter(elem);
-        encodingParam.setName(EParameterName.ENCODING.getName()); //$NON-NLS-1$
-        encodingParam.setDisplayName(EParameterName.ENCODING.getDisplayName());//$NON-NLS-1$
+        encodingParam.setName(EParameterName.ENCODING.getName());
+        encodingParam.setDisplayName(EParameterName.ENCODING.getDisplayName());
         encodingParam.setCategory(EComponentCategory.STATSANDLOGS);
         encodingParam.setFieldType(EParameterFieldType.ENCODING_TYPE);
         encodingParam
@@ -368,7 +368,7 @@ public class StatsAndLogsHelper extends Utils {
         // ProjectSettingManager
         // .
         // CONNECTION_ITEM_LABEL
-                )); //$NON-NLS-1$
+                ));
         param.setShow(false);
         param.setRequired(true);
         // paramList.add(param);
@@ -540,7 +540,7 @@ public class StatsAndLogsHelper extends Utils {
         param.setCategory(EComponentCategory.STATSANDLOGS);
         param.setNumRow(54);
         param.setRepositoryValue("SCHEMA"); //$NON-NLS-1$
-        param.setShowIf("(DB_TYPE=='OCLE' or DB_TYPE=='OCLE_OCI' or DB_TYPE=='POSTGRESQL' or DB_TYPE=='POSTGRESPLUS' or DB_TYPE=='MSSQL' or DB_TYPE=='INFORMIX') and (ON_DATABASE_FLAG == 'true') and (ON_STATCATCHER_FLAG == 'true' or ON_LOGCATCHER_FLAG == 'true' or ON_METERCATCHER_FLAG == 'true')"); //$NON-NLS-1$
+        param.setShowIf("(DB_TYPE=='OCLE' or DB_TYPE=='OCLE_OCI' or DB_TYPE=='POSTGRESQL' or DB_TYPE=='POSTGRESPLUS' or DB_TYPE=='MSSQL' or DB_TYPE=='INFORMIX' or DB_TYPE=='IBM_DB2' or DB_TYPE=='SYBASE') and (ON_DATABASE_FLAG == 'true') and (ON_STATCATCHER_FLAG == 'true' or ON_LOGCATCHER_FLAG == 'true' or ON_METERCATCHER_FLAG == 'true')"); //$NON-NLS-1$
         paramList.add(param);
 
         // username
@@ -603,7 +603,7 @@ public class StatsAndLogsHelper extends Utils {
 
         // Metter table
         param = new ElementParameter(elem);
-        param.setName(EParameterName.TABLE_METER.getName()); //$NON-NLS-1$
+        param.setName(EParameterName.TABLE_METER.getName());
         param.setValue(addQuotes(preferenceStore.getString(languagePrefix + EParameterName.TABLE_METER.getName())));
         param.setDisplayName(EParameterName.TABLE_METER.getDisplayName());
         param.setFieldType(EParameterFieldType.DBTABLE);
@@ -615,6 +615,7 @@ public class StatsAndLogsHelper extends Utils {
 
     private final static class IgnoreCaseComparator implements Comparator<String> {
 
+        @Override
         public int compare(String o1, String o2) {
             return o1.compareToIgnoreCase(o2);
         }
