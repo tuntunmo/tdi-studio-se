@@ -26,14 +26,14 @@ public enum ERepositoryImages implements IImage {
     NEW_PROJECT_ACTION("/icons/newProject.png"), //$NON-NLS-1$
     LICENSE_WIZ("/icons/license_wiz.png"), //$NON-NLS-1$
     REGISTER_WIZ("/icons/register_wiz.png"), //$NON-NLS-1$
-    DELETE_PROJECT_ACTION("/icons/delete.png"), //$NON-NLS-1$
+    DELETE_PROJECT_ACTION("/icons/delete.gif"), //$NON-NLS-1$
     PROJECT_ICON("/icons/project.gif"), //$NON-NLS-1$
     FOLDER_ICON("/icons/folder.gif"), //$NON-NLS-1$
     OPEN_PROJECT_ICON("/icons/bullet_go.png"), //$NON-NLS-1$
     LOGIN_CRITICAL_ICON("/icons/messagebox_critical.png"), //$NON-NLS-1$
     LOGIN_WARNING_ICON("/icons/messagebox_warning.png"), //$NON-NLS-1$
     LOGIN_CORRECT_ICON("/icons/messagebox_greenCoche.png"), //
-    ADD_ICON("/icons/add.png"), //$NON-NLS-N$
+    ADD_ICON("/icons/add.gif"), //$NON-NLS-N$
     DEFAULT_COMPONENT_ICON("/icons/default-32.png"), //$NON-NLS-N$
     DEFAULT_PROCESS_ICON("/icons/process_icon.png"), //$NON-NLS-N$
     MODIFIED_ICON("/icons/refresh.gif"), //$NON-NLS-N$

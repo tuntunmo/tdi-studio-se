@@ -326,7 +326,7 @@
          </action>
          <!--action
                class="org.talend.repository.ui.actions.importproject.DeleteProjectsAsAction"
-               icon="icons/delete.png"
+               icon="icons/delete.gif"
                id="org.talend.repository.deleteProjects"
                label="%deleteProjectsAction.title"
                style="push"

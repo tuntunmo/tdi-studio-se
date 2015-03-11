@@ -222,7 +222,7 @@ public class MyExchangeContentProvider implements IIntroXHTMLContentProvider {
                         + ContentConstants.KEY_EXTENSION_ID + "=" + extension.getIdExtension();
                 hyperlink.setAttribute("href", url);
                 imgElem = dom.createElement("img");
-                imgElem.setAttribute("src", "imgs/delete.png");
+                imgElem.setAttribute("src", "imgs/delete.gif");
                 imgElem.setAttribute("title", "Delete");
                 hyperlink.appendChild(imgElem);
                 tdExtension.appendChild(hyperlink);

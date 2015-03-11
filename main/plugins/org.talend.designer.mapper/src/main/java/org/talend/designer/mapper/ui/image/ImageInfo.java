@@ -23,7 +23,7 @@ public enum ImageInfo {
     MINIMIZE_ICON("/icons/collapse16.png"), //$NON-NLS-1$
     //    INTERMEDIATE_SIZE_ICON("/icons/checked.png"), //$NON-NLS-1$
     RESTORE_ICON("/icons/uncollapse16.png"), //$NON-NLS-1$
-    ADD("/icons/add.png"), //$NON-NLS-1$
+    ADD("/icons/add.gif"), //$NON-NLS-1$
     CHECKED_ICON("/icons/checked.png"), //$NON-NLS-1$
     UNCHECKED_ICON("/icons/unchecked.png"), //$NON-NLS-1$
     ADD_FILTER_ICON("/icons/addfilter.png"), //$NON-NLS-1$
