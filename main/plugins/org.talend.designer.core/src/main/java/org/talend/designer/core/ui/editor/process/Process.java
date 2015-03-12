@@ -79,6 +79,7 @@ import org.talend.core.model.general.Project;
 import org.talend.core.model.metadata.IEbcdicConstant;
 import org.talend.core.model.metadata.IMetadataColumn;
 import org.talend.core.model.metadata.IMetadataTable;
+import org.talend.core.model.metadata.MetadataSchemaType;
 import org.talend.core.model.metadata.MetadataToolHelper;
 import org.talend.core.model.process.EComponentCategory;
 import org.talend.core.model.process.EConnectionType;
@@ -2260,6 +2261,13 @@ public class Process extends Element implements IProcess2, IGEFProcess, ILastVer
                 }
                 MetadataToolHelper.initilializeSchemaFromElementParameters(metadataTable,
                         (List<IElementParameter>) nc.getElementParameters());
+                // setup additional properties for sapbapi
+                if (MetadataSchemaType.INPUT.name().equals(metadataTable.getTableType())) {
+                    Map<String, String> properties = metadataTable.getAdditionalProperties();
+                    if (properties != null) {
+                        properties.put("isinput", "true"); //$NON-NLS-1$ //$NON-NLS-2$
+                    }
+                }
             }
         }
         List<IMetadataTable> oldComponentMetadataList = new ArrayList<IMetadataTable>(nc.getMetadataList());
